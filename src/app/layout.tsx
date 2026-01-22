@@ -11,7 +11,6 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { getPayload } from 'payload';
 import { SWRConfig } from 'swr';
 import type { Theme } from '@/payload-types';
-import './globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -60,28 +59,18 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Check if this is an admin route
-  // PayloadCMS RootLayout renders its own <html> and <body> tags
-  // When used in a nested layout, it creates nested HTML tags (hydration error)
+  // Check if this is an admin route by examining the pathname
+  // Payload admin routes are in the (payload) group and start with /admin
   const headersList = await headers();
-  const isAdminRoute = headersList.get('x-admin-route') === 'true';
+  const pathname = headersList.get('x-pathname') || headersList.get('referer') || '';
+  const isAdminRoute = pathname.includes('/admin') || pathname.startsWith('/(payload)');
 
-  // RESTRUCTURED: Make PayloadCMS RootLayout the root layout for admin routes
-  // For admin routes, PayloadCMS RootLayout will handle the HTML/body structure
-  // We return minimal HTML/body to satisfy Next.js requirements, but PayloadCMS
-  // RootLayout effectively becomes the root layout by managing the structure
-  // 
-  // Note: This still creates nested HTML during SSR, but PayloadCMS RootLayout
-  // is effectively the root layout for admin routes
+  // For PayloadCMS admin routes, let Payload's RootLayout handle ALL HTML structure
+  // Do NOT render any HTML elements here - Payload will handle <html>, <head>, <body>
   if (isAdminRoute) {
-    // PayloadCMS RootLayout will render its own <html> and <body>
-    // We render minimal structure to satisfy Next.js, creating nested HTML
-    // suppressHydrationWarning suppresses the warning
-    return (
-      <html lang='en' suppressHydrationWarning>
-        <body suppressHydrationWarning>{children}</body>
-      </html>
-    );
+    // Return children directly - Payload RootLayout will render the complete HTML structure
+    // This prevents nested HTML elements and hydration errors
+    return children;
   }
 
   // Load themes from PayloadCMS with better error handling
@@ -126,6 +115,7 @@ export default async function RootLayout({
     initialTheme = 'default';
   }
 
+  // Frontend routes get full theme system
   return (
     <html
       lang='en'

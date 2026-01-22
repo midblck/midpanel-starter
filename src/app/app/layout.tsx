@@ -4,6 +4,7 @@ import { headers as getHeaders } from 'next/headers.js';
 import { redirect } from 'next/navigation';
 import { getPayload } from 'payload';
 import config from '@/payload.config';
+import '../globals.css'; // Global styles for dashboard routes
 
 export default async function DashboardLayout({
   children,

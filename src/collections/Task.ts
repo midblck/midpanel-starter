@@ -100,8 +100,7 @@ export const Tasks: CollectionConfig = {
                 console.error('Failed to auto-assign General task type:', error);
               }
             }
-
-            return value;
+            return value as string[];
           },
         ],
       },
