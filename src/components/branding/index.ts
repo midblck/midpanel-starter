@@ -1,1 +1,1 @@
-export { Branding, BrandingIcon, BrandingLogo } from './branding';
+export { Branding, BrandingIcon, BrandingLogo } from './branding'

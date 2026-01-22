@@ -1,38 +1,38 @@
-'use client';
+'use client'
 
-import { LengthCounter } from '@/components/forms';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { LengthCounter } from '@/components/forms'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { useTaskStore, type Status, type TaskType } from '@/features/kanban';
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { useTaskStore, type Status, type TaskType } from '@/features/kanban'
 
 interface TaskFormData {
-  title: string;
-  description: string;
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  assignee: string;
-  dueDate: string;
-  taskTypes: string[];
-  status: string;
+  title: string
+  description: string
+  priority: 'low' | 'medium' | 'high' | 'critical'
+  assignee: string
+  dueDate: string
+  taskTypes: string[]
+  status: string
 }
 
 interface TaskFormFieldsProps {
-  formData: TaskFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
-  isEditing?: boolean;
+  formData: TaskFormData
+  setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>
+  isEditing?: boolean
 }
 
 export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
-  const statuses = useTaskStore(state => state.statuses);
-  const taskTypes = useTaskStore(state => state.taskTypes);
+  const statuses = useTaskStore(state => state.statuses)
+  const taskTypes = useTaskStore(state => state.taskTypes)
 
   return (
     <>
@@ -41,9 +41,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
         <Input
           id='title'
           value={formData.title}
-          onChange={e =>
-            setFormData(prev => ({ ...prev, title: e.target.value }))
-          }
+          onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
           placeholder='Enter task title'
           required
         />
@@ -54,9 +52,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
         <Textarea
           id='description'
           value={formData.description}
-          onChange={e =>
-            setFormData(prev => ({ ...prev, description: e.target.value }))
-          }
+          onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
           placeholder='Enter task description'
           rows={3}
           maxLength={1000}
@@ -78,7 +74,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
               setFormData(prev => ({
                 ...prev,
                 taskTypes: [...prev.taskTypes, value],
-              }));
+              }))
             }
           }}
         >
@@ -87,10 +83,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
           </SelectTrigger>
           <SelectContent>
             {taskTypes
-              .filter(
-                (taskType: TaskType) =>
-                  !formData.taskTypes.includes(taskType.id)
-              )
+              .filter((taskType: TaskType) => !formData.taskTypes.includes(taskType.id))
               .map((taskType: TaskType) => (
                 <SelectItem key={taskType.id} value={taskType.id}>
                   <div className='flex items-center gap-2'>
@@ -107,9 +100,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
         {formData.taskTypes.length > 0 && (
           <div className='flex flex-wrap gap-1 mt-2'>
             {formData.taskTypes.map((taskTypeId: string) => {
-              const taskType = taskTypes.find(
-                (tt: { id: string }) => tt.id === taskTypeId
-              );
+              const taskType = taskTypes.find((tt: { id: string }) => tt.id === taskTypeId)
               return taskType ? (
                 <Badge
                   key={taskTypeId}
@@ -127,9 +118,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
                     onClick={() =>
                       setFormData(prev => ({
                         ...prev,
-                        taskTypes: prev.taskTypes.filter(
-                          (id: string) => id !== taskTypeId
-                        ),
+                        taskTypes: prev.taskTypes.filter((id: string) => id !== taskTypeId),
                       }))
                     }
                     className='ml-1 hover:bg-gray-300 rounded-full w-4 h-4 flex items-center justify-center'
@@ -137,7 +126,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
                     ×
                   </button>
                 </Badge>
-              ) : null;
+              ) : null
             })}
           </div>
         )}
@@ -148,9 +137,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
         <Select
           value={formData.priority}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onValueChange={(value: any) =>
-            setFormData(prev => ({ ...prev, priority: value }))
-          }
+          onValueChange={(value: any) => setFormData(prev => ({ ...prev, priority: value }))}
         >
           <SelectTrigger>
             <SelectValue />
@@ -168,9 +155,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
         <Label htmlFor='status'>Status</Label>
         <Select
           value={formData.status}
-          onValueChange={value =>
-            setFormData(prev => ({ ...prev, status: value }))
-          }
+          onValueChange={value => setFormData(prev => ({ ...prev, status: value }))}
         >
           <SelectTrigger>
             <SelectValue placeholder='Select a status' />
@@ -179,10 +164,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
             {statuses.map((status: Status) => (
               <SelectItem key={status.id} value={status.id}>
                 <div className='flex items-center gap-2'>
-                  <div
-                    className='w-3 h-3 rounded-full'
-                    style={{ backgroundColor: status.color }}
-                  />
+                  <div className='w-3 h-3 rounded-full' style={{ backgroundColor: status.color }} />
                   {status.name}
                 </div>
               </SelectItem>
@@ -197,9 +179,7 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
           id='dueDate'
           type='date'
           value={formData.dueDate}
-          onChange={e =>
-            setFormData(prev => ({ ...prev, dueDate: e.target.value }))
-          }
+          onChange={e => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
         />
       </div>
 
@@ -208,12 +188,10 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
         <Input
           id='assignee'
           value={formData.assignee}
-          onChange={e =>
-            setFormData(prev => ({ ...prev, assignee: e.target.value }))
-          }
+          onChange={e => setFormData(prev => ({ ...prev, assignee: e.target.value }))}
           placeholder='Assignee name'
         />
       </div>
     </>
-  );
+  )
 }

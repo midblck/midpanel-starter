@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { useThemeConfig } from '@/components/layout/active-theme-provider';
-import { Label } from '@/components/ui/label';
+import { useThemeConfig } from '@/components/layout/active-theme-provider'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -10,19 +10,19 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Palette } from 'lucide-react';
+} from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Palette } from 'lucide-react'
 
 export function ThemeSelector() {
-  const { activeTheme, setActiveTheme, themes, isLoading } = useThemeConfig();
+  const { activeTheme, setActiveTheme, themes, isLoading } = useThemeConfig()
 
   if (isLoading || !themes) {
     return (
       <div className='flex items-center gap-2'>
         <Skeleton className='h-10 w-10 sm:w-32' />
       </div>
-    );
+    )
   }
 
   if (themes.length === 0) {
@@ -45,7 +45,7 @@ export function ThemeSelector() {
           </SelectTrigger>
         </Select>
       </div>
-    );
+    )
   }
 
   return (
@@ -60,15 +60,9 @@ export function ThemeSelector() {
           aria-label='Select theme'
         >
           <Palette className='h-4 w-4 shrink-0 sm:hidden' />
-          <SelectValue
-            placeholder='Select a theme'
-            className='hidden sm:inline'
-          />
+          <SelectValue placeholder='Select a theme' className='hidden sm:inline' />
         </SelectTrigger>
-        <SelectContent
-          align='end'
-          className='w-[var(--radix-select-trigger-width)] sm:w-auto'
-        >
+        <SelectContent align='end' className='w-[var(--radix-select-trigger-width)] sm:w-auto'>
           <SelectGroup>
             <SelectLabel>Available Themes</SelectLabel>
             {themes.map(theme => (
@@ -81,9 +75,7 @@ export function ThemeSelector() {
                   <div className='w-3 h-3 rounded-full border bg-primary shrink-0' />
                   <span className='truncate'>{theme.name}</span>
                   {theme.isDefault && (
-                    <span className='text-xs text-muted-foreground shrink-0'>
-                      (Default)
-                    </span>
+                    <span className='text-xs text-muted-foreground shrink-0'>(Default)</span>
                   )}
                 </div>
               </SelectItem>
@@ -92,5 +84,5 @@ export function ThemeSelector() {
         </SelectContent>
       </Select>
     </div>
-  );
+  )
 }

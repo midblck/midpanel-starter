@@ -46,12 +46,12 @@ This authentication system is built with PayloadCMS, Next.js, and shadcn/ui comp
 ### Using the Auth Context
 
 ```tsx
-import { useAuth } from '@/features/auth';
+import { useAuth } from '@/features/auth'
 
 function MyComponent() {
-  const { user, loading, signIn, signOut } = useAuth();
+  const { user, loading, signIn, signOut } = useAuth()
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>
 
   return (
     <div>
@@ -64,21 +64,21 @@ function MyComponent() {
         <a href='/auth/sign-in'>Sign In</a>
       )}
     </div>
-  );
+  )
 }
 ```
 
 ### Protecting Routes
 
 ```tsx
-import ProtectedRoute from '@/features/auth/components/protected-route';
+import ProtectedRoute from '@/features/auth/components/protected-route'
 
 function DashboardLayout({ children }) {
   return (
     <ProtectedRoute>
       <div className='dashboard'>{children}</div>
     </ProtectedRoute>
-  );
+  )
 }
 ```
 

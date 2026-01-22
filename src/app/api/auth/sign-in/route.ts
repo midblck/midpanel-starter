@@ -1,60 +1,54 @@
-import { getIdentityDetails } from '@/features/auth/services/identity';
-import configPromise from '@payload-config';
-import { NextRequest, NextResponse } from 'next/server';
-import { getPayload } from 'payload';
+import { getIdentityDetails } from '@/features/auth/services/identity'
+import { createRequestLogger } from '@/utilities/logger'
+import configPromise from '@payload-config'
+import { NextRequest, NextResponse } from 'next/server'
+import { getPayload } from 'payload'
 
 export async function POST(request: NextRequest) {
+  const requestLogger = createRequestLogger()
+
   try {
     const requestBody = (await request.json()) as {
-      email?: string;
-      password?: string;
-      collection?: string;
-    };
-    const email = requestBody.email || '';
-    const password = requestBody.password || '';
-    const collection = requestBody.collection;
+      email?: string
+      password?: string
+      collection?: string
+    }
+    const email = requestBody.email || ''
+    const password = requestBody.password || ''
+    const collection = requestBody.collection
 
     if (!email || !password) {
-      return NextResponse.json(
-        { message: 'Email and password are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: 'Email and password are required' }, { status: 400 })
     }
 
-    const payload = await getPayload({ config: configPromise });
+    const payload = await getPayload({ config: configPromise })
 
-    // Get enhanced identity details
-    const enhancedIdentity = await getIdentityDetails(email, payload);
+    // Get identity details
+    const getIdentity = await getIdentityDetails(email, payload)
 
-    let targetCollection = collection;
-    let warning: string | undefined;
+    let targetCollection = collection
+    let warning: string | undefined
 
     // Auto-detect collection if not specified
     if (!targetCollection) {
-      // Use enhanced identity to determine target collection
-      if (
-        enhancedIdentity.identityDetails.existsInAdmins &&
-        enhancedIdentity.identityDetails.existsInUsers
-      ) {
-        targetCollection = 'users'; // Priority: users over admins
-        warning = 'Email exists in both collections. Logged into user account.';
-      } else if (enhancedIdentity.identityDetails.existsInUsers) {
-        targetCollection = 'users';
-      } else if (enhancedIdentity.identityDetails.existsInAdmins) {
-        targetCollection = 'users'; // Force users collection even for admin accounts
-        warning = 'Admin account found but using user collection.';
+      // Use identity to determine target collection
+      if (getIdentity.identityDetails.existsInAdmins && getIdentity.identityDetails.existsInUsers) {
+        targetCollection = 'users' // Priority: users over admins
+        warning = 'Email exists in both collections. Logged into user account.'
+      } else if (getIdentity.identityDetails.existsInUsers) {
+        targetCollection = 'users'
+      } else if (getIdentity.identityDetails.existsInAdmins) {
+        targetCollection = 'users' // Force users collection even for admin accounts
+        warning = 'Admin account found but using user collection.'
       } else {
         // Default to users collection
-        targetCollection = 'users';
+        targetCollection = 'users'
       }
     }
 
     // Validate collection
     if (!['admins', 'users'].includes(targetCollection)) {
-      return NextResponse.json(
-        { message: 'Invalid collection specified' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: 'Invalid collection specified' }, { status: 400 })
     }
 
     // Use PayloadCMS built-in login function
@@ -65,7 +59,7 @@ export async function POST(request: NextRequest) {
         password,
       },
       req: request,
-    });
+    })
 
     if (result.token) {
       // Check if account has OAuth linked (after successful login)
@@ -77,7 +71,7 @@ export async function POST(request: NextRequest) {
             { targetCollection: { equals: targetCollection } },
           ],
         },
-      });
+      })
 
       // Update lastLoginAt for user record
       await payload.update({
@@ -86,7 +80,7 @@ export async function POST(request: NextRequest) {
         data: {
           lastLoginAt: new Date().toISOString(),
         },
-      });
+      })
 
       // Update lastLoginAt for all OAuth records
       if (oauthRecords.docs.length > 0) {
@@ -97,7 +91,7 @@ export async function POST(request: NextRequest) {
             data: {
               lastLoginAt: new Date().toISOString(),
             },
-          });
+          })
         }
       }
 
@@ -107,8 +101,8 @@ export async function POST(request: NextRequest) {
           message: 'Login successful',
           user: result.user,
           collection: targetCollection,
-          identity: enhancedIdentity.identity,
-          identityDetails: enhancedIdentity.identityDetails,
+          identity: getIdentity.identity,
+          identityDetails: getIdentity.identityDetails,
           hasOAuth: oauthRecords.docs.length > 0,
           oauthProviders: oauthRecords.docs.map(o => o.provider),
           ...(warning && { warning }),
@@ -116,27 +110,24 @@ export async function POST(request: NextRequest) {
           exp: result.exp,
         },
         { status: 200 }
-      );
+      )
 
       response.cookies.set('payload-token', result.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge: 60 * 60 * 24 * 7, // 7 days
-      });
+      })
 
-      return response;
+      return response
     }
 
-    return NextResponse.json(
-      { message: 'Invalid credentials' },
-      { status: 401 }
-    );
+    return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 })
   } catch (error) {
-    console.error('Sign in error:', error);
-    return NextResponse.json(
-      { message: 'An error occurred during sign in' },
-      { status: 500 }
-    );
+    requestLogger.error('Sign in error', error, {
+      component: 'Auth',
+      action: 'POST /api/auth/sign-in',
+    })
+    return NextResponse.json({ message: 'An error occurred during sign in' }, { status: 500 })
   }
 }

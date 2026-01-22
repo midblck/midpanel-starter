@@ -1,7 +1,8 @@
-'use client';
+'use client'
 
-import { LengthCounter } from '@/components/forms';
-import { Button } from '@/components/ui/button';
+import { LengthCounter } from '@/components/forms'
+import { logDbError } from '@/utilities/logger'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -10,41 +11,36 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useTaskStore } from '@/features/kanban';
-import { DEFAULT_STATUS_COLORS } from '@/features/kanban/constants';
-import { Edit } from 'lucide-react';
-import { useEffect, useState } from 'react';
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { useTaskStore } from '@/features/kanban'
+import { DEFAULT_STATUS_COLORS } from '@/features/kanban/constants'
+import { Edit } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 interface EditColumnDialogProps {
   column: {
-    id: string;
-    title: string;
-  };
-  trigger?: React.ReactNode;
+    id: string
+    title: string
+  }
+  trigger?: React.ReactNode
 }
 
-export default function EditColumnDialog({
-  column,
-  trigger,
-}: EditColumnDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { updateStatus, statuses } = useTaskStore();
+export default function EditColumnDialog({ column, trigger }: EditColumnDialogProps) {
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const { updateStatus, statuses } = useTaskStore()
 
   // Find the current status data
-  const currentStatus = statuses.find(
-    (s: { id: string }) => s.id === column.id
-  );
+  const currentStatus = statuses.find((s: { id: string }) => s.id === column.id)
 
   const [formData, setFormData] = useState({
     name: currentStatus?.name || column.title,
     description: currentStatus?.description || '',
     color: currentStatus?.color || DEFAULT_STATUS_COLORS[0],
-  });
+  })
 
   // Update form data when dialog opens or currentStatus changes
   useEffect(() => {
@@ -53,45 +49,45 @@ export default function EditColumnDialog({
         name: currentStatus.name,
         description: currentStatus.description || '',
         color: currentStatus.color,
-      });
+      })
     }
-  }, [currentStatus, open]);
+  }, [currentStatus, open])
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!formData.name.trim()) return;
+    if (!formData.name.trim()) return
 
-    setLoading(true);
+    setLoading(true)
 
     try {
       const success = await updateStatus(column.id, {
         name: formData.name.trim(),
         description: formData.description.trim() || undefined,
         color: formData.color,
-      });
+      })
 
       if (success) {
-        setOpen(false);
+        setOpen(false)
         // Reset form data
         setFormData({
           name: currentStatus?.name || column.title,
           description: currentStatus?.description || '',
           color: currentStatus?.color || DEFAULT_STATUS_COLORS[0],
-        });
+        })
       }
     } catch (error) {
-      console.error('Failed to update column:', error);
+      logDbError('update-column-dialog', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleColorChange = (color: string) => {
-    setFormData(prev => ({ ...prev, color }));
-  };
+    setFormData(prev => ({ ...prev, color }))
+  }
 
-  const predefinedColors = DEFAULT_STATUS_COLORS;
+  const predefinedColors = DEFAULT_STATUS_COLORS
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -116,9 +112,7 @@ export default function EditColumnDialog({
             <Input
               id='name'
               value={formData.name}
-              onChange={e =>
-                setFormData(prev => ({ ...prev, name: e.target.value }))
-              }
+              onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
               placeholder='e.g., In Review'
               required
             />
@@ -129,9 +123,7 @@ export default function EditColumnDialog({
             <Textarea
               id='description'
               value={formData.description}
-              onChange={e =>
-                setFormData(prev => ({ ...prev, description: e.target.value }))
-              }
+              onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder='Optional description'
               rows={3}
               maxLength={200}
@@ -175,11 +167,7 @@ export default function EditColumnDialog({
           </div>
 
           <DialogFooter>
-            <Button
-              type='button'
-              variant='outline'
-              onClick={() => setOpen(false)}
-            >
+            <Button type='button' variant='outline' onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button type='submit' disabled={loading}>
@@ -189,5 +177,5 @@ export default function EditColumnDialog({
         </form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

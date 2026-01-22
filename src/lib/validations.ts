@@ -4,8 +4,8 @@
  * Validates email format
  */
 export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
 }
 
 /**
@@ -13,10 +13,10 @@ export function isValidEmail(email: string): boolean {
  */
 export function isValidUrl(url: string): boolean {
   try {
-    new URL(url);
-    return true;
+    new URL(url)
+    return true
   } catch {
-    return false;
+    return false
   }
 }
 
@@ -25,15 +25,15 @@ export function isValidUrl(url: string): boolean {
  */
 export function isValidPassword(password: string): boolean {
   // At least 8 characters, 1 uppercase, 1 lowercase, 1 number
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
-  return passwordRegex.test(password);
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/
+  return passwordRegex.test(password)
 }
 
 /**
  * Sanitizes string input
  */
 export function sanitizeString(input: string): string {
-  return input.trim().replace(/[<>]/g, '');
+  return input.trim().replace(/[<>]/g, '')
 }
 
 /**
@@ -44,12 +44,12 @@ export function validateRequired<T extends Record<string, unknown>>(
   requiredFields: (keyof T)[]
 ): { isValid: boolean; missingFields: (keyof T)[] } {
   const missingFields = requiredFields.filter(field => {
-    const value = data[field];
-    return value === undefined || value === null || value === '';
-  });
+    const value = data[field]
+    return value === undefined || value === null || value === ''
+  })
 
   return {
     isValid: missingFields.length === 0,
     missingFields,
-  };
+  }
 }

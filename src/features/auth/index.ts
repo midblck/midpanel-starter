@@ -1,2 +1,2 @@
-export * from './components';
-export * from './context/auth-context';
+export * from './components'
+export * from './context/auth-context'

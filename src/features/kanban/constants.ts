@@ -4,7 +4,7 @@ export const PRIORITY_COLORS = {
   medium: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200',
   high: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200',
   critical: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200',
-} as const;
+} as const
 
 // Enhanced priority colors for card borders and badges only
 export const PRIORITY_CARD_COLORS = {
@@ -36,7 +36,7 @@ export const PRIORITY_CARD_COLORS = {
     badgeColor: '#991B1B', // red-900
     badgeBackground: '#FEE2E2', // red-100
   },
-} as const;
+} as const
 
 // Default status colors for new statuses
 export const DEFAULT_STATUS_COLORS = [
@@ -49,20 +49,17 @@ export const DEFAULT_STATUS_COLORS = [
   '#3B82F6', // Blue
   '#8B5CF6', // Purple
   '#EC4899', // Pink
-] as const;
+] as const
 
 // Helper function to get priority color class
 export const getPriorityColor = (priority: string): string => {
-  return (
-    PRIORITY_COLORS[priority as keyof typeof PRIORITY_COLORS] ||
-    PRIORITY_COLORS.medium
-  );
-};
+  return PRIORITY_COLORS[priority as keyof typeof PRIORITY_COLORS] || PRIORITY_COLORS.medium
+}
 
 // Helper function to get priority card colors
 export const getPriorityCardColors = (priority: string) => {
   return (
     PRIORITY_CARD_COLORS[priority as keyof typeof PRIORITY_CARD_COLORS] ||
     PRIORITY_CARD_COLORS.medium
-  );
-};
+  )
+}

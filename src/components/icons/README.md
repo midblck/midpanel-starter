@@ -44,11 +44,11 @@ The following SVG icons are available:
 
 ```tsx
 interface IconProps {
-  name: string | IconName; // Icon name (type-safe for SVG icons)
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  className?: string; // Additional CSS classes
-  color?: string; // Icon color (default: 'currentColor')
-  strokeWidth?: number; // Stroke width for SVG icons (default: 1.5)
+  name: string | IconName // Icon name (type-safe for SVG icons)
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  className?: string // Additional CSS classes
+  color?: string // Icon color (default: 'currentColor')
+  strokeWidth?: number // Stroke width for SVG icons (default: 1.5)
 }
 ```
 
@@ -65,12 +65,12 @@ Example:
 
 ```typescript
 // In svg/index.ts
-import MyIcon from './my-icon.svg';
+import MyIcon from './my-icon.svg'
 
 export const iconRegistry = {
   // ... existing icons
   'my-icon': MyIcon,
-} as const;
+} as const
 ```
 
 ### Method 2: Hardcoded Component
@@ -81,9 +81,9 @@ For complex icons or special cases, you can add them directly to the main `Icon`
 // In index.tsx
 switch (name) {
   case 'google':
-    return <GoogleIcon className={cn(sizeClass, className)} />;
+    return <GoogleIcon className={cn(sizeClass, className)} />
   case 'my-special-icon':
-    return <MySpecialIcon className={cn(sizeClass, className)} />;
+    return <MySpecialIcon className={cn(sizeClass, className)} />
   // ...
 }
 ```

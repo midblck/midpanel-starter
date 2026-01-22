@@ -19,4 +19,4 @@ export const groups = {
     en: 'Miscellaneous',
     id: 'Lainnya',
   },
-};
+}

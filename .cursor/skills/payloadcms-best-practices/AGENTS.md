@@ -379,6 +379,63 @@ import { UserCard } from '@/components/user-card'
 import { UserPageProps } from './types'
 ```
 
+### logging-structured
+
+Use structured logging instead of console.log/error/warn statements.
+
+```typescript
+// ✅ CORRECT: Structured logging with context
+import { logInfo, logError, logDbError, logApiError } from '@/utilities/logger'
+
+export async function createUser(data: UserData) {
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const user = await payload.create({
+      collection: 'users',
+      data,
+    })
+
+    logInfo('User created successfully', {
+      component: 'UserService',
+      action: 'create',
+      userId: user.id,
+    })
+    return user
+  } catch (error) {
+    logDbError('create-user', error, {
+      component: 'UserService',
+      action: 'create',
+      userData: data,
+    })
+    throw error
+  }
+}
+
+// ✅ CORRECT: Request-scoped logging in API routes
+import { createRequestLogger } from '@/utilities/logger'
+
+export async function GET(request: NextRequest) {
+  const requestLogger = createRequestLogger()
+
+  try {
+    requestLogger.info('Processing request', {
+      component: 'API',
+      action: 'GET /endpoint',
+    })
+    // ... logic
+  } catch (error) {
+    logApiError('/endpoint', 'GET', error, {
+      component: 'API',
+      action: 'GET /endpoint',
+    })
+  }
+}
+
+// ❌ Bad: Console logging
+console.log('User created:', user.id)
+console.error('Failed to create user:', error)
+```
+
 ---
 
 ## Performance (MEDIUM-HIGH)
@@ -395,7 +452,8 @@ export async function getUsersPage(page = 1) {
     collection: 'users',
     limit: 10,
     page,
-    select: { // Only needed fields
+    select: {
+      // Only needed fields
       name: true,
       email: true,
       id: true,
@@ -708,29 +766,20 @@ export async function POST(request: Request) {
 
     // Validate input
     if (!body.email || !body.password) {
-      return Response.json(
-        { error: 'Email and password are required' },
-        { status: 400 }
-      )
+      return Response.json({ error: 'Email and password are required' }, { status: 400 })
     }
 
     const payload = await getPayload({ config: configPromise })
     const result = await createUser(body)
 
     if (!result.success) {
-      return Response.json(
-        { error: result.error, details: result.errors },
-        { status: 400 }
-      )
+      return Response.json({ error: result.error, details: result.errors }, { status: 400 })
     }
 
     return Response.json({ user: result.user }, { status: 201 })
   } catch (error) {
     console.error('API Error:', error)
-    return Response.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 ```
@@ -1151,6 +1200,7 @@ import { Card, CardContent } from '@/components/ui/card'
 - [ ] Applied KISS principle (no over-engineering)
 - [ ] Used generated types, no `any` types
 - [ ] Proper error handling implemented
+- [ ] Structured logging used (no console.log/error/warn)
 - [ ] shadcn/ui components used correctly
 - [ ] Accessible markup and keyboard navigation
 - [ ] Optimized queries with limits and select
@@ -1274,9 +1324,7 @@ export const Posts: CollectionConfig = {
       async ({ data }) => {
         // Generate slug from title
         if (data.title && !data.slug) {
-          data.slug = data.title
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
+          data.slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
         }
         return data
       },
@@ -1428,6 +1476,7 @@ import { Card, CardContent } from '@/components/ui/card'
 - [ ] Applied KISS principle (no over-engineering)
 - [ ] Used generated types, no `any` types
 - [ ] Proper error handling implemented
+- [ ] Structured logging used (no console.log/error/warn)
 - [ ] shadcn/ui components used correctly
 - [ ] Accessible markup and keyboard navigation
 - [ ] Optimized queries with limits and select
@@ -1545,6 +1594,7 @@ import { LoginForm, useAuth } from '@/features/auth'
 - [ ] Applied KISS principle (no over-engineering)
 - [ ] Used generated types, no `any` types
 - [ ] Proper error handling implemented
+- [ ] Structured logging used (no console.log/error/warn)
 - [ ] shadcn/ui components used correctly
 - [ ] Accessible markup and keyboard navigation
 - [ ] Optimized queries with limits and select

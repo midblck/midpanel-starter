@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { useRegisterActions } from 'kbar';
-import { useTheme } from 'next-themes';
-import { useMemo } from 'react';
+import { useRegisterActions } from 'kbar'
+import { useTheme } from 'next-themes'
+import { useMemo } from 'react'
 
 const useThemeSwitching = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme()
 
   const themeAction = useMemo(() => {
     // Return empty array if theme is not yet resolved (prevents errors during SSR/hydration)
-    if (!theme) return [];
+    if (!theme) return []
 
     return [
       {
@@ -18,7 +18,7 @@ const useThemeSwitching = () => {
         keywords: 'theme toggle dark light',
         section: 'Theme',
         perform: () => {
-          setTheme(theme === 'light' ? 'dark' : 'light');
+          setTheme(theme === 'light' ? 'dark' : 'light')
         },
       },
       {
@@ -37,12 +37,12 @@ const useThemeSwitching = () => {
         shortcut: ['t', 'd'],
         perform: () => setTheme('dark'),
       },
-    ];
-  }, [theme, setTheme]);
+    ]
+  }, [theme, setTheme])
 
   // Register actions - useRegisterActions safely handles empty arrays
   // The dependency array should match the actions to ensure proper updates
-  useRegisterActions(themeAction, [themeAction]);
-};
+  useRegisterActions(themeAction, [themeAction])
+}
 
-export default useThemeSwitching;
+export default useThemeSwitching

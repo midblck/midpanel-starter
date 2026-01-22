@@ -1,30 +1,26 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { AlertTriangle, Copy, Home, RefreshCw } from 'lucide-react';
-import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { logError } from '@/utilities/logger'
+import { AlertTriangle, Copy, Home, RefreshCw } from 'lucide-react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 interface ErrorBoundaryState {
-  hasError: boolean;
-  error: Error | null;
-  errorInfo: React.ErrorInfo | null;
-  errorId: string;
+  hasError: boolean
+  error: Error | null
+  errorInfo: React.ErrorInfo | null
+  errorId: string
 }
 
 interface ErrorBoundaryProps {
-  children: ReactNode;
-  fallback?: ReactNode;
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
-  resetOnPropsChange?: boolean;
-  resetKeys?: Array<string | number>;
+  children: ReactNode
+  fallback?: ReactNode
+
+  onError?: (err: Error, errInfo: React.ErrorInfo) => void
+  resetOnPropsChange?: boolean
+  resetKeys?: Array<string | number>
 }
 
 export function ErrorBoundary({
@@ -39,7 +35,7 @@ export function ErrorBoundary({
     error: null,
     errorInfo: null,
     errorId: '',
-  });
+  })
 
   const resetErrorBoundary = useCallback(() => {
     setErrorState({
@@ -47,16 +43,21 @@ export function ErrorBoundary({
       error: null,
       errorInfo: null,
       errorId: '',
-    });
-  }, []);
+    })
+  }, [])
 
   const handleError = useCallback(
     (error: Error, errorInfo: React.ErrorInfo) => {
-      const errorId = `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const errorId = `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
-      // Log error to console in development
+      // Log error to structured logger in development
       if (process.env.NODE_ENV === 'development') {
-        console.error('ErrorBoundary caught an error:', error, errorInfo);
+        logError('ErrorBoundary caught an error', error, {
+          component: 'ErrorBoundary',
+          action: 'catch-error',
+          errorId,
+          componentStack: errorInfo.componentStack,
+        })
       }
 
       // Update state with error info
@@ -65,70 +66,32 @@ export function ErrorBoundary({
         error,
         errorInfo,
         errorId,
-      });
+      })
 
       // Call custom error handler if provided
-      onError?.(error, errorInfo);
+      onError?.(error, errorInfo)
 
       // Show error toast
       toast.error('Something went wrong. Please try again.', {
-        description:
-          'An unexpected error occurred. Our team has been notified.',
-      });
+        description: 'An unexpected error occurred. Our team has been notified.',
+      })
     },
     [onError]
-  );
+  )
 
   // Reset on props change
   useEffect(() => {
     if (errorState.hasError && resetOnPropsChange && resetKeys) {
-      resetErrorBoundary();
+      resetErrorBoundary()
     }
-  }, [resetKeys, resetOnPropsChange, errorState.hasError, resetErrorBoundary]);
-
-  const logErrorToService = useCallback(
-    (error: Error, errorInfo: React.ErrorInfo) => {
-      // In a real application, you would send this to an error reporting service
-      // like Sentry, LogRocket, or Bugsnag
-      const errorReport = {
-        message: error.message,
-        stack: error.stack,
-        componentStack: errorInfo.componentStack,
-        errorId: errorState.errorId,
-        timestamp: new Date().toISOString(),
-        userAgent: navigator.userAgent,
-        url: window.location.href,
-      };
-
-      // For now, we'll just log it to console
-      console.error('Error Report:', errorReport);
-
-      // In production, you would send this to your error reporting service
-      // Example:
-      // Sentry.captureException(error, {
-      //   contexts: {
-      //     react: {
-      //       componentStack: errorInfo.componentStack,
-      //     },
-      //   },
-      //   tags: {
-      //     errorId: errorState.errorId,
-      //   },
-      // });
-    },
-    [errorState.errorId]
-  );
-
-  const handleRetry = useCallback(() => {
-    resetErrorBoundary();
-  }, [resetErrorBoundary]);
+  }, [resetKeys, resetOnPropsChange, errorState.hasError, resetErrorBoundary])
 
   const handleGoHome = useCallback(() => {
-    window.location.href = '/';
-  }, []);
+    window.location.href = '/'
+  }, [])
 
   const handleCopyError = useCallback(() => {
-    if (!errorState.error) return;
+    if (!errorState.error) return
 
     const errorDetails = {
       message: errorState.error.message,
@@ -137,7 +100,7 @@ export function ErrorBoundary({
       timestamp: new Date().toISOString(),
       url: window.location.href,
       userAgent: navigator.userAgent,
-    };
+    }
 
     const errorText = `Error Details:
 Message: ${errorDetails.message}
@@ -147,29 +110,29 @@ URL: ${errorDetails.url}
 User Agent: ${errorDetails.userAgent}
 
 Stack Trace:
-${errorDetails.stack || 'No stack trace available'}`;
+${errorDetails.stack || 'No stack trace available'}`
 
     try {
-      void navigator.clipboard.writeText(errorText);
-      toast.success('Error details copied to clipboard');
+      void navigator.clipboard.writeText(errorText)
+      toast.success('Error details copied to clipboard')
     } catch {
       // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = errorText;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      toast.success('Error details copied to clipboard');
+      const textArea = document.createElement('textarea')
+      textArea.value = errorText
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      toast.success('Error details copied to clipboard')
     }
-  }, [errorState.error, errorState.errorId]);
+  }, [errorState.error, errorState.errorId])
 
   // Create error boundary using React's error boundary pattern
   const ErrorFallback = useCallback(
     ({ error, resetError }: { error: Error; resetError: () => void }) => {
       // Custom fallback UI
       if (fallback) {
-        return <>{fallback}</>;
+        return <>{fallback}</>
       }
 
       // Default error UI
@@ -180,12 +143,9 @@ ${errorDetails.stack || 'No stack trace available'}`;
               <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10'>
                 <AlertTriangle className='h-6 w-6 text-destructive' />
               </div>
-              <CardTitle className='text-xl'>
-                Oops! Something went wrong
-              </CardTitle>
+              <CardTitle className='text-xl'>Oops! Something went wrong</CardTitle>
               <CardDescription>
-                We encountered an unexpected error. Don&apos;t worry, our team
-                has been notified.
+                We encountered an unexpected error. Don&apos;t worry, our team has been notified.
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-4'>
@@ -206,11 +166,7 @@ ${errorDetails.stack || 'No stack trace available'}`;
                   <RefreshCw className='h-4 w-4 mr-2' />
                   Try Again
                 </Button>
-                <Button
-                  variant='outline'
-                  onClick={handleGoHome}
-                  className='flex-1'
-                >
+                <Button variant='outline' onClick={handleGoHome} className='flex-1'>
                   <Home className='h-4 w-4 mr-2' />
                   Go Home
                 </Button>
@@ -234,73 +190,60 @@ ${errorDetails.stack || 'No stack trace available'}`;
             </CardContent>
           </Card>
         </div>
-      );
+      )
     },
     [fallback, handleGoHome, handleCopyError, errorState.errorId]
-  );
+  )
 
   // Use a wrapper component that can catch errors
   const ErrorCatcher = useCallback(
     ({ children: child }: { children: ReactNode }) => {
       // If there's an error, show the fallback
       if (errorState.hasError && errorState.error) {
-        return (
-          <ErrorFallback
-            error={errorState.error}
-            resetError={resetErrorBoundary}
-          />
-        );
+        return <ErrorFallback error={errorState.error} resetError={resetErrorBoundary} />
       }
 
       // Otherwise, render children normally
-      return <>{child}</>;
+      return <>{child}</>
     },
     [errorState.hasError, errorState.error, ErrorFallback, resetErrorBoundary]
-  );
+  )
 
   // Use useEffect to catch errors (this is a simplified approach)
   // In a real implementation, you might want to use a more robust error boundary
   useEffect(() => {
     const handleGlobalError = (event: ErrorEvent) => {
       handleError(event.error || new Error(event.message), {
-        componentStack: event.filename
-          ? `at ${event.filename}:${event.lineno}:${event.colno}`
-          : '',
-      });
-    };
+        componentStack: event.filename ? `at ${event.filename}:${event.lineno}:${event.colno}` : '',
+      })
+    }
 
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      const error =
-        event.reason instanceof Error
-          ? event.reason
-          : new Error(String(event.reason));
+      const error = event.reason instanceof Error ? event.reason : new Error(String(event.reason))
       handleError(error, {
         componentStack: '',
-      });
-    };
+      })
+    }
 
-    window.addEventListener('error', handleGlobalError);
-    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    window.addEventListener('error', handleGlobalError)
+    window.addEventListener('unhandledrejection', handleUnhandledRejection)
 
     return () => {
-      window.removeEventListener('error', handleGlobalError);
-      window.removeEventListener(
-        'unhandledrejection',
-        handleUnhandledRejection
-      );
-    };
-  }, [handleError]);
+      window.removeEventListener('error', handleGlobalError)
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection)
+    }
+  }, [handleError])
 
-  return <ErrorCatcher>{children}</ErrorCatcher>;
+  return <ErrorCatcher>{children}</ErrorCatcher>
 }
 
 // Hook for functional components to trigger error boundary
 export const useErrorHandler = () => {
   return (error: Error) => {
     // This will be caught by the nearest ErrorBoundary
-    throw error;
-  };
-};
+    throw error
+  }
+}
 
 // Higher-order component for easier error boundary wrapping
 export function withErrorBoundary<P extends object>(
@@ -311,9 +254,9 @@ export function withErrorBoundary<P extends object>(
     <ErrorBoundary {...errorBoundaryProps}>
       <Component {...props} />
     </ErrorBoundary>
-  );
+  )
 
-  WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
+  WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`
 
-  return WrappedComponent;
+  return WrappedComponent
 }

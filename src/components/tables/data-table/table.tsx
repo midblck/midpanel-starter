@@ -1,21 +1,14 @@
-import { flexRender, type Table as TanstackTable } from '@tanstack/react-table';
-import type * as React from 'react';
+import { flexRender, type Table as TanstackTable } from '@tanstack/react-table'
+import type * as React from 'react'
 
-import { getCommonPinningStyles } from '@/lib/data-table';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../table';
-import { DataTablePagination } from './pagination';
+import { getCommonPinningStyles } from '@/lib/data-table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../table'
+import { DataTablePagination } from './pagination'
 
 interface DataTableProps<TData> extends React.ComponentProps<'div'> {
-  table: TanstackTable<TData>;
-  actionBar?: React.ReactNode;
-  isLoading?: boolean;
+  table: TanstackTable<TData>
+  actionBar?: React.ReactNode
+  isLoading?: boolean
 }
 
 export function DataTable<TData>({
@@ -49,10 +42,7 @@ export function DataTable<TData>({
                       >
                         {header.isPlaceholder
                           ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                          : flexRender(header.column.columnDef.header, header.getContext())}
                         {header.column.getCanResize() && (
                           <div
                             className={`absolute right-0 top-0 h-full w-[6px] cursor-col-resize select-none touch-none transition-all duration-200 ease-in-out opacity-0 group-hover:opacity-100 ${
@@ -99,20 +89,14 @@ export function DataTable<TData>({
                             width: cell.column.getSize(),
                           }}
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                       ))}
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell
-                      colSpan={table.getAllColumns().length}
-                      className='h-24 text-center'
-                    >
+                    <TableCell colSpan={table.getAllColumns().length} className='h-24 text-center'>
                       No results.
                     </TableCell>
                   </TableRow>
@@ -124,10 +108,8 @@ export function DataTable<TData>({
       </div>
       <div className='flex flex-col gap-2.5'>
         <DataTablePagination table={table} />
-        {actionBar &&
-          table.getFilteredSelectedRowModel().rows.length > 0 &&
-          actionBar}
+        {actionBar && table.getFilteredSelectedRowModel().rows.length > 0 && actionBar}
       </div>
     </div>
-  );
+  )
 }

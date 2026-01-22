@@ -1,5 +1,5 @@
 // Re-export frontend constants
-export { AVATAR_CONFIG, FEATURES, TESTIMONIALS } from './constants-frontend';
+export { AVATAR_CONFIG, FEATURES, TESTIMONIALS } from './constants-frontend'
 
 // Re-export dashboard constants
 export {
@@ -10,4 +10,4 @@ export {
   navItems,
   tenants,
   type NavItem,
-} from './constants-dashboard';
+} from './constants-dashboard'

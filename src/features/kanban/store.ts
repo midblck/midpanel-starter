@@ -1,8 +1,8 @@
-import { UniqueIdentifier } from '@dnd-kit/core';
-import { toast } from 'sonner';
-import { v4 as uuid } from 'uuid';
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { UniqueIdentifier } from '@dnd-kit/core'
+import { toast } from 'sonner'
+import { v4 as uuid } from 'uuid'
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import {
   createKanbanTask,
   createTaskStatus,
@@ -16,68 +16,69 @@ import {
   updateKanbanTask,
   updateTaskStatus,
   updateTaskType,
-} from './services';
-import type { CreateTaskData } from './services/types';
+} from './services'
+import type { CreateTaskData } from './services/types'
+import { logDbError } from '@/utilities/logger'
 
 export type Status = {
-  id: string;
-  name: string;
-  description?: string;
-  color: string;
-  order: number;
-};
+  id: string
+  name: string
+  description?: string
+  color: string
+  order: number
+}
 
 // Default columns will be loaded from TaskStatus collection
-const defaultCols: Column[] = [];
+const defaultCols: Column[] = []
 
-export type ColumnId = string;
+export type ColumnId = string
 
 export type TaskType = {
-  id: string;
-  name: string;
-  description?: string;
-  color: string;
-  order: number;
-};
+  id: string
+  name: string
+  description?: string
+  color: string
+  order: number
+}
 
 export type Task = {
-  id: string;
-  title: string;
-  description?: string;
-  status: Status;
-  priority?: 'low' | 'medium' | 'high' | 'critical';
-  assignee?: string;
-  dueDate?: string;
-  taskTypes?: TaskType[];
-  order?: number;
-  createdAt?: string;
-  updatedAt?: string;
-};
+  id: string
+  title: string
+  description?: string
+  status: Status
+  priority?: 'low' | 'medium' | 'high' | 'critical'
+  assignee?: string
+  dueDate?: string
+  taskTypes?: TaskType[]
+  order?: number
+  createdAt?: string
+  updatedAt?: string
+}
 
 export type Column = {
-  id: string;
-  title: string;
-};
+  id: string
+  title: string
+}
 
 export type State = {
-  tasks: Task[];
-  columns: Column[];
-  statuses: Status[];
-  taskTypes: TaskType[];
-  draggedTask: string | null;
-  isLoading: boolean;
-  isTasksLoading: boolean;
-  isStatusesLoading: boolean;
-  isTaskTypesLoading: boolean;
+  tasks: Task[]
+  columns: Column[]
+  statuses: Status[]
+  taskTypes: TaskType[]
+  draggedTask: string | null
+  isLoading: boolean
+  isTasksLoading: boolean
+  isStatusesLoading: boolean
+  isTaskTypesLoading: boolean
   dateFilter: {
-    enabled: boolean;
-    startDate: string | null;
-    endDate: string | null;
-  };
-};
+    enabled: boolean
+    startDate: string | null
+    endDate: string | null
+  }
+}
 
 // Initial tasks will be loaded from PayloadCMS
-const initialTasks: Task[] = [];
+const initialTasks: Task[] = []
 
 export type Actions = {
   addTask: (
@@ -88,60 +89,49 @@ export type Actions = {
     priority?: 'low' | 'medium' | 'high' | 'critical',
     assignee?: string,
     dueDate?: string
-  ) => Promise<void>;
-  addCol: (title: string) => void;
-  dragTask: (id: string | null) => void;
-  removeTask: (id: string) => Promise<void>;
-  removeCol: (id: UniqueIdentifier) => void;
-  setTasks: (updatedTask: Task[]) => void;
-  setCols: (updatedCols: Column[]) => void;
+  ) => Promise<void>
+  addCol: (title: string) => void
+  dragTask: (id: string | null) => void
+  removeTask: (id: string) => Promise<void>
+  removeCol: (id: UniqueIdentifier) => void
+  setTasks: (updatedTask: Task[]) => void
+  setCols: (updatedCols: Column[]) => void
   updateTask: (
     id: string,
     updates: Partial<Omit<Task, 'status'>> & { status?: Status | string }
-  ) => Promise<void>;
-  deleteTask: (id: string) => Promise<boolean>;
-  moveTask: (
-    taskId: string,
-    newStatusId: string,
-    newOrder?: number
-  ) => Promise<void>;
-  loadTasks: () => Promise<void>;
+  ) => Promise<void>
+  deleteTask: (id: string) => Promise<boolean>
+  moveTask: (taskId: string, newStatusId: string, newOrder?: number) => Promise<void>
+  loadTasks: () => Promise<void>
   // Status management
-  loadStatuses: () => Promise<void>;
+  loadStatuses: () => Promise<void>
   addStatus: (statusData: {
-    name: string;
-    description?: string;
-    color?: string;
-    order?: number;
-  }) => Promise<void>;
-  updateStatus: (id: string, updates: Partial<Status>) => Promise<boolean>;
-  deleteStatus: (id: string) => Promise<boolean>;
-  setStatuses: (statuses: Status[]) => void;
+    name: string
+    description?: string
+    color?: string
+    order?: number
+  }) => Promise<void>
+  updateStatus: (id: string, updates: Partial<Status>) => Promise<boolean>
+  deleteStatus: (id: string) => Promise<boolean>
+  setStatuses: (statuses: Status[]) => void
   // TaskType management
-  loadTaskTypes: () => Promise<void>;
+  loadTaskTypes: () => Promise<void>
   addTaskType: (taskTypeData: {
-    name: string;
-    description?: string;
-    color?: string;
-    order?: number;
-  }) => Promise<void>;
-  updateTaskType: (id: string, updates: Partial<TaskType>) => Promise<boolean>;
-  deleteTaskType: (id: string) => Promise<boolean>;
-  setTaskTypes: (taskTypes: TaskType[]) => void;
+    name: string
+    description?: string
+    color?: string
+    order?: number
+  }) => Promise<void>
+  updateTaskType: (id: string, updates: Partial<TaskType>) => Promise<boolean>
+  deleteTaskType: (id: string) => Promise<boolean>
+  setTaskTypes: (taskTypes: TaskType[]) => void
   // Order management
-  recalculateColumnOrders: (
-    statusId: string,
-    startIndex?: number
-  ) => Promise<void>;
-  updateStatusOrders: () => Promise<void>;
+  recalculateColumnOrders: (statusId: string, startIndex?: number) => Promise<void>
+  updateStatusOrders: () => Promise<void>
   // Date filter management
-  setDateFilter: (
-    enabled: boolean,
-    startDate: string | null,
-    endDate: string | null
-  ) => void;
-  getFilteredTasks: () => Task[];
-};
+  setDateFilter: (enabled: boolean, startDate: string | null, endDate: string | null) => void
+  getFilteredTasks: () => Task[]
+}
 
 export const useTaskStore = create<State & Actions>()(
   persist(
@@ -158,9 +148,7 @@ export const useTaskStore = create<State & Actions>()(
       dateFilter: {
         enabled: false,
         startDate: new Date().toISOString().split('T')[0],
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .split('T')[0],
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       },
 
       addTask: async (
@@ -174,17 +162,15 @@ export const useTaskStore = create<State & Actions>()(
       ) => {
         try {
           // Get the highest order in the target status to place new task at top
-          let maxOrder = 0;
+          let maxOrder = 0
           set(state => {
-            const statusTasks = state.tasks.filter(
-              (task: Task) => task.status.id === statusId
-            );
+            const statusTasks = state.tasks.filter((task: Task) => task.status.id === statusId)
             maxOrder =
               statusTasks.length > 0
                 ? Math.max(...statusTasks.map((task: Task) => task.order || 0))
-                : 0;
-            return state; // Don't update state, just read it
-          });
+                : 0
+            return state // Don't update state, just read it
+          })
 
           const newTask = await createKanbanTask({
             title,
@@ -195,19 +181,19 @@ export const useTaskStore = create<State & Actions>()(
             dueDate,
             taskTypes,
             order: maxOrder + 1, // Place new task at the top
-          });
+          })
 
           if (newTask) {
             set(state => ({
               tasks: [...state.tasks, newTask],
-            }));
-            toast.success('Task created successfully');
+            }))
+            toast.success('Task created successfully')
           } else {
-            toast.error('Failed to create task');
+            toast.error('Failed to create task')
           }
         } catch (error) {
-          console.error('Failed to create task:', error);
-          toast.error('Failed to create task');
+          logDbError('create-task-store', error)
+          toast.error('Failed to create task')
         }
       },
 
@@ -228,11 +214,11 @@ export const useTaskStore = create<State & Actions>()(
         })),
 
       removeTask: async id => {
-        const success = await deleteKanbanTask(id);
+        const success = await deleteKanbanTask(id)
         if (success) {
           set(state => ({
             tasks: state.tasks.filter(task => task.id !== id),
-          }));
+          }))
         }
       },
 
@@ -256,77 +242,72 @@ export const useTaskStore = create<State & Actions>()(
           // Convert Task updates to CreateTaskData format
           const updateData: Partial<CreateTaskData> = {
             ...updates,
-            status:
-              typeof updates.status === 'string'
-                ? updates.status
-                : updates.status?.id,
+            status: typeof updates.status === 'string' ? updates.status : updates.status?.id,
             taskTypes: Array.isArray(updates.taskTypes)
-              ? updates.taskTypes.map(tt =>
-                  typeof tt === 'string' ? tt : tt.id
-                )
+              ? updates.taskTypes.map(tt => (typeof tt === 'string' ? tt : tt.id))
               : undefined,
-          };
+          }
 
-          const updatedTask = await updateKanbanTask(id, updateData);
+          const updatedTask = await updateKanbanTask(id, updateData)
           if (updatedTask) {
             set(state => ({
-              tasks: state.tasks.map(task =>
-                task.id === id ? updatedTask : task
-              ),
-            }));
-            toast.success('Task updated successfully');
+              tasks: state.tasks.map(task => (task.id === id ? updatedTask : task)),
+            }))
+            toast.success('Task updated successfully')
           } else {
-            console.error('Failed to update task - no response from API');
-            toast.error('Failed to update task');
+            logDbError('update-task-store-no-response', new Error('No response from API'), {
+              taskId: id,
+            })
+            toast.error('Failed to update task')
           }
         } catch (error) {
-          console.error('Error updating task:', error);
-          toast.error('Failed to update task');
+          logDbError('update-task-store', error, { taskId: id })
+          toast.error('Failed to update task')
         }
       },
 
       deleteTask: async id => {
         try {
-          const success = await deleteKanbanTask(id);
+          const success = await deleteKanbanTask(id)
           if (success) {
             set(state => ({
               tasks: state.tasks.filter(task => task.id !== id),
-            }));
-            return true;
+            }))
+            return true
           }
-          return false;
+          return false
         } catch (error) {
-          console.error('Failed to delete task:', error);
-          return false;
+          logDbError('delete-task-store', error, { taskId: id })
+          return false
         }
       },
 
       moveTask: async (taskId, newStatusId, newOrder) => {
         // This function is now handled by updateTask
         // Keeping for backward compatibility but redirecting to updateTask
-        const { updateTask } = useTaskStore.getState();
+        const { updateTask } = useTaskStore.getState()
         await updateTask(taskId, {
           status: newStatusId, // Convert string to Status type
           order: newOrder,
-        });
+        })
       },
 
       loadTasks: async () => {
-        set(state => ({ ...state, isTasksLoading: true }));
+        set(state => ({ ...state, isTasksLoading: true }))
         try {
-          const tasks = await fetchKanbanTasks();
-          set(() => ({ tasks, isTasksLoading: false }));
+          const tasks = await fetchKanbanTasks()
+          set(() => ({ tasks, isTasksLoading: false }))
         } catch (error) {
-          console.error('Failed to load tasks:', error);
-          set(state => ({ ...state, isTasksLoading: false }));
+          logDbError('load-tasks-store', error)
+          set(state => ({ ...state, isTasksLoading: false }))
         }
       },
 
       // Status management actions
       loadStatuses: async () => {
-        set(state => ({ ...state, isStatusesLoading: true }));
+        set(state => ({ ...state, isStatusesLoading: true }))
         try {
-          const statuses = await fetchTaskStatuses();
+          const statuses = await fetchTaskStatuses()
 
           // If no statuses exist, create some default ones
           if (statuses.length === 0) {
@@ -353,16 +334,15 @@ export const useTaskStore = create<State & Actions>()(
                 name: 'Archive',
                 color: '#9CA3AF',
                 order: 3,
-                description:
-                  'Tasks that are no longer active but kept for reference',
+                description: 'Tasks that are no longer active but kept for reference',
               },
-            ];
+            ]
 
-            const createdStatuses: Status[] = [];
+            const createdStatuses: Status[] = []
             for (const statusData of defaultStatuses) {
-              const created = await createTaskStatus(statusData);
+              const created = await createTaskStatus(statusData)
               if (created) {
-                createdStatuses.push(created);
+                createdStatuses.push(created)
               }
             }
 
@@ -373,13 +353,12 @@ export const useTaskStore = create<State & Actions>()(
                 title: status.name,
               })),
               isStatusesLoading: false,
-            }));
+            }))
           } else {
             // Ensure unique statuses and columns
             const uniqueStatuses = statuses.filter(
-              (status, index, self) =>
-                index === self.findIndex(s => s.id === status.id)
-            );
+              (status, index, self) => index === self.findIndex(s => s.id === status.id)
+            )
 
             set(() => ({
               statuses: uniqueStatuses,
@@ -388,25 +367,23 @@ export const useTaskStore = create<State & Actions>()(
                 title: status.name,
               })),
               isStatusesLoading: false,
-            }));
+            }))
           }
         } catch (error) {
-          console.error('Failed to load statuses:', error);
-          set(state => ({ ...state, isStatusesLoading: false }));
+          logDbError('load-statuses-store', error)
+          set(state => ({ ...state, isStatusesLoading: false }))
         }
       },
 
       addStatus: async statusData => {
         try {
-          const newStatus = await createTaskStatus(statusData);
+          const newStatus = await createTaskStatus(statusData)
           if (newStatus) {
             set(state => {
               // Check if status already exists to prevent duplicates
-              const existingStatus = state.statuses.find(
-                s => s.id === newStatus.id
-              );
+              const existingStatus = state.statuses.find(s => s.id === newStatus.id)
               if (existingStatus) {
-                return state;
+                return state
               }
 
               return {
@@ -418,60 +395,54 @@ export const useTaskStore = create<State & Actions>()(
                     title: newStatus.name,
                   },
                 ],
-              };
-            });
-            toast.success('Status created successfully');
+              }
+            })
+            toast.success('Status created successfully')
           } else {
-            toast.error('Failed to create status');
+            toast.error('Failed to create status')
           }
         } catch (error) {
-          console.error('Failed to create status:', error);
-          toast.error('Failed to create status');
+          logDbError('create-status-store', error, { statusData })
+          toast.error('Failed to create status')
         }
       },
 
       updateStatus: async (id, updates) => {
         try {
-          const updatedStatus = await updateTaskStatus(id, updates);
+          const updatedStatus = await updateTaskStatus(id, updates)
           if (updatedStatus) {
             set(state => ({
-              statuses: state.statuses.map(status =>
-                status.id === id ? updatedStatus : status
-              ),
+              statuses: state.statuses.map(status => (status.id === id ? updatedStatus : status)),
               columns: state.columns.map(col =>
-                col.id === id
-                  ? { id: updatedStatus.id, title: updatedStatus.name }
-                  : col
+                col.id === id ? { id: updatedStatus.id, title: updatedStatus.name } : col
               ),
-            }));
-            toast.success('Status updated successfully');
-            return true;
+            }))
+            toast.success('Status updated successfully')
+            return true
           } else {
-            toast.error('Failed to update status');
-            return false;
+            toast.error('Failed to update status')
+            return false
           }
         } catch (error) {
-          console.error('Failed to update status:', error);
-          toast.error('Failed to update status');
-          return false;
+          logDbError('update-status-store', error, { statusId: id, updates })
+          toast.error('Failed to update status')
+          return false
         }
       },
 
       deleteStatus: async id => {
         try {
-          const success = await deleteTaskStatus(id);
+          const success = await deleteTaskStatus(id)
           if (success) {
             // Get current state for fallback logic
-            const currentState = useTaskStore.getState();
+            const currentState = useTaskStore.getState()
             const fallbackStatus =
               currentState.statuses.length > 1
                 ? currentState.statuses.find((s: Status) => s.id !== id)
-                : null;
+                : null
 
             set(state => {
-              const remainingStatuses = state.statuses.filter(
-                status => status.id !== id
-              );
+              const remainingStatuses = state.statuses.filter(status => status.id !== id)
 
               return {
                 statuses: remainingStatuses,
@@ -485,31 +456,31 @@ export const useTaskStore = create<State & Actions>()(
                       }
                     : task
                 ),
-              };
-            });
+              }
+            })
 
             // Update tasks in the database that were using this status
             if (fallbackStatus) {
-              const tasksToUpdate = currentState.tasks.filter(
-                task => task.status.id === id
-              );
+              const tasksToUpdate = currentState.tasks.filter(task => task.status.id === id)
               for (const task of tasksToUpdate) {
                 try {
                   await updateKanbanTask(task.id, {
                     status: fallbackStatus.id,
-                  });
+                  })
                 } catch (error) {
-                  console.error(`Failed to update task ${task.id}:`, error);
+                  logDbError('update-task-status-change', error, {
+                    taskId: task.id,
+                  })
                 }
               }
             }
 
-            return true;
+            return true
           }
-          return false;
+          return false
         } catch (error) {
-          console.error('Failed to delete status:', error);
-          return false;
+          logDbError('delete-status-store', error, { statusId: id })
+          return false
         }
       },
 
@@ -520,20 +491,20 @@ export const useTaskStore = create<State & Actions>()(
             id: status.id,
             title: status.name,
           })),
-        }));
+        }))
       },
 
       // TaskType management actions
       loadTaskTypes: async () => {
         // Prevent multiple simultaneous loads
-        const currentState = useTaskStore.getState();
+        const currentState = useTaskStore.getState()
         if (currentState.isTaskTypesLoading) {
-          return;
+          return
         }
 
-        set(state => ({ ...state, isTaskTypesLoading: true }));
+        set(state => ({ ...state, isTaskTypesLoading: true }))
         try {
-          const taskTypes = await fetchTaskTypes();
+          const taskTypes = await fetchTaskTypes()
 
           // Check which preset task types are missing and create them
           const presetTaskTypes = [
@@ -575,8 +546,7 @@ export const useTaskStore = create<State & Actions>()(
             },
             {
               name: 'Maintenance',
-              description:
-                'System upkeep, refactoring, and routine maintenance',
+              description: 'System upkeep, refactoring, and routine maintenance',
               color: '#64748B',
               order: 6,
             },
@@ -592,177 +562,171 @@ export const useTaskStore = create<State & Actions>()(
               color: '#14B8A6',
               order: 8,
             },
-          ];
+          ]
 
           // Check which preset task types don't exist yet
-          const existingNames = new Set(taskTypes.map(tt => tt.name));
-          const missingTaskTypes = presetTaskTypes.filter(
-            preset => !existingNames.has(preset.name)
-          );
+          const existingNames = new Set(taskTypes.map(tt => tt.name))
+          const missingTaskTypes = presetTaskTypes.filter(preset => !existingNames.has(preset.name))
 
           // Create only the missing task types
           if (missingTaskTypes.length > 0) {
-            const createdTaskTypes: TaskType[] = [];
+            const createdTaskTypes: TaskType[] = []
             for (const taskTypeData of missingTaskTypes) {
-              const created = await createTaskType(taskTypeData);
+              const created = await createTaskType(taskTypeData)
               if (created) {
-                createdTaskTypes.push(created);
+                createdTaskTypes.push(created)
               }
             }
 
             // Combine existing and newly created task types
-            const allTaskTypes = [...taskTypes, ...createdTaskTypes];
+            const allTaskTypes = [...taskTypes, ...createdTaskTypes]
             set(() => ({
               taskTypes: allTaskTypes,
               isTaskTypesLoading: false,
-            }));
+            }))
           } else {
-            set(() => ({ taskTypes, isTaskTypesLoading: false }));
+            set(() => ({ taskTypes, isTaskTypesLoading: false }))
           }
         } catch (error) {
-          console.error('Failed to load task types:', error);
-          set(state => ({ ...state, isTaskTypesLoading: false }));
+          logDbError('load-task-types-store', error)
+          set(state => ({ ...state, isTaskTypesLoading: false }))
         }
       },
 
       addTaskType: async taskTypeData => {
         try {
-          const newTaskType = await createTaskType(taskTypeData);
+          const newTaskType = await createTaskType(taskTypeData)
           if (newTaskType) {
             set(state => ({
               taskTypes: [...state.taskTypes, newTaskType],
-            }));
-            toast.success('Task type created successfully');
+            }))
+            toast.success('Task type created successfully')
           } else {
-            toast.error('Failed to create task type');
+            toast.error('Failed to create task type')
           }
         } catch (error) {
-          console.error('Failed to create task type:', error);
-          toast.error('Failed to create task type');
+          logDbError('create-task-type-store', error, { taskTypeData })
+          toast.error('Failed to create task type')
         }
       },
 
       updateTaskType: async (id, updates) => {
         try {
-          const updatedTaskType = await updateTaskType(id, updates);
+          const updatedTaskType = await updateTaskType(id, updates)
           if (updatedTaskType) {
             set(state => ({
               taskTypes: state.taskTypes.map(taskType =>
                 taskType.id === id ? updatedTaskType : taskType
               ),
-            }));
-            toast.success('Task type updated successfully');
-            return true;
+            }))
+            toast.success('Task type updated successfully')
+            return true
           } else {
-            toast.error('Failed to update task type');
-            return false;
+            toast.error('Failed to update task type')
+            return false
           }
         } catch (error) {
-          console.error('Failed to update task type:', error);
-          toast.error('Failed to update task type');
-          return false;
+          logDbError('update-task-type-store', error, {
+            taskTypeId: id,
+            updates,
+          })
+          toast.error('Failed to update task type')
+          return false
         }
       },
 
       deleteTaskType: async id => {
         try {
-          const success = await deleteTaskType(id);
+          const success = await deleteTaskType(id)
           if (success) {
             set(state => ({
               taskTypes: state.taskTypes.filter(taskType => taskType.id !== id),
-            }));
-            return true;
+            }))
+            return true
           }
-          return false;
+          return false
         } catch (error) {
-          console.error('Failed to delete task type:', error);
-          return false;
+          logDbError('delete-task-type-store', error, { taskTypeId: id })
+          return false
         }
       },
 
       setTaskTypes: taskTypes => {
-        set(() => ({ taskTypes }));
+        set(() => ({ taskTypes }))
       },
 
       // Helper function to recalculate orders for a column
-      recalculateColumnOrders: async (
-        statusId: string,
-        startIndex: number = 0
-      ) => {
-        const { tasks, updateTask } = useTaskStore.getState();
+      recalculateColumnOrders: async (statusId: string, startIndex: number = 0) => {
+        const { tasks, updateTask } = useTaskStore.getState()
         const columnTasks = tasks
           .filter((task: Task) => task.status.id === statusId)
-          .sort((a: Task, b: Task) => (a.order || 0) - (b.order || 0));
+          .sort((a: Task, b: Task) => (a.order || 0) - (b.order || 0))
 
         // Update orders starting from startIndex
         for (let i = startIndex; i < columnTasks.length; i++) {
-          const task = columnTasks[i];
+          const task = columnTasks[i]
           if (task && (task.order ?? 0) !== i) {
-            await updateTask(task.id, { order: i });
+            await updateTask(task.id, { order: i })
           }
         }
       },
 
       // Helper function to update status orders after column reordering
       updateStatusOrders: async () => {
-        const { statuses, updateStatus } = useTaskStore.getState();
+        const { statuses, updateStatus } = useTaskStore.getState()
 
         try {
           // Update each status with its new order
           for (let i = 0; i < statuses.length; i++) {
-            const status = statuses[i];
+            const status = statuses[i]
             if (status && (status.order ?? 0) !== i) {
-              await updateStatus(status.id, { order: i });
+              await updateStatus(status.id, { order: i })
             }
           }
         } catch (error) {
-          console.error('Failed to update status orders:', error);
+          logDbError('update-status-orders', error)
         }
       },
 
       // Date filter management
-      setDateFilter: (
-        enabled: boolean,
-        startDate: string | null,
-        endDate: string | null
-      ) => {
+      setDateFilter: (enabled: boolean, startDate: string | null, endDate: string | null) => {
         set(_state => ({
           dateFilter: {
             enabled,
             startDate,
             endDate,
           },
-        }));
+        }))
       },
 
       getFilteredTasks: (): Task[] => {
-        const { tasks, dateFilter } = useTaskStore.getState();
+        const { tasks, dateFilter } = useTaskStore.getState()
 
         if (!dateFilter.enabled) {
-          return tasks;
+          return tasks
         }
 
         return tasks.filter((task: Task) => {
           // Show tasks with no due date
           if (!task.dueDate) {
-            return true;
+            return true
           }
 
           // Show tasks within the date range
-          const taskDate = new Date(task.dueDate).toISOString().split('T')[0];
-          const startDate = dateFilter.startDate;
-          const endDate = dateFilter.endDate;
+          const taskDate = new Date(task.dueDate).toISOString().split('T')[0]
+          const startDate = dateFilter.startDate
+          const endDate = dateFilter.endDate
 
           if (startDate && endDate) {
-            return taskDate >= startDate && taskDate <= endDate;
+            return taskDate >= startDate && taskDate <= endDate
           } else if (startDate) {
-            return taskDate >= startDate;
+            return taskDate >= startDate
           } else if (endDate) {
-            return taskDate <= endDate;
+            return taskDate <= endDate
           }
 
-          return true;
-        });
+          return true
+        })
       },
     }),
     {
@@ -776,4 +740,4 @@ export const useTaskStore = create<State & Actions>()(
       }),
     }
   )
-);
+)

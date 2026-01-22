@@ -1,38 +1,38 @@
-import { Active, DataRef } from '@dnd-kit/core';
+import { Active, DataRef } from '@dnd-kit/core'
 
 export const hasDraggableData = (
   active: Active | undefined | null
 ): active is Active & {
   data: DataRef<{
-    type: string;
-  }>;
+    type: string
+  }>
 } => {
-  return Boolean(active?.data.current?.type);
-};
+  return Boolean(active?.data.current?.type)
+}
 
 export const isTask = (
   active: Active | undefined | null
 ): active is Active & {
   data: DataRef<{
-    type: 'task';
+    type: 'task'
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    task: any;
-  }>;
+    task: any
+  }>
 } => {
-  return hasDraggableData(active) && active.data.current?.type === 'task';
-};
+  return hasDraggableData(active) && active.data.current?.type === 'task'
+}
 
 export const isColumn = (
   active: Active | undefined | null
 ): active is Active & {
   data: DataRef<{
-    type: 'column';
+    type: 'column'
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    column: any;
-  }>;
+    column: any
+  }>
 } => {
-  return hasDraggableData(active) && active.data.current?.type === 'column';
-};
+  return hasDraggableData(active) && active.data.current?.type === 'column'
+}
 
 // Priority color function moved to constants.ts
 // Use getPriorityColor from '@/features/kanban/constants' instead
@@ -40,38 +40,35 @@ export const isColumn = (
 export const getPriorityLabel = (priority?: string) => {
   switch (priority) {
     case 'critical':
-      return 'Critical';
+      return 'Critical'
     case 'high':
-      return 'High';
+      return 'High'
     case 'medium':
-      return 'Medium';
+      return 'Medium'
     case 'low':
-      return 'Low';
+      return 'Low'
     default:
-      return 'Medium';
+      return 'Medium'
   }
-};
+}
 
 export const formatDate = (dateString?: string) => {
-  if (!dateString) return '';
-  const date = new Date(dateString);
+  if (!dateString) return ''
+  const date = new Date(dateString)
   return date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-  });
-};
+  })
+}
 
-export const isOverdue = (
-  dueDate?: string,
-  status?: { name: string; color: string }
-) => {
-  if (!dueDate) return false;
+export const isOverdue = (dueDate?: string, status?: { name: string; color: string }) => {
+  if (!dueDate) return false
 
   // Don't show overdue for Done or Archive tasks
   if (status?.name === 'Done' || status?.name === 'Archive') {
-    return false;
+    return false
   }
 
-  return new Date(dueDate) < new Date();
-};
+  return new Date(dueDate) < new Date()
+}

@@ -1,11 +1,11 @@
-import { cn } from '@/lib/utils';
-import Image from 'next/image';
+import { cn } from '@/lib/utils'
+import Image from 'next/image'
 
 interface BrandingProps {
-  variant?: 'logo' | 'icon';
-  size?: 'sm' | 'md' | 'lg';
-  showText?: boolean;
-  className?: string;
+  variant?: 'logo' | 'icon'
+  size?: 'sm' | 'md' | 'lg'
+  showText?: boolean
+  className?: string
 }
 
 export function Branding({
@@ -18,13 +18,13 @@ export function Branding({
     sm: 'h-5 w-5',
     md: 'h-7 w-7',
     lg: 'h-10 w-10',
-  };
+  }
 
   const textSizes = {
     sm: 'text-sm',
     md: 'text-lg',
     lg: 'text-xl',
-  };
+  }
 
   return (
     <div className={cn('flex items-center space-x-3', className)}>
@@ -44,7 +44,7 @@ export function Branding({
         </span>
       )}
     </div>
-  );
+  )
 }
 
 // Compact version for smaller spaces
@@ -56,12 +56,12 @@ export function BrandingIcon({
     sm: 'h-4 w-4',
     md: 'h-5 w-5',
     lg: 'h-6 w-6',
-  };
+  }
 
   return (
     <div className={cn('relative', sizeClasses[size], className)}>
       <Image
-        src='/branding/icon.svg'
+        src='/branding/icon-dark.svg'
         alt='Midblck'
         width={24}
         height={24}
@@ -69,7 +69,7 @@ export function BrandingIcon({
         priority
       />
     </div>
-  );
+  )
 }
 
 // Logo with gradient background
@@ -81,7 +81,7 @@ export function BrandingLogo({
     sm: 'h-6 w-6',
     md: 'h-8 w-8',
     lg: 'h-12 w-12',
-  };
+  }
 
   return (
     <div
@@ -92,7 +92,7 @@ export function BrandingLogo({
       )}
     >
       <Image
-        src='/branding/icon.svg'
+        src='/branding/icon-dark.svg'
         alt='Midblck'
         width={20}
         height={20}
@@ -100,5 +100,5 @@ export function BrandingLogo({
         priority
       />
     </div>
-  );
+  )
 }

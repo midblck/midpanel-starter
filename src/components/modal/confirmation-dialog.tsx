@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   Dialog,
@@ -6,46 +6,46 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { ReactNode } from 'react';
+} from '@/components/ui/dialog'
+import { ReactNode } from 'react'
 
-import { SwipeButton } from '../ui/swipe-button';
+import { SwipeButton } from '../ui/swipe-button'
 import {
   CONFIRMATION_VARIANT_CONFIG,
   DEFAULT_DESCRIPTIONS,
   DEFAULT_TEXTS,
   type ConfirmationVariant,
-} from './constants';
+} from './constants'
 
-export type { ConfirmationVariant };
+export type { ConfirmationVariant }
 
 interface ConfirmationDialogProps {
   /** Whether the dialog is open */
-  open: boolean;
+  open: boolean
   /** Callback when dialog open state changes */
-  onOpenChange: (open: boolean) => void;
+  onOpenChange: (open: boolean) => void
   /** Callback when confirm button is clicked */
-  onConfirm: () => void | Promise<void>;
+  onConfirm: () => void | Promise<void>
   /** Dialog title */
-  title?: string;
+  title?: string
   /** Dialog description */
-  description?: string;
+  description?: string
   /** Name of the item being acted upon (used in default descriptions) */
-  itemName?: string;
+  itemName?: string
   /** Whether the confirm action is loading */
-  isLoading?: boolean;
+  isLoading?: boolean
   /** Visual variant of the dialog */
-  variant?: ConfirmationVariant;
+  variant?: ConfirmationVariant
   /** Text for the confirm button */
-  confirmText?: string;
+  confirmText?: string
   /** Text for the cancel button */
-  cancelText?: string;
+  cancelText?: string
   /** Text shown while loading */
-  loadingText?: string;
+  loadingText?: string
   /** Custom icon to display */
-  icon?: ReactNode;
+  icon?: ReactNode
   /** Whether to show the icon */
-  showIcon?: boolean;
+  showIcon?: boolean
 }
 
 export function ConfirmationDialog({
@@ -62,17 +62,17 @@ export function ConfirmationDialog({
   showIcon = true,
 }: ConfirmationDialogProps) {
   const handleConfirm = () => {
-    const result = onConfirm();
+    const result = onConfirm()
     if (result instanceof Promise) {
-      result.then(() => onOpenChange(false));
+      result.then(() => onOpenChange(false))
     } else {
-      onOpenChange(false);
+      onOpenChange(false)
     }
-  };
+  }
 
-  const config = CONFIRMATION_VARIANT_CONFIG[variant];
-  const IconComponent = config.icon;
-  const defaultLoadingText = loadingText || `${confirmText}ing...`;
+  const config = CONFIRMATION_VARIANT_CONFIG[variant]
+  const IconComponent = config.icon
+  const defaultLoadingText = loadingText || `${confirmText}ing...`
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -84,15 +84,11 @@ export function ConfirmationDialog({
                 className={`flex h-10 w-10 items-center justify-center rounded-full ${config.iconBg}`}
                 style={{ aspectRatio: '1/1' }}
               >
-                {icon || (
-                  <IconComponent className={`h-5 w-5 ${config.iconColor}`} />
-                )}
+                {icon || <IconComponent className={`h-5 w-5 ${config.iconColor}`} />}
               </div>
             )}
             <div>
-              <DialogTitle className='text-lg font-semibold'>
-                {title}
-              </DialogTitle>
+              <DialogTitle className='text-lg font-semibold'>{title}</DialogTitle>
               <DialogDescription className='text-sm text-muted-foreground'>
                 {description}
               </DialogDescription>
@@ -118,7 +114,7 @@ export function ConfirmationDialog({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 // Convenience components for common use cases
@@ -131,11 +127,9 @@ export function DeleteConfirmationDialog(
       variant='destructive'
       confirmText={DEFAULT_TEXTS.delete}
       title={props.title || 'Delete Item'}
-      description={
-        props.description || DEFAULT_DESCRIPTIONS.delete(props.itemName)
-      }
+      description={props.description || DEFAULT_DESCRIPTIONS.delete(props.itemName)}
     />
-  );
+  )
 }
 
 export function ApproveConfirmationDialog(
@@ -147,11 +141,9 @@ export function ApproveConfirmationDialog(
       variant='success'
       confirmText={DEFAULT_TEXTS.approve}
       title={props.title || 'Approve Item'}
-      description={
-        props.description || DEFAULT_DESCRIPTIONS.approve(props.itemName)
-      }
+      description={props.description || DEFAULT_DESCRIPTIONS.approve(props.itemName)}
     />
-  );
+  )
 }
 
 export function RejectConfirmationDialog(
@@ -163,11 +155,9 @@ export function RejectConfirmationDialog(
       variant='warning'
       confirmText={DEFAULT_TEXTS.reject}
       title={props.title || 'Reject Item'}
-      description={
-        props.description || DEFAULT_DESCRIPTIONS.reject(props.itemName)
-      }
+      description={props.description || DEFAULT_DESCRIPTIONS.reject(props.itemName)}
     />
-  );
+  )
 }
 
 export function SaveConfirmationDialog(
@@ -179,11 +169,9 @@ export function SaveConfirmationDialog(
       variant='default'
       confirmText={DEFAULT_TEXTS.save}
       title={props.title || 'Save Changes'}
-      description={
-        props.description || DEFAULT_DESCRIPTIONS.save(props.itemName)
-      }
+      description={props.description || DEFAULT_DESCRIPTIONS.save(props.itemName)}
     />
-  );
+  )
 }
 
 export function UpdateConfirmationDialog(
@@ -195,11 +183,9 @@ export function UpdateConfirmationDialog(
       variant='default'
       confirmText={DEFAULT_TEXTS.update}
       title={props.title || 'Update Item'}
-      description={
-        props.description || DEFAULT_DESCRIPTIONS.update(props.itemName)
-      }
+      description={props.description || DEFAULT_DESCRIPTIONS.update(props.itemName)}
     />
-  );
+  )
 }
 
 export function CreateConfirmationDialog(
@@ -211,9 +197,7 @@ export function CreateConfirmationDialog(
       variant='success'
       confirmText={DEFAULT_TEXTS.create}
       title={props.title || 'Create Item'}
-      description={
-        props.description || DEFAULT_DESCRIPTIONS.create(props.itemName)
-      }
+      description={props.description || DEFAULT_DESCRIPTIONS.create(props.itemName)}
     />
-  );
+  )
 }

@@ -88,6 +88,9 @@ A modern, production-ready PayloadCMS admin starter template built with Next.js 
    GOOGLE_CLIENT_ID=your-google-client-id
    GOOGLE_CLIENT_SECRET=your-google-client-secret
    UPLOADTHING_TOKEN=your-uploadthing-token
+   SMTP_HOST=your-smtp-host
+   SMTP_USER=your-smtp-user
+   SMTP_PASS=yout-smtp-pass
    ```
 
 4. **Start development server**
@@ -232,6 +235,7 @@ This project implements enterprise-grade automated code quality that runs across
 - **Husky** - Git hooks for automated pre-commit quality checks
 - **EditorConfig** - Cross-editor consistency (spaces, line endings, etc.)
 - **GitHub Actions** - CI/CD pipeline with automated quality validation
+- **Structured Logging** - Pino-based logging with correlation IDs and error tracking
 
 #### 🔄 **Automatic Code Quality**
 
@@ -252,6 +256,48 @@ The project enforces these quality standards:
 - ✅ **No Unformatted Code** - Pre-commit hooks prevent bad commits
 - ✅ **CI Validation** - Automated checks on all pull requests
 - ✅ **Cross-Platform Consistency** - Works on Windows, macOS, Linux
+
+### 📊 **Structured Logging**
+
+This project implements enterprise-grade structured logging for better observability and debugging:
+
+#### **🚀 Logging Features**
+
+- **Pino-based Logger** - High-performance JSON logging
+- **Correlation IDs** - Trace requests across distributed systems
+- **Error Codes** - Unique identifiers for issue tracking
+- **Request Scoping** - Context-aware logging per request
+- **Environment Aware** - Different behaviors for dev/prod
+- **Rich Metadata** - Component, action, and user context
+
+#### **📝 Usage Examples**
+
+```typescript
+// Basic logging
+logInfo('User created', { userId: '123', component: 'UserService' })
+logError('Database error', error, { component: 'Database', operation: 'find' })
+
+// API route logging
+const requestLogger = createRequestLogger()
+requestLogger.apiError('/api/users', 'POST', error)
+
+// Performance monitoring
+logPerformance('user-creation', 150, { component: 'UserService' })
+
+// Security events
+logSecurity('login-attempt', { userId: '123', ip: '192.168.1.1' })
+```
+
+#### **🔍 Log Levels**
+
+- **DEBUG** - Development-only detailed information
+- **INFO** - General information about operations
+- **WARN** - Warning conditions that don't stop execution
+- **ERROR** - Error conditions with error codes and context
+
+**Never use `console.log/error/warn` - always use the structured logger!**
+
+---
 
 ### 🚀 **Development Workflow**
 

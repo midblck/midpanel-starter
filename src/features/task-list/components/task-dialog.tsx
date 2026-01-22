@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { NewTaskDialog } from '@/features/kanban';
-import type { TaskTableData } from '@/types/data-table';
+import { NewTaskDialog } from '@/features/kanban'
+import type { TaskTableData } from '@/types/data-table'
 
 interface TaskDialogProps {
-  trigger?: React.ReactNode;
-  editingTask?: TaskTableData | null;
-  onTaskChange?: () => void;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  trigger?: React.ReactNode
+  editingTask?: TaskTableData | null
+  onTaskChange?: () => void
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 export function TaskDialog({
@@ -43,26 +43,26 @@ export function TaskDialog({
         createdAt: editingTask.createdAt,
         updatedAt: editingTask.updatedAt,
       }
-    : null;
+    : null
 
   const handleTaskChange = () => {
     // Refresh the task list data
     if (onTaskChange) {
-      onTaskChange();
+      onTaskChange()
     }
-  };
+  }
 
   const handleOpenChange = (newOpen: boolean) => {
     // When dialog closes, refresh the data
     if (!newOpen) {
-      handleTaskChange();
+      handleTaskChange()
     }
 
     // Call the original onOpenChange if provided
     if (onOpenChange) {
-      onOpenChange(newOpen);
+      onOpenChange(newOpen)
     }
-  };
+  }
 
   return (
     <NewTaskDialog
@@ -71,5 +71,5 @@ export function TaskDialog({
       onOpenChange={handleOpenChange}
       editingTask={kanbanTask}
     />
-  );
+  )
 }

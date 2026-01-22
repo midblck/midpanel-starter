@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import type { Table } from '@tanstack/react-table';
-import { useEffect } from 'react';
+import type { Table } from '@tanstack/react-table'
+import { useEffect } from 'react'
 
 interface UseTaskPaginationProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  table: Table<any>;
+  table: Table<any>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initialData: any[];
+  initialData: any[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initialFilterOptions?: any;
+  initialFilterOptions?: any
   fetchTasks: (
     page: number,
     limit: number,
@@ -18,17 +18,17 @@ interface UseTaskPaginationProps {
     filters: any,
     includeFilterOptions?: boolean
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ) => Promise<any>;
+  ) => Promise<any>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  extractFilters: (table: Table<any>) => any;
+  extractFilters: (table: Table<any>) => any
   prevStateRef: React.MutableRefObject<{
-    pageIndex: number;
-    pageSize: number;
+    pageIndex: number
+    pageSize: number
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sorting: any[];
+    sorting: any[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    columnFilters: any[];
-  } | null>;
+    columnFilters: any[]
+  } | null>
 }
 
 export function useTaskPagination({
@@ -41,22 +41,21 @@ export function useTaskPagination({
 }: UseTaskPaginationProps) {
   useEffect(() => {
     // Only fetch if we have initial data (to avoid fetching on mount)
-    if (initialData.length === 0 && !initialFilterOptions) return;
+    if (initialData.length === 0 && !initialFilterOptions) return
 
-    const currentState = table.getState();
-    const currentPage = currentState.pagination.pageIndex + 1;
-    const currentPageSize = currentState.pagination.pageSize;
+    const currentState = table.getState()
+    const currentPage = currentState.pagination.pageIndex + 1
+    const currentPageSize = currentState.pagination.pageSize
 
     // Check if pagination or filters have actually changed to prevent infinite loops
-    const prevState = prevStateRef.current;
+    const prevState = prevStateRef.current
     if (
       prevState &&
       prevState.pageIndex === currentState.pagination.pageIndex &&
       prevState.pageSize === currentState.pagination.pageSize &&
-      JSON.stringify(prevState.columnFilters) ===
-        JSON.stringify(currentState.columnFilters)
+      JSON.stringify(prevState.columnFilters) === JSON.stringify(currentState.columnFilters)
     ) {
-      return; // No change, skip fetch
+      return // No change, skip fetch
     }
 
     // Update ref with current pagination and filter state
@@ -65,14 +64,14 @@ export function useTaskPagination({
       pageSize: currentState.pagination.pageSize,
       sorting: [], // Not used for server-side
       columnFilters: currentState.columnFilters,
-    };
+    }
 
     // Use default sorting for server-side pagination
-    const sortString = '-createdAt';
+    const sortString = '-createdAt'
 
     // Extract filters and fetch tasks
-    const filterObj = extractFilters(table);
-    void fetchTasks(currentPage, currentPageSize, sortString, filterObj, false);
+    const filterObj = extractFilters(table)
+    void fetchTasks(currentPage, currentPageSize, sortString, filterObj, false)
   }, [
     table.getState().pagination.pageIndex,
     table.getState().pagination.pageSize,
@@ -82,5 +81,5 @@ export function useTaskPagination({
     initialData.length,
     initialFilterOptions,
     prevStateRef,
-  ]);
+  ])
 }

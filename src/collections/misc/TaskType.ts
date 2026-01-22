@@ -1,5 +1,5 @@
-import type { CollectionConfig } from 'payload';
-import { groups } from '@/lib/groups';
+import type { CollectionConfig } from 'payload'
+import { groups } from '@/lib/groups'
 
 export const TaskType: CollectionConfig = {
   slug: 'task-types',
@@ -32,9 +32,9 @@ export const TaskType: CollectionConfig = {
       validate: (val: string | null | undefined) => {
         // Basic hex color validation
         if (val && !/^#[0-9A-F]{6}$/i.test(val)) {
-          return 'Please enter a valid hex color (e.g., #6B7280)';
+          return 'Please enter a valid hex color (e.g., #6B7280)'
         }
-        return true;
+        return true
       },
     },
     {
@@ -44,4 +44,4 @@ export const TaskType: CollectionConfig = {
     },
   ],
   timestamps: true,
-};
+}

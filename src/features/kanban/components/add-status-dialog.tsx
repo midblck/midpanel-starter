@@ -1,7 +1,8 @@
-'use client';
+'use client'
 
-import { LengthCounter } from '@/components/forms';
-import { Button } from '@/components/ui/button';
+import { LengthCounter } from '@/components/forms'
+import { logDbError } from '@/utilities/logger'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -9,32 +10,32 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useTaskStore } from '@/features/kanban';
-import { Plus } from 'lucide-react';
-import { useState } from 'react';
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { useTaskStore } from '@/features/kanban'
+import { Plus } from 'lucide-react'
+import { useState } from 'react'
 
 interface AddStatusDialogProps {
-  trigger?: React.ReactNode;
+  trigger?: React.ReactNode
 }
 
 export default function AddStatusDialog({ trigger }: AddStatusDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [statusName, setStatusName] = useState('');
-  const [statusDescription, setStatusDescription] = useState('');
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [statusName, setStatusName] = useState('')
+  const [statusDescription, setStatusDescription] = useState('')
 
-  const { addStatus, statuses } = useTaskStore();
+  const { addStatus, statuses } = useTaskStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!statusName.trim()) return;
+    if (!statusName.trim()) return
 
-    setLoading(true);
+    setLoading(true)
 
     try {
       // Generate a color based on the number of existing statuses
@@ -48,27 +49,27 @@ export default function AddStatusDialog({ trigger }: AddStatusDialogProps) {
         '#3B82F6', // Blue
         '#8B5CF6', // Purple
         '#EC4899', // Pink
-      ];
+      ]
 
-      const color = colors[statuses.length % colors.length];
-      const order = statuses.length;
+      const color = colors[statuses.length % colors.length]
+      const order = statuses.length
 
       await addStatus({
         name: statusName.trim(),
         description: statusDescription.trim() || undefined,
         color,
         order,
-      });
+      })
 
-      setOpen(false);
-      setStatusName('');
-      setStatusDescription('');
+      setOpen(false)
+      setStatusName('')
+      setStatusDescription('')
     } catch (error) {
-      console.error('Error creating status:', error);
+      logDbError('create-status-dialog', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -85,9 +86,7 @@ export default function AddStatusDialog({ trigger }: AddStatusDialogProps) {
       </DialogTrigger>
       <DialogContent className='w-[calc(100vw-2rem)] sm:max-w-md'>
         <DialogHeader>
-          <DialogTitle className='text-xl font-semibold'>
-            Add New Status
-          </DialogTitle>
+          <DialogTitle className='text-xl font-semibold'>Add New Status</DialogTitle>
           <DialogDescription className='text-gray-600'>
             What status you want to add today?
           </DialogDescription>
@@ -143,5 +142,5 @@ export default function AddStatusDialog({ trigger }: AddStatusDialogProps) {
         </form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

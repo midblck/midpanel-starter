@@ -1,8 +1,9 @@
-'use client';
+'use client'
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { logError } from '@/utilities/logger'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -10,27 +11,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertTriangle, CheckCircle, Eye, EyeOff, Info } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
-import { useState, useTransition } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import * as z from 'zod';
-import { useAuth } from '../context/auth-context';
-import { passwordRequirements } from '../utils/password-validation';
-import type { IdentityCheckResponse } from '@/types/auth';
-import GoogleSignInButton from './google-auth-button';
-import PasswordStrengthIndicator from './password-strength-indicator';
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { AlertTriangle, CheckCircle, Eye, EyeOff, Info } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { useState, useTransition } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import * as z from 'zod'
+import { useAuth } from '../context/auth-context'
+import { passwordRequirements } from '../utils/password-validation'
+import type { IdentityCheckResponse } from '@/types/auth'
+import GoogleSignInButton from './google-auth-button'
+import PasswordStrengthIndicator from './password-strength-indicator'
 
 const signInSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
-  password: z
-    .string()
-    .min(6, { message: 'Password must be at least 6 characters' }),
-});
+  password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
+})
 
 const signUpSchema = z
   .object({
@@ -54,25 +53,24 @@ const signUpSchema = z
   .refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ['confirmPassword'],
-  });
+  })
 
-type SignInFormValue = z.infer<typeof signInSchema>;
-type SignUpFormValue = z.infer<typeof signUpSchema>;
+type SignInFormValue = z.infer<typeof signInSchema>
+type SignUpFormValue = z.infer<typeof signUpSchema>
 
 interface UserAuthFormProps {
-  mode: 'sign-in' | 'sign-up';
+  mode: 'sign-in' | 'sign-up'
 }
 
 export default function UserAuthForm({ mode }: UserAuthFormProps) {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/app';
-  const [loading, startTransition] = useTransition();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [emailIdentity, setEmailIdentity] =
-    useState<IdentityCheckResponse | null>(null);
-  const [checkingIdentity, setCheckingIdentity] = useState(false);
-  useAuth();
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') || '/app'
+  const [loading, startTransition] = useTransition()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [emailIdentity, setEmailIdentity] = useState<IdentityCheckResponse | null>(null)
+  const [checkingIdentity, setCheckingIdentity] = useState(false)
+  useAuth()
 
   const signInForm = useForm<SignInFormValue>({
     resolver: zodResolver(signInSchema),
@@ -80,7 +78,7 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
       email: '',
       password: '',
     },
-  });
+  })
 
   const signUpForm = useForm<SignUpFormValue>({
     resolver: zodResolver(signUpSchema),
@@ -90,30 +88,33 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
       password: '',
       confirmPassword: '',
     },
-  });
+  })
 
   // Check email identity for sign-up
   const checkEmailIdentity = async (email: string) => {
-    if (!email || !email.includes('@')) return;
+    if (!email || !email.includes('@')) return
 
-    setCheckingIdentity(true);
+    setCheckingIdentity(true)
     try {
       const response = await fetch('/api/auth/me', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
-      });
+      })
 
       if (response.ok) {
-        const data = await response.json();
-        setEmailIdentity(data);
+        const data = await response.json()
+        setEmailIdentity(data)
       }
     } catch (error) {
-      console.error('Identity check failed:', error);
+      logError('Identity check failed', error, {
+        component: 'UserAuthForm',
+        action: 'check-identity',
+      })
     } finally {
-      setCheckingIdentity(false);
+      setCheckingIdentity(false)
     }
-  };
+  }
 
   const onSignIn = async (data: SignInFormValue) => {
     startTransition(async () => {
@@ -122,30 +123,26 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: data.email, password: data.password }),
-        });
+        })
 
-        const result = await response.json();
+        const result = await response.json()
 
         if (response.ok) {
           // Show identity info if available
           if (result.identity === 'both') {
-            toast.warning(
-              result.warning || 'Email exists in multiple accounts'
-            );
+            toast.warning(result.warning || 'Email exists in multiple accounts')
           }
 
-          toast.success('Signed in successfully!');
-          window.location.href = callbackUrl;
+          toast.success('Signed in successfully!')
+          window.location.href = callbackUrl
         } else {
-          toast.error(
-            result.message || 'Sign in failed. Please check your credentials.'
-          );
+          toast.error(result.message || 'Sign in failed. Please check your credentials.')
         }
       } catch {
-        toast.error('Sign in failed. Please try again.');
+        toast.error('Sign in failed. Please try again.')
       }
-    });
-  };
+    })
+  }
 
   const onSignUp = async (data: SignUpFormValue) => {
     startTransition(async () => {
@@ -159,58 +156,58 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
             password: data.password,
             collection: 'users', // Use users collection with customer role
           }),
-        });
+        })
 
-        const result = await response.json();
+        const result = await response.json()
 
         if (response.ok) {
           // Show warning if email exists in other collection
           if (result.warning) {
-            toast.warning(result.warning);
+            toast.warning(result.warning)
           }
 
-          toast.success('Account created successfully!');
-          window.location.href = callbackUrl;
+          toast.success('Account created successfully!')
+          window.location.href = callbackUrl
         } else {
-          toast.error(result.message || 'Sign up failed. Please try again.');
+          toast.error(result.message || 'Sign up failed. Please try again.')
         }
       } catch {
-        toast.error('Sign up failed. Please try again.');
+        toast.error('Sign up failed. Please try again.')
       }
-    });
-  };
+    })
+  }
 
   // Identity status component
   const IdentityStatus = () => {
-    if (!emailIdentity) return null;
+    if (!emailIdentity) return null
 
     const getStatusIcon = () => {
       switch (emailIdentity.identity) {
         case 'both':
-          return <AlertTriangle className='h-4 w-4 text-amber-500' />;
+          return <AlertTriangle className='h-4 w-4 text-amber-500' />
         case 'admin':
         case 'user':
-          return <CheckCircle className='h-4 w-4 text-green-500' />;
+          return <CheckCircle className='h-4 w-4 text-green-500' />
         case 'none':
-          return <Info className='h-4 w-4 text-blue-500' />;
+          return <Info className='h-4 w-4 text-blue-500' />
         default:
-          return null;
+          return null
       }
-    };
+    }
 
     const getStatusColor = () => {
       switch (emailIdentity.identity) {
         case 'both':
-          return 'bg-amber-50 border-amber-200 text-amber-800';
+          return 'bg-amber-50 border-amber-200 text-amber-800'
         case 'admin':
         case 'user':
-          return 'bg-green-50 border-green-200 text-green-800';
+          return 'bg-green-50 border-green-200 text-green-800'
         case 'none':
-          return 'bg-blue-50 border-blue-200 text-blue-800';
+          return 'bg-blue-50 border-blue-200 text-blue-800'
         default:
-          return 'bg-gray-50 border-gray-200 text-gray-800';
+          return 'bg-gray-50 border-gray-200 text-gray-800'
       }
-    };
+    }
 
     return (
       <Alert className={getStatusColor()}>
@@ -222,11 +219,7 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
               {emailIdentity.collections.length > 0 && (
                 <div className='mt-1 flex gap-1'>
                   {emailIdentity.collections.map(collection => (
-                    <Badge
-                      key={collection}
-                      variant='outline'
-                      className='text-xs'
-                    >
+                    <Badge key={collection} variant='outline' className='text-xs'>
                       {collection === 'admins' ? 'Admin' : 'User'}
                     </Badge>
                   ))}
@@ -236,17 +229,14 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
           </div>
         </div>
       </Alert>
-    );
-  };
+    )
+  }
 
   if (mode === 'sign-in') {
     return (
       <>
         <Form {...signInForm}>
-          <form
-            onSubmit={signInForm.handleSubmit(onSignIn)}
-            className='w-full space-y-4'
-          >
+          <form onSubmit={signInForm.handleSubmit(onSignIn)} className='w-full space-y-4'>
             <FormField
               control={signInForm.control}
               name='email'
@@ -309,23 +299,18 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
             <span className='w-full border-t' />
           </div>
           <div className='relative flex justify-center text-xs uppercase'>
-            <span className='bg-background text-muted-foreground px-2'>
-              Or continue with
-            </span>
+            <span className='bg-background text-muted-foreground px-2'>Or continue with</span>
           </div>
         </div>
         <GoogleSignInButton />
       </>
-    );
+    )
   }
 
   return (
     <>
       <Form {...signUpForm}>
-        <form
-          onSubmit={signUpForm.handleSubmit(onSignUp)}
-          className='w-full space-y-4'
-        >
+        <form onSubmit={signUpForm.handleSubmit(onSignUp)} className='w-full space-y-4'>
           <FormField
             control={signUpForm.control}
             name='name'
@@ -333,11 +318,7 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='Enter your full name...'
-                    disabled={loading}
-                    {...field}
-                  />
+                  <Input placeholder='Enter your full name...' disabled={loading} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -356,16 +337,14 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
                     disabled={loading}
                     {...field}
                     onChange={e => {
-                      field.onChange(e);
-                      checkEmailIdentity(e.target.value);
+                      field.onChange(e)
+                      checkEmailIdentity(e.target.value)
                     }}
                   />
                 </FormControl>
                 <FormMessage />
                 {checkingIdentity && (
-                  <p className='text-sm text-muted-foreground'>
-                    Checking email status...
-                  </p>
+                  <p className='text-sm text-muted-foreground'>Checking email status...</p>
                 )}
                 <IdentityStatus />
               </FormItem>
@@ -393,11 +372,7 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
                       onClick={() => setShowPassword(!showPassword)}
                       disabled={loading}
                     >
-                      {showPassword ? (
-                        <EyeOff className='h-4 w-4' />
-                      ) : (
-                        <Eye className='h-4 w-4' />
-                      )}
+                      {showPassword ? <EyeOff className='h-4 w-4' /> : <Eye className='h-4 w-4' />}
                     </Button>
                   </div>
                 </FormControl>
@@ -425,9 +400,7 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
                       variant='ghost'
                       size='sm'
                       className='absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent'
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       disabled={loading}
                     >
                       {showConfirmPassword ? (
@@ -452,12 +425,10 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
           <span className='w-full border-t' />
         </div>
         <div className='relative flex justify-center text-xs uppercase'>
-          <span className='bg-background text-muted-foreground px-2'>
-            Or continue with
-          </span>
+          <span className='bg-background text-muted-foreground px-2'>Or continue with</span>
         </div>
       </div>
       <GoogleSignInButton />
     </>
-  );
+  )
 }

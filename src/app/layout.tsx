@@ -1,23 +1,24 @@
-import { ErrorProvider } from '@/components/error-boundary';
-import { ActiveThemeProvider } from '@/components/layout/active-theme-provider';
-import { Toaster } from '@/components/ui/sonner';
-import { AuthProvider } from '@/features/auth';
-import configPromise from '@payload-config';
-import type { Metadata } from 'next';
-import { ThemeProvider } from 'next-themes';
-import { Inter } from 'next/font/google';
-import { cookies, headers } from 'next/headers';
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import { getPayload } from 'payload';
-import { SWRConfig } from 'swr';
-import type { Theme } from '@/payload-types';
+import { ErrorProvider } from '@/components/error-boundary'
+import { ActiveThemeProvider } from '@/components/layout/active-theme-provider'
+import { logError, logInfo } from '@/utilities/logger'
+import { Toaster } from '@/components/ui/sonner'
+import { AuthProvider } from '@/features/auth'
+import configPromise from '@payload-config'
+import type { Metadata } from 'next'
+import { ThemeProvider } from 'next-themes'
+import { Inter } from 'next/font/google'
+import { cookies, headers } from 'next/headers'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { getPayload } from 'payload'
+import { SWRConfig } from 'swr'
+import type { Theme } from '@/payload-types'
 
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
   preload: true,
-});
+})
 
 export const metadata: Metadata = {
   title: 'Midblck Admin Starter - Production-Ready Admin Panel',
@@ -52,80 +53,73 @@ export const metadata: Metadata = {
     description:
       'A modern PayloadCMS admin starter template with Next.js 15, TypeScript, and shadcn/ui components.',
   },
-};
+}
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Check if this is an admin route by examining the pathname
   // Payload admin routes are in the (payload) group and start with /admin
-  const headersList = await headers();
-  const pathname =
-    headersList.get('x-pathname') || headersList.get('referer') || '';
-  const isAdminRoute =
-    pathname.includes('/admin') || pathname.startsWith('/(payload)');
+  const headersList = await headers()
+  const pathname = headersList.get('x-pathname') || headersList.get('referer') || ''
+  const isAdminRoute = pathname.includes('/admin') || pathname.startsWith('/(payload)')
 
   // For PayloadCMS admin routes, let Payload's RootLayout handle ALL HTML structure
   // Do NOT render any HTML elements here - Payload will handle <html>, <head>, <body>
   if (isAdminRoute) {
     // Return children directly - Payload RootLayout will render the complete HTML structure
     // This prevents nested HTML elements and hydration errors
-    return children;
+    return children
   }
 
   // Load themes from PayloadCMS with better error handling
-  let themes: Theme[] = [];
-  let initialTheme = 'default';
+  let themes: Theme[] = []
+  let initialTheme = 'default'
 
   try {
     // Check if we're in a build context or if database is available
     if (process.env.NODE_ENV === 'production' && !process.env.DATABASE_URI) {
-      console.log(
-        'Skipping theme loading during build - no database connection'
-      );
+      logInfo('Skipping theme loading during build - no database connection', {
+        component: 'AppLayout',
+        action: 'load-themes',
+      })
     } else {
-      const payload = await getPayload({ config: configPromise });
+      const payload = await getPayload({ config: configPromise })
       const { docs: themesData } = await payload.find({
         collection: 'themes',
         sort: 'name',
-      });
-      themes = themesData;
+      })
+      themes = themesData
 
       // Get default theme
-      const defaultTheme = themesData.find((theme: Theme) => theme.isDefault);
+      const defaultTheme = themesData.find((theme: Theme) => theme.isDefault)
       if (defaultTheme) {
-        initialTheme = defaultTheme.name.toLowerCase().replace(/\s+/g, '-');
+        initialTheme = defaultTheme.name.toLowerCase().replace(/\s+/g, '-')
       }
 
       // Check cookie for saved theme preference
-      const cookieStore = await cookies();
-      const savedTheme = cookieStore.get('active_theme')?.value;
+      const cookieStore = await cookies()
+      const savedTheme = cookieStore.get('active_theme')?.value
       if (
         savedTheme &&
         themesData.find(
-          (theme: Theme) =>
-            theme.name.toLowerCase().replace(/\s+/g, '-') === savedTheme
+          (theme: Theme) => theme.name.toLowerCase().replace(/\s+/g, '-') === savedTheme
         )
       ) {
-        initialTheme = savedTheme;
+        initialTheme = savedTheme
       }
     }
   } catch (error) {
-    console.error('Failed to load themes:', error);
+    logError('Failed to load themes', error, {
+      component: 'AppLayout',
+      action: 'load-themes',
+    })
     // Fallback to default theme if database is not available
-    themes = [];
-    initialTheme = 'default';
+    themes = []
+    initialTheme = 'default'
   }
 
   // Frontend routes get full theme system
   return (
-    <html
-      lang='en'
-      className={`${inter.variable} ${inter.className}`}
-      suppressHydrationWarning
-    >
+    <html lang='en' className={`${inter.variable} ${inter.className}`} suppressHydrationWarning>
       <head>
         <link rel='icon' href='/branding/favicon.ico' sizes='any' />
         <link rel='icon' href='/branding/icon.svg' type='image/svg+xml' />
@@ -148,10 +142,7 @@ export default async function RootLayout({
                 enableSystem
                 disableTransitionOnChange
               >
-                <ActiveThemeProvider
-                  initialTheme={initialTheme}
-                  themes={themes}
-                >
+                <ActiveThemeProvider initialTheme={initialTheme} themes={themes}>
                   <AuthProvider>
                     {children}
                     <Toaster />
@@ -163,5 +154,5 @@ export default async function RootLayout({
         </ErrorProvider>
       </body>
     </html>
-  );
+  )
 }

@@ -1,43 +1,44 @@
-'use client';
+'use client'
 
 import {
   ErrorBoundary,
   InlineErrorFallback,
   TaskListErrorFallback,
-} from '@/components/error-boundary';
-import { DeleteConfirmationDialog } from '@/components/modal';
-import { DataTable, DataTableToolbar } from '@/components/tables';
-import { Button } from '@/components/ui/button';
-import { useDataTable } from '@/lib/hooks/use-data-table';
-import type { TaskTableData } from '@/types/data-table';
-import { Plus } from 'lucide-react';
-import React, { useState } from 'react';
-import { toast } from 'sonner';
+} from '@/components/error-boundary'
+import { logError } from '@/utilities/logger'
+import { DeleteConfirmationDialog } from '@/components/modal'
+import { DataTable, DataTableToolbar } from '@/components/tables'
+import { Button } from '@/components/ui/button'
+import { useDataTable } from '@/lib/hooks/use-data-table'
+import type { TaskTableData } from '@/types/data-table'
+import { Plus } from 'lucide-react'
+import React, { useState } from 'react'
+import { toast } from 'sonner'
 import {
   useFilterExtraction,
   useFilterOptions,
   useTaskData,
   useTaskPagination,
   useTaskSearch,
-} from '../hooks';
-import { deleteTask } from '../services/task-table';
-import { Filters } from './data-table';
-import { TaskDialog } from './task-dialog';
-import { createTaskTableColumns } from './task-table-columns';
+} from '../hooks'
+import { deleteTask } from '../services/task-table'
+import { Filters } from './data-table'
+import { TaskDialog } from './task-dialog'
+import { createTaskTableColumns } from './task-table-columns'
 
 interface TaskTableProps {
-  initialData?: TaskTableData[];
+  initialData?: TaskTableData[]
   initialPagination?: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
   initialFilterOptions?: {
-    statuses: Array<{ value: string; label: string; color: string }>;
-    taskTypes: Array<{ value: string; label: string; color: string }>;
-    assignees: Array<{ value: string; label: string }>;
-  };
+    statuses: Array<{ value: string; label: string; color: string }>
+    taskTypes: Array<{ value: string; label: string; color: string }>
+    assignees: Array<{ value: string; label: string }>
+  }
 }
 
 export function TaskTable({
@@ -45,10 +46,10 @@ export function TaskTable({
   initialPagination,
   initialFilterOptions,
 }: TaskTableProps) {
-  const [editingTask, setEditingTask] = useState<TaskTableData | null>(null);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [tasksToDelete, setTasksToDelete] = useState<TaskTableData[]>([]);
-  const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<TaskTableData | null>(null)
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [tasksToDelete, setTasksToDelete] = useState<TaskTableData[]>([])
+  const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false)
 
   // Data management
   const {
@@ -64,66 +65,69 @@ export function TaskTable({
     initialData,
     initialPagination,
     initialFilterOptions,
-  });
+  })
 
   // Filter options management
   const { filterOptions } = useFilterOptions({
     initialFilterOptions,
-  });
+  })
 
   // Filter extraction
-  const { extractFilters } = useFilterExtraction();
+  const { extractFilters } = useFilterExtraction()
 
   // Task handlers
   const handleCreateTask = () => {
-    setIsCreateDialogOpen(true);
-  };
+    setIsCreateDialogOpen(true)
+  }
 
   const handleEditTask = (task: TaskTableData) => {
-    setEditingTask(task);
-  };
+    setEditingTask(task)
+  }
 
   const handleDeleteTask = async (task: TaskTableData) => {
-    setTasksToDelete([task]);
-    setIsBulkDeleteDialogOpen(true);
-  };
+    setTasksToDelete([task])
+    setIsBulkDeleteDialogOpen(true)
+  }
 
   const confirmDeleteTasks = async () => {
     try {
-      const deletePromises = tasksToDelete.map(task => deleteTask(task.id));
-      await Promise.all(deletePromises);
+      const deletePromises = tasksToDelete.map(task => deleteTask(task.id))
+      await Promise.all(deletePromises)
 
-      toast.success(`${tasksToDelete.length} task(s) deleted successfully`);
+      toast.success(`${tasksToDelete.length} task(s) deleted successfully`)
 
       // Clear selection and refresh data
-      table.resetRowSelection();
-      refreshData();
+      table.resetRowSelection()
+      refreshData()
 
       // Close dialog
-      setIsBulkDeleteDialogOpen(false);
-      setTasksToDelete([]);
+      setIsBulkDeleteDialogOpen(false)
+      setTasksToDelete([])
     } catch (error) {
-      toast.error('Failed to delete tasks');
-      console.error('Error deleting tasks:', error);
+      toast.error('Failed to delete tasks')
+      logError('Error deleting tasks from table component', error, {
+        component: 'TaskTable',
+        action: 'bulk-delete',
+      })
     }
-  };
+  }
 
   const handleTaskChange = () => {
     // Refresh the data when a task is created or updated
-    refreshData();
-    setEditingTask(null);
-    setIsCreateDialogOpen(false);
-  };
+    refreshData()
+    setEditingTask(null)
+    setIsCreateDialogOpen(false)
+  }
 
   // Bulk delete handler
   const handleBulkDelete = (selectedRows: TaskTableData[]) => {
     if (selectedRows.length === 0) {
-      toast.error('No tasks selected');
-      return;
+      toast.error('No tasks selected')
+      return
     }
-    setTasksToDelete(selectedRows);
-    setIsBulkDeleteDialogOpen(true);
-  };
+    setTasksToDelete(selectedRows)
+    setIsBulkDeleteDialogOpen(true)
+  }
 
   // Table configuration
   const { table } = useDataTable({
@@ -146,24 +150,21 @@ export function TaskTable({
     manualPagination: true,
     manualSorting: false, // Allow client-side sorting
     manualFiltering: true, // Enable server-side filtering
-  });
+  })
 
   // Set initial sorting after table is created and data is loaded
   React.useEffect(() => {
-    if (
-      data.length > 0 &&
-      table.getAllColumns().some(col => col.id === 'createdAt')
-    ) {
-      table.setSorting([{ id: 'createdAt', desc: true }]);
+    if (data.length > 0 && table.getAllColumns().some(col => col.id === 'createdAt')) {
+      table.setSorting([{ id: 'createdAt', desc: true }])
     }
-  }, [data.length, table]);
+  }, [data.length, table])
 
   // Search functionality
   const { handleSearch, isPending: isSearchPending } = useTaskSearch({
     table,
     fetchTasks,
     extractFilters,
-  });
+  })
 
   // Pagination and filter changes
   useTaskPagination({
@@ -173,25 +174,22 @@ export function TaskTable({
     fetchTasks,
     extractFilters,
     prevStateRef,
-  });
+  })
 
   // Note: enhancedFetchTasks was removed as it's not currently used
 
   if (error) {
     return (
       <InlineErrorFallback
-        error={new Error(error)}
         title='Failed to load tasks'
         description='There was an error loading the task list. Please try again.'
       />
-    );
+    )
   }
 
   return (
     <ErrorBoundary
-      fallback={
-        <TaskListErrorFallback error={new Error('Task list failed to load')} />
-      }
+      fallback={<TaskListErrorFallback error={new Error('Task list failed to load')} />}
     >
       <div className='space-y-4'>
         <div className='flex justify-between items-center'>
@@ -219,21 +217,19 @@ export function TaskTable({
               assigneeOptions={filterOptions.assigneeOptions}
               taskTypesOptions={filterOptions.taskTypesOptions}
               onStatusFilter={(status: string) => {
-                table.getColumn('status')?.setFilterValue(status);
+                table.getColumn('status')?.setFilterValue(status)
               }}
               onPriorityFilter={(priority: string) => {
-                table.getColumn('priority')?.setFilterValue(priority);
+                table.getColumn('priority')?.setFilterValue(priority)
               }}
               onAssigneeFilter={(assignee: string) => {
-                table.getColumn('assignee')?.setFilterValue(assignee);
+                table.getColumn('assignee')?.setFilterValue(assignee)
               }}
               onTaskTypesFilter={(taskTypes: string) => {
-                table.getColumn('taskTypes')?.setFilterValue(taskTypes);
+                table.getColumn('taskTypes')?.setFilterValue(taskTypes)
               }}
               onDateRangeFilter={(startDate: string, endDate: string) => {
-                table
-                  .getColumn('dueDate')
-                  ?.setFilterValue({ startDate, endDate });
+                table.getColumn('dueDate')?.setFilterValue({ startDate, endDate })
               }}
             />
           </DataTableToolbar>
@@ -268,5 +264,5 @@ export function TaskTable({
         />
       </div>
     </ErrorBoundary>
-  );
+  )
 }

@@ -1,25 +1,23 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
 interface FilterOptions {
-  statusOptions: Array<{ value: string; label: string; color: string }>;
-  priorityOptions: Array<{ value: string; label: string }>;
-  assigneeOptions: Array<{ value: string; label: string }>;
-  taskTypesOptions: Array<{ value: string; label: string; color: string }>;
+  statusOptions: Array<{ value: string; label: string; color: string }>
+  priorityOptions: Array<{ value: string; label: string }>
+  assigneeOptions: Array<{ value: string; label: string }>
+  taskTypesOptions: Array<{ value: string; label: string; color: string }>
 }
 
 interface UseFilterOptionsProps {
   initialFilterOptions?: {
-    statuses: Array<{ value: string; label: string; color: string }>;
-    taskTypes: Array<{ value: string; label: string; color: string }>;
-    assignees: Array<{ value: string; label: string }>;
-  };
+    statuses: Array<{ value: string; label: string; color: string }>
+    taskTypes: Array<{ value: string; label: string; color: string }>
+    assignees: Array<{ value: string; label: string }>
+  }
 }
 
-export function useFilterOptions({
-  initialFilterOptions,
-}: UseFilterOptionsProps) {
+export function useFilterOptions({ initialFilterOptions }: UseFilterOptionsProps) {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     statusOptions: initialFilterOptions?.statuses || [],
     priorityOptions: [
@@ -30,18 +28,18 @@ export function useFilterOptions({
     ],
     assigneeOptions: initialFilterOptions?.assignees || [],
     taskTypesOptions: initialFilterOptions?.taskTypes || [],
-  });
+  })
 
   const updateFilterOptions = (newOptions: Partial<FilterOptions>) => {
     setFilterOptions(prev => ({
       ...prev,
       ...newOptions,
-    }));
-  };
+    }))
+  }
 
   return {
     filterOptions,
     setFilterOptions,
     updateFilterOptions,
-  };
+  }
 }

@@ -1,6 +1,6 @@
-import type { CollectionConfig, CollectionSlug } from 'payload';
-import { statusAccess } from '@/lib/access';
-import { groups } from '@/lib/groups';
+import type { CollectionConfig, CollectionSlug } from 'payload'
+import { statusAccess } from '@/lib/access'
+import { groups } from '@/lib/groups'
 
 export const TaskStatuses: CollectionConfig = {
   slug: 'task-statuses',
@@ -53,7 +53,7 @@ export const TaskStatuses: CollectionConfig = {
         beforeChange: [
           ({ req, operation }) => {
             if (operation === 'create' && req.user) {
-              return req.user.id;
+              return req.user.id
             }
           },
         ],
@@ -64,4 +64,4 @@ export const TaskStatuses: CollectionConfig = {
     },
   ],
   timestamps: true,
-};
+}

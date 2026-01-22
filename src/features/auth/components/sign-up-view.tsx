@@ -1,7 +1,7 @@
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import UserAuthForm from './user-auth-form';
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import Link from 'next/link'
+import UserAuthForm from './user-auth-form'
 
 export default function SignUpViewPage() {
   return (
@@ -35,8 +35,8 @@ export default function SignUpViewPage() {
         <div className='relative z-20 mt-auto'>
           <blockquote className='space-y-2'>
             <p className='text-lg'>
-              &ldquo;Join thousands of teams who trust Midblck Admin to manage
-              their projects efficiently and collaborate seamlessly.&rdquo;
+              &ldquo;Join thousands of teams who trust Midblck Admin to manage their projects
+              efficiently and collaborate seamlessly.&rdquo;
             </p>
             <footer className='text-sm'>Admin Team</footer>
           </blockquote>
@@ -45,9 +45,7 @@ export default function SignUpViewPage() {
       <div className='flex h-full items-center justify-center p-4 lg:p-8'>
         <div className='flex w-full max-w-md flex-col items-center justify-center space-y-6'>
           <div className='flex flex-col items-center space-y-2'>
-            <h1 className='text-2xl font-semibold tracking-tight'>
-              Create an account
-            </h1>
+            <h1 className='text-2xl font-semibold tracking-tight'>Create an account</h1>
             <p className='text-sm text-muted-foreground'>
               Enter your information below to create your account
             </p>
@@ -57,10 +55,7 @@ export default function SignUpViewPage() {
 
           <p className='text-muted-foreground px-8 text-center text-sm'>
             Already have an account?{' '}
-            <Link
-              href='/auth/sign-in'
-              className='hover:text-primary underline underline-offset-4'
-            >
+            <Link href='/auth/sign-in' className='hover:text-primary underline underline-offset-4'>
               Sign in
             </Link>
             .
@@ -68,5 +63,5 @@ export default function SignUpViewPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

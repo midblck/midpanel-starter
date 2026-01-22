@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 /**
  * LengthCounter - A reusable component for displaying character count with visual warnings
@@ -14,12 +14,12 @@ import { cn } from '@/lib/utils';
  * ```
  */
 interface LengthCounterProps {
-  current: number;
-  max: number;
-  className?: string;
-  showWarning?: boolean;
-  warningThreshold?: number;
-  dangerThreshold?: number;
+  current: number
+  max: number
+  className?: string
+  showWarning?: boolean
+  warningThreshold?: number
+  dangerThreshold?: number
 }
 
 export function LengthCounter({
@@ -30,30 +30,30 @@ export function LengthCounter({
   warningThreshold = 0.8, // 80% of max
   dangerThreshold = 0.9, // 90% of max
 }: LengthCounterProps) {
-  const warningLimit = Math.floor(max * warningThreshold);
-  const dangerLimit = Math.floor(max * dangerThreshold);
+  const warningLimit = Math.floor(max * warningThreshold)
+  const dangerLimit = Math.floor(max * dangerThreshold)
 
   const getColorClass = () => {
-    if (current > dangerLimit) return 'text-red-500';
-    if (current > warningLimit) return 'text-yellow-500';
-    return 'text-muted-foreground';
-  };
+    if (current > dangerLimit) return 'text-red-500'
+    if (current > warningLimit) return 'text-yellow-500'
+    return 'text-muted-foreground'
+  }
 
   const getStatus = () => {
-    if (current > max) return 'exceeded';
-    if (current > dangerLimit) return 'danger';
-    if (current > warningLimit) return 'warning';
-    return 'normal';
-  };
+    if (current > max) return 'exceeded'
+    if (current > dangerLimit) return 'danger'
+    if (current > warningLimit) return 'warning'
+    return 'normal'
+  }
 
-  const status = getStatus();
+  const status = getStatus()
 
   if (!showWarning) {
     return (
       <div className={cn('text-xs text-right', className)}>
         {current}/{max} characters
       </div>
-    );
+    )
   }
 
   return (
@@ -66,5 +66,5 @@ export function LengthCounter({
         <span className='ml-1 text-yellow-500 font-medium'>(Near limit)</span>
       )}
     </div>
-  );
+  )
 }

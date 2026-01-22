@@ -1,20 +1,17 @@
-import type { CheckboxField, TextField } from 'payload';
+import type { CheckboxField, TextField } from 'payload'
 
-import { formatSlugHook } from './formatSlug';
+import { formatSlugHook } from './formatSlug'
 
 type Overrides = {
-  slugOverrides?: Partial<TextField>;
-  checkboxOverrides?: Partial<CheckboxField>;
-  unique?: boolean;
-};
+  slugOverrides?: Partial<TextField>
+  checkboxOverrides?: Partial<CheckboxField>
+  unique?: boolean
+}
 
-type Slug = (
-  fieldToUse?: string,
-  overrides?: Overrides
-) => [TextField, CheckboxField];
+type Slug = (fieldToUse?: string, overrides?: Overrides) => [TextField, CheckboxField]
 
 export const slugField: Slug = (fieldToUse = 'title', overrides = {}) => {
-  const { unique, checkboxOverrides, slugOverrides } = overrides;
+  const { unique, checkboxOverrides, slugOverrides } = overrides
 
   const checkBoxField: CheckboxField = {
     name: 'slugLock',
@@ -26,7 +23,7 @@ export const slugField: Slug = (fieldToUse = 'title', overrides = {}) => {
       position: 'sidebar',
     },
     ...checkboxOverrides,
-  };
+  }
 
   // @ts-expect-error - ts mismatch Partial<TextField> with TextField
   const slugField: TextField = {
@@ -54,7 +51,7 @@ export const slugField: Slug = (fieldToUse = 'title', overrides = {}) => {
     ...(unique && { unique: true }),
     unique: true,
     index: true,
-  };
+  }
 
-  return [slugField, checkBoxField];
-};
+  return [slugField, checkBoxField]
+}

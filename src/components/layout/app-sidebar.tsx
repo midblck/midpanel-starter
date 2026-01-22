@@ -1,10 +1,6 @@
-'use client';
+'use client'
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu'
 import {
   Sidebar,
   SidebarContent,
@@ -28,41 +24,34 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-} from '@/components/ui/sidebar';
-import { useAuth } from '@/features/auth';
-import { generateAvatarUrl } from '@/lib/avatar';
-import { Icons, company, navItems, tenants } from '@/lib/constants';
-import { BrandingIcon } from '@/components/branding';
-import {
-  Bell,
-  ChevronRight,
-  ChevronsDown,
-  CreditCard,
-  LogOut,
-  User,
-} from 'lucide-react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import * as React from 'react';
+} from '@/components/ui/sidebar'
+import { useAuth } from '@/features/auth'
+import { generateAvatarUrl } from '@/lib/avatar'
+import { Icons, company, navItems, tenants } from '@/lib/constants'
+import { BrandingIcon } from '@/components/branding'
+import { Bell, ChevronRight, ChevronsDown, CreditCard, LogOut, User } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import * as React from 'react'
 
 export default function AppSidebar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { user, signOut, collection, hasOAuth } = useAuth();
-  const [activeTenant, setActiveTenant] = React.useState(tenants[0]);
+  const pathname = usePathname()
+  const router = useRouter()
+  const { user, signOut, collection, hasOAuth } = useAuth()
+  const [activeTenant, setActiveTenant] = React.useState(tenants[0])
 
   const handleSwitchTenant = (tenantId: string) => {
-    const tenant = tenants.find(t => t.id === tenantId);
+    const tenant = tenants.find(t => t.id === tenantId)
     if (tenant) {
-      setActiveTenant(tenant);
+      setActiveTenant(tenant)
     }
-  };
+  }
 
   const handleSignOut = () => {
     void signOut().then(() => {
-      router.push('/auth/sign-in');
-    });
-  };
+      router.push('/auth/sign-in')
+    })
+  }
 
   return (
     <Sidebar collapsible='icon'>
@@ -80,9 +69,7 @@ export default function AppSidebar() {
                   </div>
                   <div className='flex flex-col gap-0.5 leading-none'>
                     <span className='font-semibold'>{company.name}</span>
-                    <span className='text-xs text-muted-foreground'>
-                      {activeTenant.name}
-                    </span>
+                    <span className='text-xs text-muted-foreground'>{activeTenant.name}</span>
                   </div>
                   <ChevronsDown className='ml-auto size-4' />
                 </SidebarMenuButton>
@@ -92,14 +79,9 @@ export default function AppSidebar() {
                 align='start'
               >
                 {tenants.map(tenant => (
-                  <DropdownMenuItem
-                    key={tenant.id}
-                    onSelect={() => handleSwitchTenant(tenant.id)}
-                  >
+                  <DropdownMenuItem key={tenant.id} onSelect={() => handleSwitchTenant(tenant.id)}>
                     {tenant.name}
-                    {tenant.id === activeTenant.id && (
-                      <ChevronRight className='ml-auto size-4' />
-                    )}
+                    {tenant.id === activeTenant.id && <ChevronRight className='ml-auto size-4' />}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -116,14 +98,13 @@ export default function AppSidebar() {
             {navItems
               .filter(item => item.title !== 'Payload Admin')
               .map(item => {
-                const Icon = item.icon ? Icons[item.icon] : Icons.dashboard;
+                const Icon = item.icon ? Icons[item.icon] : Icons.dashboard
                 return item?.items && item?.items?.length > 0 ? (
                   <Collapsible
                     key={item.title}
                     asChild
                     defaultOpen={
-                      item.isActive ||
-                      item.items?.some(subItem => pathname === subItem.url)
+                      item.isActive || item.items?.some(subItem => pathname === subItem.url)
                     }
                     className='group/collapsible'
                   >
@@ -132,9 +113,8 @@ export default function AppSidebar() {
                         <SidebarMenuButton
                           tooltip={item.title}
                           isActive={
-                            item.items?.some(
-                              subItem => pathname === subItem.url
-                            ) || pathname === item.url
+                            item.items?.some(subItem => pathname === subItem.url) ||
+                            pathname === item.url
                           }
                         >
                           {item.icon && <Icon className='size-4' />}
@@ -146,10 +126,7 @@ export default function AppSidebar() {
                         <SidebarMenuSub>
                           {item.items?.map(subItem => (
                             <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton
-                                asChild
-                                isActive={pathname === subItem.url}
-                              >
+                              <SidebarMenuSubButton asChild isActive={pathname === subItem.url}>
                                 <Link href={subItem.url}>
                                   <span>{subItem.title}</span>
                                 </Link>
@@ -167,16 +144,13 @@ export default function AppSidebar() {
                       tooltip={item.title}
                       isActive={pathname === item.url}
                     >
-                      <Link
-                        href={item.url}
-                        target={item.external ? '_blank' : undefined}
-                      >
+                      <Link href={item.url} target={item.external ? '_blank' : undefined}>
                         <Icon className='size-4' />
                         <span>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                );
+                )
               })}
           </SidebarMenu>
         </SidebarGroup>
@@ -203,9 +177,7 @@ export default function AppSidebar() {
                     )}
                   </div>
                   <div className='flex flex-col gap-0.5 leading-none'>
-                    <span className='font-semibold'>
-                      {user?.name || 'User'}
-                    </span>
+                    <span className='font-semibold'>{user?.name || 'User'}</span>
                     <span className='text-xs text-muted-foreground'>
                       {user?.email || 'No email'}
                     </span>
@@ -233,9 +205,7 @@ export default function AppSidebar() {
                       )}
                     </div>
                     <div className='flex flex-col gap-0.5 leading-none'>
-                      <span className='font-semibold'>
-                        {user?.name || 'User'}
-                      </span>
+                      <span className='font-semibold'>{user?.name || 'User'}</span>
                       {/* <span className='text-xs text-muted-foreground'>
                         {user?.email || 'No email'}
                       </span> */}
@@ -274,5 +244,5 @@ export default function AppSidebar() {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  );
+  )
 }

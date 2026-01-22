@@ -1,7 +1,7 @@
 import {
   DefaultTranslationsObject,
   Language,
-} from 'node_modules/@payloadcms/translations/dist/types';
+} from 'node_modules/@payloadcms/translations/dist/types'
 
 export const idTranslations: DefaultTranslationsObject = {
   authentication: {
@@ -40,8 +40,7 @@ export const idTranslations: DefaultTranslationsObject = {
       'Membuat kunci API baru akan <1>membatalkan</1> kunci sebelumnya. Apakah Anda yakin ingin melanjutkan?',
     lockUntil: 'Kunci Sampai',
     logBackIn: 'Masuk kembali',
-    loggedIn:
-      'Untuk masuk dengan pengguna lain, Anda harus <0>keluar</0> terlebih dahulu.',
+    loggedIn: 'Untuk masuk dengan pengguna lain, Anda harus <0>keluar</0> terlebih dahulu.',
     loggedInChangePassword:
       'Untuk mengganti kata sandi Anda, buka <0>akun</0> Anda dan edit kata sandi Anda di sana.',
     loggedOutInactivity: 'Anda telah keluar karena tidak aktif.',
@@ -102,8 +101,7 @@ export const idTranslations: DefaultTranslationsObject = {
     invalidClipboardData: 'Data papan klip tidak valid.',
     invalidFileType: 'Jenis file tidak valid',
     invalidFileTypeValue: 'Jenis file tidak valid: {{value}}',
-    invalidRequestArgs:
-      'Argumen tidak valid diteruskan dalam permintaan: {{args}}',
+    invalidRequestArgs: 'Argumen tidak valid diteruskan dalam permintaan: {{args}}',
     loadingDocument: 'Ada masalah saat memuat dokumen dengan ID {{id}}.',
     localesNotSaved_one: 'Lokal berikut tidak dapat disimpan:',
     localesNotSaved_other: 'Lokal berikut tidak dapat disimpan:',
@@ -115,8 +113,7 @@ export const idTranslations: DefaultTranslationsObject = {
     noFilesUploaded: 'Tidak ada file yang diunggah.',
     noMatchedField: 'Tidak ada bidang yang cocok ditemukan untuk "{{label}}"',
     notAllowedToAccessPage: 'Anda tidak diizinkan untuk mengakses halaman ini.',
-    notAllowedToPerformAction:
-      'Anda tidak diizinkan untuk melakukan tindakan ini.',
+    notAllowedToPerformAction: 'Anda tidak diizinkan untuk melakukan tindakan ini.',
     notFound: 'Sumber daya yang diminta tidak ditemukan.',
     noUser: 'Tidak ada Pengguna',
     previewing: 'Ada masalah saat mempratinjau dokumen ini.',
@@ -127,27 +124,21 @@ export const idTranslations: DefaultTranslationsObject = {
     tokenInvalidOrExpired: 'Token tidak valid atau telah kedaluwarsa.',
     tokenNotProvided: 'Token tidak disediakan.',
     unableToCopy: 'Tidak dapat menyalin.',
-    unableToDeleteCount:
-      'Tidak dapat menghapus {{count}} dari {{total}} {{label}}.',
+    unableToDeleteCount: 'Tidak dapat menghapus {{count}} dari {{total}} {{label}}.',
     unableToReindexCollection:
       'Kesalahan mengindeks ulang koleksi {{collection}}. Operasi dibatalkan.',
-    unableToUpdateCount:
-      'Tidak dapat memperbarui {{count}} dari {{total}} {{label}}.',
+    unableToUpdateCount: 'Tidak dapat memperbarui {{count}} dari {{total}} {{label}}.',
     unauthorized: 'Tidak sah, Anda harus masuk untuk membuat permintaan ini.',
-    unauthorizedAdmin:
-      'Tidak sah, pengguna ini tidak memiliki akses ke panel admin.',
+    unauthorizedAdmin: 'Tidak sah, pengguna ini tidak memiliki akses ke panel admin.',
     unknown: 'Terjadi kesalahan yang tidak diketahui.',
     unPublishingDocument: 'Ada masalah saat membatalkan publikasi dokumen ini.',
     unspecific: 'Terjadi sebuah kesalahan.',
     unverifiedEmail: 'Harap verifikasi email Anda sebelum masuk.',
-    userEmailAlreadyRegistered:
-      'Seorang pengguna dengan email yang diberikan sudah terdaftar.',
-    userLocked:
-      'Pengguna ini terkunci karena terlalu banyak upaya masuk yang gagal.',
+    userEmailAlreadyRegistered: 'Seorang pengguna dengan email yang diberikan sudah terdaftar.',
+    userLocked: 'Pengguna ini terkunci karena terlalu banyak upaya masuk yang gagal.',
     usernameAlreadyRegistered:
       'Seorang pengguna dengan nama pengguna yang diberikan sudah terdaftar.',
-    usernameOrPasswordIncorrect:
-      'Nama pengguna atau kata sandi yang diberikan salah.',
+    usernameOrPasswordIncorrect: 'Nama pengguna atau kata sandi yang diberikan salah.',
     valueMustBeUnique: 'Nilai harus unik',
     verificationTokenInvalid: 'Token verifikasi tidak valid.',
   },
@@ -204,8 +195,7 @@ export const idTranslations: DefaultTranslationsObject = {
     deleteFolder: 'Hapus Folder',
     folderName: 'Nama Folder',
     folders: 'Folder',
-    folderTypeDescription:
-      'Pilih jenis koleksi dokumen yang harus diizinkan dalam folder ini.',
+    folderTypeDescription: 'Pilih jenis koleksi dokumen yang harus diizinkan dalam folder ini.',
     itemHasBeenMoved: '{{title}} telah dipindahkan ke {{folderName}}',
     itemHasBeenMovedToRoot: '{{title}} telah dipindahkan ke folder root',
     itemsMovedToFolder: '{{title}} dipindahkan ke {{folderName}}',
@@ -228,8 +218,7 @@ export const idTranslations: DefaultTranslationsObject = {
   },
   general: {
     name: 'Nama',
-    aboutToDelete:
-      'Anda akan menghapus {{label}} <1>{{title}}</1>. Apakah Anda yakin?',
+    aboutToDelete: 'Anda akan menghapus {{label}} <1>{{title}}</1>. Apakah Anda yakin?',
     aboutToDeleteCount_many: 'Anda akan menghapus {{count}} {{label}}',
     aboutToDeleteCount_one: 'Anda akan menghapus {{count}} {{label}}',
     aboutToDeleteCount_other: 'Anda akan menghapus {{count}} {{label}}',
@@ -239,15 +228,12 @@ export const idTranslations: DefaultTranslationsObject = {
     newLabel: '{{label}} Baru',
     aboutToPermanentlyDeleteTrash:
       'Anda akan menghapus <0>{{count}}</0> <1>{{label}}</1> secara permanen dari sampah. Apakah Anda yakin?',
-    aboutToRestore:
-      'Anda akan memulihkan {{label}} <1>{{title}}</1>. Apakah Anda yakin?',
+    aboutToRestore: 'Anda akan memulihkan {{label}} <1>{{title}}</1>. Apakah Anda yakin?',
     aboutToRestoreAsDraft:
       'Anda akan memulihkan {{label}} <1>{{title}}</1> sebagai draf. Apakah Anda yakin?',
-    aboutToRestoreAsDraftCount:
-      'Anda akan memulihkan {{count}} {{label}} sebagai draf',
+    aboutToRestoreAsDraftCount: 'Anda akan memulihkan {{count}} {{label}} sebagai draf',
     aboutToRestoreCount: 'Anda akan memulihkan {{count}} {{label}}',
-    aboutToTrash:
-      'Anda akan memindahkan {{label}} <1>{{title}}</1> ke sampah. Apakah Anda yakin?',
+    aboutToTrash: 'Anda akan memindahkan {{label}} <1>{{title}}</1> ke sampah. Apakah Anda yakin?',
     aboutToTrashCount: 'Anda akan memindahkan {{count}} {{label}} ke sampah',
     addBelow: 'Tambahkan di Bawah',
     addFilter: 'Tambahkan Filter',
@@ -257,8 +243,7 @@ export const idTranslations: DefaultTranslationsObject = {
     allLocales: 'Semua lokal',
     and: 'Dan',
     anotherUser: 'Pengguna lain',
-    anotherUserTakenOver:
-      'Pengguna lain telah mengambil alih pengeditan dokumen ini.',
+    anotherUserTakenOver: 'Pengguna lain telah mengambil alih pengeditan dokumen ini.',
     applyChanges: 'Terapkan Perubahan',
     ascending: 'Naik',
     automatic: 'Otomatis',
@@ -396,8 +381,7 @@ export const idTranslations: DefaultTranslationsObject = {
     pasteRow: 'Tempel Baris',
     payloadSettings: 'Pengaturan Payload',
     permanentlyDelete: 'Hapus Permanen',
-    permanentlyDeletedCountSuccessfully:
-      'Berhasil menghapus {{count}} {{label}} secara permanen.',
+    permanentlyDeletedCountSuccessfully: 'Berhasil menghapus {{count}} {{label}} secara permanen.',
     perPage: 'Per Halaman: {{limit}}',
     previous: 'Sebelumnya',
     reindex: 'Indeks ulang',
@@ -406,8 +390,7 @@ export const idTranslations: DefaultTranslationsObject = {
     rename: 'Ganti Nama',
     reset: 'Reset',
     resetPreferences: 'Reset Preferensi',
-    resetPreferencesDescription:
-      'Ini akan mereset semua preferensi Anda ke pengaturan default.',
+    resetPreferencesDescription: 'Ini akan mereset semua preferensi Anda ke pengaturan default.',
     resettingPreferences: 'Mereset Preferensi.',
     restore: 'Pulihkan',
     restoreAsPublished: 'Pulihkan sebagai versi yang diterbitkan',
@@ -543,28 +526,23 @@ export const idTranslations: DefaultTranslationsObject = {
     emailAddress: 'Silakan masukkan alamat email yang valid.',
     enterNumber: 'Silakan masukkan nomor yang valid.',
     fieldHasNo: 'Bidang ini tidak memiliki {{label}}',
-    greaterThanMax:
-      '{{value}} lebih besar dari {{label}} maksimum yang diizinkan yaitu {{max}}.',
+    greaterThanMax: '{{value}} lebih besar dari {{label}} maksimum yang diizinkan yaitu {{max}}.',
     invalidBlock: 'Bidang ini memiliki blok yang tidak valid.',
     invalidBlocks: 'Bidang ini memiliki blok tidak valid berikut:',
     invalidInput: 'Bidang ini memiliki input yang tidak valid.',
     invalidSelection: 'Bidang ini memiliki pilihan yang tidak valid.',
     invalidSelections: 'Bidang ini memiliki pilihan tidak valid berikut:',
-    lessThanMin:
-      '{{value}} kurang dari {{label}} minimum yang diizinkan yaitu {{min}}.',
+    lessThanMin: '{{value}} kurang dari {{label}} minimum yang diizinkan yaitu {{min}}.',
     latitudeOutOfBounds: 'Lintang harus berada antara -90 dan 90.',
     limitReached: 'Batas tercapai, hanya {{max}} item yang dapat ditambahkan.',
     longitudeOutOfBounds: 'Garis bujur harus berada di antara -180 dan 180.',
-    longerThanMin:
-      'Nilai ini harus lebih panjang dari panjang minimum {{minLength}} karakter.',
+    longerThanMin: 'Nilai ini harus lebih panjang dari panjang minimum {{minLength}} karakter.',
     notValidDate: '"{{value}}" bukan tanggal yang valid.',
     required: 'Bidang ini wajib diisi.',
     requiresAtLeast: 'Bidang ini memerlukan setidaknya {{count}} {{label}}.',
-    requiresNoMoreThan:
-      'Bidang ini tidak memerlukan lebih dari {{count}} {{label}}.',
+    requiresNoMoreThan: 'Bidang ini tidak memerlukan lebih dari {{count}} {{label}}.',
     requiresTwoNumbers: 'Bidang ini memerlukan dua angka.',
-    shorterThanMax:
-      'Nilai ini harus lebih pendek dari panjang maksimum {{maxLength}} karakter.',
+    shorterThanMax: 'Nilai ini harus lebih pendek dari panjang maksimum {{maxLength}} karakter.',
     timezoneRequired: 'Zona waktu diperlukan.',
     trueOrFalse: 'Bidang ini hanya bisa sama dengan benar atau salah.',
     username:
@@ -582,8 +560,7 @@ export const idTranslations: DefaultTranslationsObject = {
       'Anda akan memulihkan global {{label}} ke keadaan seperti pada {{versionDate}}.',
     aboutToRevertToPublished:
       'Anda akan mengembalikan perubahan dokumen ini ke keadaan yang diterbitkan. Apakah Anda yakin?',
-    aboutToUnpublish:
-      'Anda akan membatalkan publikasi dokumen ini. Apakah Anda yakin?',
+    aboutToUnpublish: 'Anda akan membatalkan publikasi dokumen ini. Apakah Anda yakin?',
     aboutToUnpublishIn:
       'Anda akan membatalkan publikasi dokumen ini dalam {{locale}}. Apakah Anda yakin?',
     aboutToUnpublishSelection:
@@ -661,9 +638,9 @@ export const idTranslations: DefaultTranslationsObject = {
     viewingVersions: 'Melihat versi untuk {{entityLabel}} {{documentTitle}}',
     viewingVersionsGlobal: 'Melihat versi untuk global {{entityLabel}}',
   },
-};
+}
 
 export const id: Language = {
   dateFNSKey: 'en-US',
   translations: idTranslations,
-};
+}

@@ -1,15 +1,11 @@
-import { KBarResults, useMatches } from 'kbar';
-import ResultItem from './result-item';
+import { KBarResults, useMatches } from 'kbar'
+import ResultItem from './result-item'
 
 export default function RenderResults() {
-  const { results, rootActionId } = useMatches();
+  const { results, rootActionId } = useMatches()
 
   if (!results || results.length === 0) {
-    return (
-      <div className='px-4 py-8 text-center text-muted-foreground'>
-        No results found
-      </div>
-    );
+    return <div className='px-4 py-8 text-center text-muted-foreground'>No results found</div>
   }
 
   return (
@@ -21,13 +17,9 @@ export default function RenderResults() {
             {item}
           </div>
         ) : (
-          <ResultItem
-            action={item}
-            active={active}
-            currentRootActionId={rootActionId ?? ''}
-          />
+          <ResultItem action={item} active={active} currentRootActionId={rootActionId ?? ''} />
         )
       }
     />
-  );
+  )
 }

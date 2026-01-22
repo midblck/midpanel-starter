@@ -1,11 +1,11 @@
-import type { CollectionConfig } from 'payload';
+import type { CollectionConfig } from 'payload'
 import {
   FixedToolbarFeature,
   HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
-} from '@payloadcms/richtext-lexical';
-import { groups } from '@/lib/groups';
+} from '@payloadcms/richtext-lexical'
+import { groups } from '@/lib/groups'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -33,7 +33,7 @@ export const Media: CollectionConfig = {
             HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
             FixedToolbarFeature(),
             InlineToolbarFeature(),
-          ];
+          ]
         },
       }),
       label: { en: 'Caption', id: 'Keterangan' },
@@ -51,4 +51,4 @@ export const Media: CollectionConfig = {
       },
     },
   },
-};
+}

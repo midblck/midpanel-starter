@@ -1,79 +1,75 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { useTaskStore } from '@/features/kanban';
-import { Filter } from 'lucide-react';
-import { useState } from 'react';
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useTaskStore } from '@/features/kanban'
+import { Filter } from 'lucide-react'
+import { useState } from 'react'
 
 export function DateRangeFilter() {
-  const { dateFilter, setDateFilter } = useTaskStore();
-  const [isOpen, setIsOpen] = useState(false);
+  const { dateFilter, setDateFilter } = useTaskStore()
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleToggleFilter = (enabled: boolean) => {
-    setDateFilter(enabled, dateFilter.startDate, dateFilter.endDate);
-  };
+    setDateFilter(enabled, dateFilter.startDate, dateFilter.endDate)
+  }
 
   const handleStartDateChange = (startDate: string) => {
-    setDateFilter(dateFilter.enabled, startDate, dateFilter.endDate);
-  };
+    setDateFilter(dateFilter.enabled, startDate, dateFilter.endDate)
+  }
 
   const handleEndDateChange = (endDate: string) => {
-    setDateFilter(dateFilter.enabled, dateFilter.startDate, endDate);
-  };
+    setDateFilter(dateFilter.enabled, dateFilter.startDate, endDate)
+  }
 
   const handlePreset = (preset: 'today' | 'week' | 'month' | 'clear') => {
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
+    const today = new Date()
+    const todayStr = today.toISOString().split('T')[0]
 
     switch (preset) {
       case 'today':
-        setDateFilter(true, todayStr, todayStr);
-        break;
+        setDateFilter(true, todayStr, todayStr)
+        break
       case 'week':
-        const weekEnd = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-        setDateFilter(true, todayStr, weekEnd.toISOString().split('T')[0]);
-        break;
+        const weekEnd = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
+        setDateFilter(true, todayStr, weekEnd.toISOString().split('T')[0])
+        break
       case 'month':
-        const monthEnd = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-        setDateFilter(true, todayStr, monthEnd.toISOString().split('T')[0]);
-        break;
+        const monthEnd = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
+        setDateFilter(true, todayStr, monthEnd.toISOString().split('T')[0])
+        break
       case 'clear':
-        setDateFilter(false, null, null);
-        break;
+        setDateFilter(false, null, null)
+        break
     }
-    setIsOpen(false);
-  };
+    setIsOpen(false)
+  }
 
   const getFilterSummary = () => {
     if (!dateFilter.enabled) {
-      return 'All tasks';
+      return 'All tasks'
     }
 
     if (dateFilter.startDate && dateFilter.endDate) {
       if (dateFilter.startDate === dateFilter.endDate) {
-        return `Due on ${new Date(dateFilter.startDate).toLocaleDateString()}`;
+        return `Due on ${new Date(dateFilter.startDate).toLocaleDateString()}`
       }
-      return `Due ${new Date(dateFilter.startDate).toLocaleDateString()} - ${new Date(dateFilter.endDate).toLocaleDateString()}`;
+      return `Due ${new Date(dateFilter.startDate).toLocaleDateString()} - ${new Date(dateFilter.endDate).toLocaleDateString()}`
     }
 
     if (dateFilter.startDate) {
-      return `Due after ${new Date(dateFilter.startDate).toLocaleDateString()}`;
+      return `Due after ${new Date(dateFilter.startDate).toLocaleDateString()}`
     }
 
     if (dateFilter.endDate) {
-      return `Due before ${new Date(dateFilter.endDate).toLocaleDateString()}`;
+      return `Due before ${new Date(dateFilter.endDate).toLocaleDateString()}`
     }
 
-    return 'All tasks';
-  };
+    return 'All tasks'
+  }
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -171,5 +167,5 @@ export function DateRangeFilter() {
         </div>
       </PopoverContent>
     </Popover>
-  );
+  )
 }

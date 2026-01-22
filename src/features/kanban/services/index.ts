@@ -1,8 +1,8 @@
 // Export all types
-export type * from './types';
+export type * from './types'
 
 // Export all converters
-export * from './converters';
+export * from './converters'
 
 // Export task services
 export {
@@ -11,20 +11,10 @@ export {
   deleteKanbanTask,
   fetchKanbanTasks,
   updateKanbanTask,
-} from './task';
+} from './task'
 
 // Export status services
-export {
-  createTaskStatus,
-  deleteTaskStatus,
-  fetchTaskStatuses,
-  updateTaskStatus,
-} from './status';
+export { createTaskStatus, deleteTaskStatus, fetchTaskStatuses, updateTaskStatus } from './status'
 
 // Export task type services
-export {
-  createTaskType,
-  deleteTaskType,
-  fetchTaskTypes,
-  updateTaskType,
-} from './task-type';
+export { createTaskType, deleteTaskType, fetchTaskTypes, updateTaskType } from './task-type'

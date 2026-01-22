@@ -52,13 +52,13 @@ The main table component that orchestrates the entire task management interface.
 
 ```typescript
 interface TaskTableProps {
-  initialData?: TaskTableData[];
+  initialData?: TaskTableData[]
   initialPagination?: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
 }
 ```
 
@@ -118,25 +118,25 @@ Handles all data fetching and API interactions with PayloadCMS.
 
 ```typescript
 interface TaskTableData {
-  id: string;
-  title: string;
-  description?: string;
+  id: string
+  title: string
+  description?: string
   status: {
-    id: string;
-    name: string;
-    color: string;
-  };
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  assignee?: string;
-  dueDate?: string;
+    id: string
+    name: string
+    color: string
+  }
+  priority: 'low' | 'medium' | 'high' | 'critical'
+  assignee?: string
+  dueDate?: string
   taskTypes?: Array<{
-    id: string;
-    name: string;
-    color: string;
-  }>;
-  order: number;
-  createdAt: string;
-  updatedAt: string;
+    id: string
+    name: string
+    color: string
+  }>
+  order: number
+  createdAt: string
+  updatedAt: string
 }
 ```
 
@@ -144,11 +144,11 @@ interface TaskTableData {
 
 ```typescript
 interface TaskTableParams {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  search?: string;
-  filters?: TaskTableFilters;
+  page?: number
+  limit?: number
+  sort?: string
+  search?: string
+  filters?: TaskTableFilters
 }
 ```
 
@@ -279,7 +279,7 @@ const { table } = useDataTable({
   manualPagination: false,
   manualSorting: false,
   manualFiltering: false,
-});
+})
 ```
 
 ### Column Configuration

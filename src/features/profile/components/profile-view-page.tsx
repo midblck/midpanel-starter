@@ -1,152 +1,131 @@
-'use client';
+'use client'
 
-import {
-  ErrorBoundary,
-  ProfileErrorFallback,
-} from '@/components/error-boundary';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useAuth } from '@/features/auth/context/auth-context';
-import { generateAvatarUrl } from '@/lib/avatar';
-import {
-  Edit,
-  Mail,
-  Save,
-  Shield,
-  User,
-  X,
-  Calendar,
-  Clock,
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ErrorBoundary, ProfileErrorFallback } from '@/components/error-boundary'
+import { logError } from '@/utilities/logger'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { useAuth } from '@/features/auth/context/auth-context'
+import { generateAvatarUrl } from '@/lib/avatar'
+import { Edit, Mail, Save, Shield, User, X, Calendar, Clock } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 export default function ProfileViewPage() {
-  const {
-    user,
-    loading,
-    hasOAuth,
-    oauthProviders,
-    identity,
-    identityDetails,
-    collection,
-  } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [name, setName] = useState('');
-  const [avatar, setAvatar] = useState<string | null>(null);
+  const { user, loading, hasOAuth, oauthProviders, identity, identityDetails, collection } =
+    useAuth()
+  const [isEditing, setIsEditing] = useState(false)
+  const [isChangingPassword, setIsChangingPassword] = useState(false)
+  const [name, setName] = useState('')
+  const [avatar, setAvatar] = useState<string | null>(null)
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
-  });
-  const [isUpdating, setIsUpdating] = useState(false);
+  })
+  const [isUpdating, setIsUpdating] = useState(false)
   const [message, setMessage] = useState<{
-    type: 'success' | 'error';
-    text: string;
-  } | null>(null);
+    type: 'success' | 'error'
+    text: string
+  } | null>(null)
 
   // Initialize form data when user loads
   useEffect(() => {
     if (user) {
-      setName(user.name || '');
-      void fetchOAuthAvatar();
+      setName(user.name || '')
+      void fetchOAuthAvatar()
     }
-  }, [user]);
+  }, [user])
 
   const fetchOAuthAvatar = async () => {
-    if (!user) return;
+    if (!user) return
 
     try {
-      const response = await fetch('/api/profile');
+      const response = await fetch('/api/profile')
       if (response.ok) {
-        const data = await response.json();
-        setAvatar(data.oauthAvatar || null);
+        const data = await response.json()
+        setAvatar(data.oauthAvatar || null)
       }
     } catch (error) {
-      console.error('Failed to fetch OAuth avatar:', error);
+      logError('Failed to fetch OAuth avatar', error, {
+        component: 'ProfileView',
+        action: 'fetch-oauth-avatar',
+      })
     }
-  };
+  }
 
   const handleSave = async () => {
-    if (!user) return;
+    if (!user) return
 
-    setIsUpdating(true);
+    setIsUpdating(true)
     try {
       const response = await fetch('/api/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),
-      });
+      })
 
       if (response.ok) {
-        setMessage({ type: 'success', text: 'Profile updated successfully' });
-        setIsEditing(false);
+        setMessage({ type: 'success', text: 'Profile updated successfully' })
+        setIsEditing(false)
       } else {
-        const error = await response.json();
+        const error = await response.json()
         setMessage({
           type: 'error',
           text: error.message || 'Failed to update profile',
-        });
+        })
       }
     } catch {
-      setMessage({ type: 'error', text: 'Failed to update profile' });
+      setMessage({ type: 'error', text: 'Failed to update profile' })
     } finally {
-      setIsUpdating(false);
+      setIsUpdating(false)
     }
-  };
+  }
 
   const handleCancel = () => {
-    setName(user?.name || '');
-    setIsEditing(false);
-  };
+    setName(user?.name || '')
+    setIsEditing(false)
+  }
 
   const handlePasswordChange = async () => {
-    if (!user) return;
+    if (!user) return
 
-    setIsUpdating(true);
+    setIsUpdating(true)
     try {
       const response = await fetch('/api/profile/password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(passwordData),
-      });
+      })
 
       if (response.ok) {
-        setMessage({ type: 'success', text: 'Password updated successfully' });
+        setMessage({ type: 'success', text: 'Password updated successfully' })
         setPasswordData({
           currentPassword: '',
           newPassword: '',
           confirmPassword: '',
-        });
-        setIsChangingPassword(false);
+        })
+        setIsChangingPassword(false)
       } else {
-        const error = await response.json();
+        const error = await response.json()
         setMessage({
           type: 'error',
           text: error.message || 'Failed to update password',
-        });
+        })
       }
     } catch {
-      setMessage({ type: 'error', text: 'Failed to update password' });
+      setMessage({ type: 'error', text: 'Failed to update password' })
     } finally {
-      setIsUpdating(false);
+      setIsUpdating(false)
     }
-  };
+  }
 
   const handleGoogleLink = () => {
-    const callbackUrl = encodeURIComponent('/app/profile');
-    window.location.href = `/api/auth/google?collection=${collection}&callbackUrl=${callbackUrl}`;
-  };
+    const callbackUrl = encodeURIComponent('/app/profile')
+    window.location.href = `/api/auth/google?collection=${collection}&callbackUrl=${callbackUrl}`
+  }
 
   if (loading) {
     return (
@@ -158,7 +137,7 @@ export default function ProfileViewPage() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   if (!user) {
@@ -167,29 +146,21 @@ export default function ProfileViewPage() {
         <div className='flex items-center justify-between'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Profile</h2>
-            <p className='text-muted-foreground'>
-              Please sign in to view your profile
-            </p>
+            <p className='text-muted-foreground'>Please sign in to view your profile</p>
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
-    <ErrorBoundary
-      fallback={
-        <ProfileErrorFallback error={new Error('Profile failed to load')} />
-      }
-    >
+    <ErrorBoundary fallback={<ProfileErrorFallback error={new Error('Profile failed to load')} />}>
       <div className='flex flex-1 flex-col space-y-6'>
         {/* Header */}
         <div className='flex items-center justify-between'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Profile</h2>
-            <p className='text-muted-foreground'>
-              Manage your account settings and preferences
-            </p>
+            <p className='text-muted-foreground'>Manage your account settings and preferences</p>
           </div>
           <div className='flex space-x-2'>
             {isEditing ? (
@@ -245,16 +216,10 @@ export default function ProfileViewPage() {
                   </Avatar>
                 </div>
                 <CardTitle className='text-xl'>{user.name}</CardTitle>
-                <CardDescription className='text-sm'>
-                  {user.role}
-                </CardDescription>
+                <CardDescription className='text-sm'>{user.role}</CardDescription>
                 <div className='flex justify-center gap-2 mt-2'>
-                  <Badge variant='secondary'>
-                    {collection === 'admins' ? 'Admin' : 'User'}
-                  </Badge>
-                  {identity === 'both' && (
-                    <Badge variant='outline'>Multi-Collection</Badge>
-                  )}
+                  <Badge variant='secondary'>{collection === 'admins' ? 'Admin' : 'User'}</Badge>
+                  {identity === 'both' && <Badge variant='outline'>Multi-Collection</Badge>}
                 </div>
               </CardHeader>
               <CardContent>
@@ -266,19 +231,13 @@ export default function ProfileViewPage() {
                   {user.lastLoginAt && (
                     <div className='flex items-center space-x-3 text-sm'>
                       <Clock className='h-4 w-4 text-muted-foreground' />
-                      <span>
-                        Last login:{' '}
-                        {new Date(user.lastLoginAt).toLocaleDateString()}
-                      </span>
+                      <span>Last login: {new Date(user.lastLoginAt).toLocaleDateString()}</span>
                     </div>
                   )}
                   {user.createdAt && (
                     <div className='flex items-center space-x-3 text-sm'>
                       <Calendar className='h-4 w-4 text-muted-foreground' />
-                      <span>
-                        Member since:{' '}
-                        {new Date(user.createdAt).toLocaleDateString()}
-                      </span>
+                      <span>Member since: {new Date(user.createdAt).toLocaleDateString()}</span>
                     </div>
                   )}
                 </div>
@@ -293,29 +252,22 @@ export default function ProfileViewPage() {
               <CardContent>
                 <div className='grid grid-cols-1 gap-4'>
                   <div className='flex justify-between items-center'>
-                    <span className='text-sm text-muted-foreground'>
-                      Account Type
-                    </span>
+                    <span className='text-sm text-muted-foreground'>Account Type</span>
                     <span className='font-semibold'>
                       {collection === 'admins' ? 'Administrator' : 'User'}
                     </span>
                   </div>
                   <div className='flex justify-between items-center'>
-                    <span className='text-sm text-muted-foreground'>
-                      Authentication
-                    </span>
+                    <span className='text-sm text-muted-foreground'>Authentication</span>
                     <span className='font-semibold'>
                       {hasOAuth ? 'OAuth + Password' : 'Password Only'}
                     </span>
                   </div>
                   {identityDetails && (
                     <div className='flex justify-between items-center'>
-                      <span className='text-sm text-muted-foreground'>
-                        Multi-Collection
-                      </span>
+                      <span className='text-sm text-muted-foreground'>Multi-Collection</span>
                       <span className='font-semibold'>
-                        {identityDetails.existsInAdmins &&
-                        identityDetails.existsInUsers
+                        {identityDetails.existsInAdmins && identityDetails.existsInUsers
                           ? 'Yes (Both Collections)'
                           : 'No'}
                       </span>
@@ -335,9 +287,7 @@ export default function ProfileViewPage() {
                   <User className='mr-2 h-5 w-5' />
                   Account Details
                 </CardTitle>
-                <CardDescription>
-                  Update your account information
-                </CardDescription>
+                <CardDescription>Update your account information</CardDescription>
               </CardHeader>
               <CardContent className='space-y-4'>
                 <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
@@ -362,12 +312,7 @@ export default function ProfileViewPage() {
                   </div>
                   <div>
                     <Label htmlFor='role'>Role</Label>
-                    <Input
-                      id='role'
-                      value={user.role}
-                      disabled
-                      className='bg-muted'
-                    />
+                    <Input id='role' value={user.role} disabled className='bg-muted' />
                   </div>
                   <div>
                     <Label htmlFor='collection'>Collection</Label>
@@ -393,19 +338,14 @@ export default function ProfileViewPage() {
               </CardHeader>
               <CardContent className='space-y-4'>
                 {!isChangingPassword ? (
-                  <Button
-                    onClick={() => setIsChangingPassword(true)}
-                    variant='outline'
-                  >
+                  <Button onClick={() => setIsChangingPassword(true)} variant='outline'>
                     Change Password
                   </Button>
                 ) : (
                   <div className='space-y-4'>
                     {!hasOAuth && (
                       <div>
-                        <Label htmlFor='currentPassword'>
-                          Current Password
-                        </Label>
+                        <Label htmlFor='currentPassword'>Current Password</Label>
                         <Input
                           id='currentPassword'
                           type='password'
@@ -434,9 +374,7 @@ export default function ProfileViewPage() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor='confirmPassword'>
-                        Confirm New Password
-                      </Label>
+                      <Label htmlFor='confirmPassword'>Confirm New Password</Label>
                       <Input
                         id='confirmPassword'
                         type='password'
@@ -455,16 +393,10 @@ export default function ProfileViewPage() {
                       </p>
                     )}
                     <div className='flex space-x-2'>
-                      <Button
-                        onClick={handlePasswordChange}
-                        disabled={isUpdating}
-                      >
+                      <Button onClick={handlePasswordChange} disabled={isUpdating}>
                         {isUpdating ? 'Updating...' : 'Update Password'}
                       </Button>
-                      <Button
-                        onClick={() => setIsChangingPassword(false)}
-                        variant='outline'
-                      >
+                      <Button onClick={() => setIsChangingPassword(false)} variant='outline'>
                         Cancel
                       </Button>
                     </div>
@@ -477,9 +409,7 @@ export default function ProfileViewPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Connected Accounts</CardTitle>
-                <CardDescription>
-                  Manage your authentication methods
-                </CardDescription>
+                <CardDescription>Manage your authentication methods</CardDescription>
               </CardHeader>
               <CardContent>
                 {hasOAuth ? (
@@ -513,20 +443,15 @@ export default function ProfileViewPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>User Dashboard</CardTitle>
-                  <CardDescription>
-                    Your personal dashboard and activity
-                  </CardDescription>
+                  <CardDescription>Your personal dashboard and activity</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className='space-y-4'>
                     <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
                       <div className='p-4 border rounded-lg'>
-                        <h4 className='font-semibold text-sm'>
-                          Profile Completion
-                        </h4>
+                        <h4 className='font-semibold text-sm'>Profile Completion</h4>
                         <p className='text-xs text-muted-foreground mt-1'>
-                          Complete your profile to get the most out of your
-                          account
+                          Complete your profile to get the most out of your account
                         </p>
                         <div className='mt-2'>
                           <div className='w-full bg-gray-200 rounded-full h-2'>
@@ -535,15 +460,11 @@ export default function ProfileViewPage() {
                               style={{ width: '75%' }}
                             ></div>
                           </div>
-                          <span className='text-xs text-muted-foreground'>
-                            75% Complete
-                          </span>
+                          <span className='text-xs text-muted-foreground'>75% Complete</span>
                         </div>
                       </div>
                       <div className='p-4 border rounded-lg'>
-                        <h4 className='font-semibold text-sm'>
-                          Account Status
-                        </h4>
+                        <h4 className='font-semibold text-sm'>Account Status</h4>
                         <p className='text-xs text-muted-foreground mt-1'>
                           Your account is active and ready to use
                         </p>
@@ -562,9 +483,7 @@ export default function ProfileViewPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Administrator Panel</CardTitle>
-                  <CardDescription>
-                    Administrative tools and system information
-                  </CardDescription>
+                  <CardDescription>Administrative tools and system information</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className='space-y-4'>
@@ -579,9 +498,7 @@ export default function ProfileViewPage() {
                         </Badge>
                       </div>
                       <div className='p-4 border rounded-lg'>
-                        <h4 className='font-semibold text-sm'>
-                          Role Permissions
-                        </h4>
+                        <h4 className='font-semibold text-sm'>Role Permissions</h4>
                         <p className='text-xs text-muted-foreground mt-1'>
                           Role: {user.role || 'Staff'}
                         </p>
@@ -598,5 +515,5 @@ export default function ProfileViewPage() {
         </div>
       </div>
     </ErrorBoundary>
-  );
+  )
 }

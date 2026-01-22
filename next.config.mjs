@@ -1,7 +1,7 @@
-import { withPayload } from '@payloadcms/next/withPayload';
-import { fileURLToPath } from 'url';
+import { withPayload } from '@payloadcms/next/withPayload'
+import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url);
+const __filename = fileURLToPath(import.meta.url)
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -55,8 +55,7 @@ const nextConfig = {
       {
         // Cache static assets from public folder
         // Works on both Vercel and other platforms
-        source:
-          '/:path*.(ico|svg|png|jpg|jpeg|gif|webp|avif|woff|woff2|ttf|eot)',
+        source: '/:path*.(ico|svg|png|jpg|jpeg|gif|webp|avif|woff|woff2|ttf|eot)',
         headers: [
           {
             key: 'Cache-Control',
@@ -64,16 +63,12 @@ const nextConfig = {
           },
         ],
       },
-    ];
+    ]
   },
 
   // Performance optimizations
   experimental: {
-    optimizePackageImports: [
-      'lucide-react',
-      '@radix-ui/react-icons',
-      '@tabler/icons-react',
-    ],
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons', '@tabler/icons-react'],
     // Build optimizations
     webpackBuildWorker: true,
     parallelServerCompiles: true,
@@ -95,7 +90,7 @@ const nextConfig = {
       '.cjs': ['.cts', '.cjs'],
       '.js': ['.ts', '.tsx', '.js', '.jsx'],
       '.mjs': ['.mts', '.mjs'],
-    };
+    }
 
     // Ensure public folder is included in build output
     // Next.js automatically copies public folder, but we ensure it's not excluded
@@ -112,26 +107,26 @@ const nextConfig = {
         buildDependencies: {
           config: [__filename],
         },
-      };
+      }
 
       // Optimize module resolution
-      webpackConfig.resolve.symlinks = false;
+      webpackConfig.resolve.symlinks = false
 
       // Simple code splitting configuration
       webpackConfig.optimization = {
         ...webpackConfig.optimization,
         moduleIds: 'deterministic',
         chunkIds: 'deterministic',
-      };
+      }
     }
 
-    return webpackConfig;
+    return webpackConfig
   },
 
   // Ensure public folder is included in build
   // Next.js automatically copies public/ to the build output root
   // This is handled automatically, but we document it here for clarity
   // On Vercel, the public folder is automatically included in the deployment
-};
+}
 
-export default withPayload(nextConfig, { devBundleServerPackages: false });
+export default withPayload(nextConfig, { devBundleServerPackages: false })

@@ -1,95 +1,97 @@
-import configPromise from '@payload-config';
-import { NextRequest, NextResponse } from 'next/server';
-import { getPayload } from 'payload';
-import { cookies } from 'next/headers';
-import { isAdmin } from '@/lib/access';
-import type { Task, TaskStatus, TaskType } from '@/payload-types';
-import type { TaskTableData } from '@/types/data-table';
+import configPromise from '@payload-config'
+import { NextRequest, NextResponse } from 'next/server'
+import { getPayload } from 'payload'
+import { cookies } from 'next/headers'
+import { isAdmin } from '@/lib/access'
+import type { Task, TaskStatus, TaskType } from '@/payload-types'
+import type { TaskTableData } from '@/types/data-table'
+import { createRequestLogger } from '@/utilities/logger'
 
 export async function GET(request: NextRequest) {
+  const requestLogger = createRequestLogger()
+
+  // Get user from JWT token in cookies for proper access control
+  let user = null
+
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(request.url)
 
     // Extract pagination parameters from URL
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const sort = searchParams.get('sort') || '-createdAt';
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '10')
+    const sort = searchParams.get('sort') || '-createdAt'
 
     // Check if pagination should be used (default: true, unless explicitly disabled)
     const usePagination =
       searchParams.has('page') ||
       searchParams.has('limit') ||
-      searchParams.get('usePagination') !== 'false';
+      searchParams.get('usePagination') !== 'false'
 
     // Extract filter parameters
-    const status = searchParams.get('status');
-    const priority = searchParams.get('priority');
-    const assignee = searchParams.get('assignee');
-    const taskTypes = searchParams.get('taskTypes');
-    const dueDateFrom = searchParams.get('dueDateFrom');
-    const dueDateTo = searchParams.get('dueDateTo');
-    const search = searchParams.get('search');
-    const includeFilterOptions =
-      searchParams.get('includeFilterOptions') === 'true';
+    const status = searchParams.get('status')
+    const priority = searchParams.get('priority')
+    const assignee = searchParams.get('assignee')
+    const taskTypes = searchParams.get('taskTypes')
+    const dueDateFrom = searchParams.get('dueDateFrom')
+    const dueDateTo = searchParams.get('dueDateTo')
+    const search = searchParams.get('search')
+    const includeFilterOptions = searchParams.get('includeFilterOptions') === 'true'
 
-    const payload = await getPayload({ config: configPromise });
-
-    // Get user from JWT token in cookies for proper access control
-    let user = null;
-    const cookieStore = await cookies();
-    const token = cookieStore.get('payload-token')?.value;
+    const payload = await getPayload({ config: configPromise })
+    const cookieStore = await cookies()
+    const token = cookieStore.get('payload-token')?.value
 
     if (token) {
       try {
-        const headers = new Headers();
-        headers.set('Authorization', `Bearer ${token}`);
-        const authResult = await payload.auth({ headers });
-        user = authResult.user;
+        const headers = new Headers()
+        headers.set('Authorization', `Bearer ${token}`)
+        const authResult = await payload.auth({ headers })
+        user = authResult.user
       } catch (authError) {
-        console.error(
-          'Failed to authenticate user for task-list API:',
-          authError
-        );
+        requestLogger.error('Failed to authenticate user for task-list API', authError, {
+          component: 'API',
+          action: 'GET /api/task-list',
+        })
       }
     }
 
     // Build where clause for filtering
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const where: Record<string, any> = {};
+    const where: Record<string, any> = {}
 
     // Always filter by creator for multi-tenancy
     if (user && !isAdmin(user)) {
-      where.creator = { equals: user.id };
+      where.creator = { equals: user.id }
     }
 
     if (status) {
-      where['status.id'] = { equals: status };
+      where['status.id'] = { equals: status }
     }
 
     if (priority) {
-      where.priority = { equals: priority };
+      where.priority = { equals: priority }
     }
 
     if (assignee) {
-      where.assignee = { equals: assignee };
+      where.assignee = { equals: assignee }
     }
 
     if (taskTypes) {
-      where['taskTypes.id'] = { equals: taskTypes };
+      where['taskTypes.id'] = { equals: taskTypes }
     }
 
     if (dueDateFrom) {
       where.dueDate = {
         ...((where.dueDate as Record<string, unknown>) || {}),
         greater_than_equal: dueDateFrom,
-      };
+      }
     }
 
     if (dueDateTo) {
       where.dueDate = {
         ...((where.dueDate as Record<string, unknown>) || {}),
         less_than_equal: dueDateTo,
-      };
+      }
     }
 
     if (search) {
@@ -97,7 +99,7 @@ export async function GET(request: NextRequest) {
         { title: { contains: search } },
         { description: { contains: search } },
         { assignee: { contains: search } },
-      ];
+      ]
     }
 
     // Use PayloadCMS built-in pagination
@@ -122,7 +124,7 @@ export async function GET(request: NextRequest) {
           email: true,
         },
       },
-    });
+    })
 
     // Transform the data to match our table structure
     const transformedData: TaskTableData[] = result.docs.map((task: Task) => ({
@@ -146,7 +148,7 @@ export async function GET(request: NextRequest) {
       order: task.order || 0,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
-    }));
+    }))
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response: any = {
@@ -160,35 +162,32 @@ export async function GET(request: NextRequest) {
       hasNextPage: usePagination ? result.hasNextPage : false, // No pagination when disabled
       prevPage: usePagination ? result.prevPage : null,
       nextPage: usePagination ? result.nextPage : null,
-    };
+    }
 
     // Include filter options if requested (for initial load)
     if (includeFilterOptions) {
       try {
         // Fetch statuses, task types, and assignees in parallel
-        const [statusResult, taskTypesResult, assigneeResult] =
-          await Promise.all([
-            payload.find({
-              collection: 'task-statuses',
-              limit: 100,
-              // Filter by creator for multi-tenancy
-              ...(user &&
-                !isAdmin(user) && { where: { creator: { equals: user.id } } }),
-            }),
-            payload.find({
-              collection: 'task-types',
-              limit: 100,
-              // Task types are global, not filtered by creator
-            }),
-            payload.find({
-              collection: 'tasks',
-              limit: 1000,
-              select: { assignee: true },
-              // Filter by creator for multi-tenancy
-              ...(user &&
-                !isAdmin(user) && { where: { creator: { equals: user.id } } }),
-            }),
-          ]);
+        const [statusResult, taskTypesResult, assigneeResult] = await Promise.all([
+          payload.find({
+            collection: 'task-statuses',
+            limit: 100,
+            // Filter by creator for multi-tenancy
+            ...(user && !isAdmin(user) && { where: { creator: { equals: user.id } } }),
+          }),
+          payload.find({
+            collection: 'task-types',
+            limit: 100,
+            // Task types are global, not filtered by creator
+          }),
+          payload.find({
+            collection: 'tasks',
+            limit: 1000,
+            select: { assignee: true },
+            // Filter by creator for multi-tenancy
+            ...(user && !isAdmin(user) && { where: { creator: { equals: user.id } } }),
+          }),
+        ])
 
         const uniqueAssignees = [
           ...new Set(
@@ -196,14 +195,12 @@ export async function GET(request: NextRequest) {
               .map((task: Pick<Task, 'assignee'>) => task.assignee)
               .filter(
                 (assignee): assignee is string =>
-                  assignee !== null &&
-                  assignee !== undefined &&
-                  assignee.trim() !== ''
+                  assignee !== null && assignee !== undefined && assignee.trim() !== ''
               )
           ),
-        ].sort();
+        ].sort()
 
-        (response as Record<string, unknown>).filterOptions = {
+        ;(response as Record<string, unknown>).filterOptions = {
           statuses: statusResult.docs.map((status: TaskStatus) => ({
             value: status.id,
             label: status.name,
@@ -218,24 +215,29 @@ export async function GET(request: NextRequest) {
             value: assignee,
             label: assignee,
           })),
-        };
+        }
       } catch (filterError) {
-        console.error('Failed to fetch filter options:', filterError);
+        requestLogger.error('Failed to fetch filter options', filterError, {
+          component: 'API',
+          action: 'GET /api/task-list',
+          userId: user?.id,
+        })
         // Don't fail the main request if filter options fail
-        (response as Record<string, unknown>).filterOptions = {
+        ;(response as Record<string, unknown>).filterOptions = {
           statuses: [],
           taskTypes: [],
           assignees: [],
-        };
+        }
       }
     }
 
-    return NextResponse.json(response);
+    return NextResponse.json(response)
   } catch (error) {
-    console.error('Failed to fetch tasks:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch tasks' },
-      { status: 500 }
-    );
+    requestLogger.error('Failed to fetch tasks', error, {
+      component: 'API',
+      action: 'GET /api/task-list',
+      userId: user?.id,
+    })
+    return NextResponse.json({ error: 'Failed to fetch tasks' }, { status: 500 })
   }
 }

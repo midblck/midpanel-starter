@@ -1,2 +1,2 @@
-export { LazyKanbanBoard } from './lazy-kanban-board';
-export { LazyTaskTable } from './lazy-task-table';
+export { LazyKanbanBoard } from './lazy-kanban-board'
+export { LazyTaskTable } from './lazy-task-table'

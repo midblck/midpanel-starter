@@ -1,7 +1,7 @@
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import UserAuthForm from './user-auth-form';
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import Link from 'next/link'
+import UserAuthForm from './user-auth-form'
 
 export default function SignInViewPage() {
   return (
@@ -35,9 +35,8 @@ export default function SignInViewPage() {
         <div className='relative z-20 mt-auto'>
           <blockquote className='space-y-2'>
             <p className='text-lg'>
-              &ldquo;This admin template has saved me countless hours of work
-              and helped me deliver projects to my clients faster than ever
-              before.&rdquo;
+              &ldquo;This admin template has saved me countless hours of work and helped me deliver
+              projects to my clients faster than ever before.&rdquo;
             </p>
             <footer className='text-sm'>Admin Team</footer>
           </blockquote>
@@ -46,22 +45,15 @@ export default function SignInViewPage() {
       <div className='flex h-full items-center justify-center p-4 lg:p-8'>
         <div className='flex w-full max-w-md flex-col items-center justify-center space-y-6'>
           <div className='flex flex-col items-center space-y-2'>
-            <h1 className='text-2xl font-semibold tracking-tight'>
-              Sign in to your account
-            </h1>
-            <p className='text-sm text-muted-foreground'>
-              Enter your credentials below to sign in
-            </p>
+            <h1 className='text-2xl font-semibold tracking-tight'>Sign in to your account</h1>
+            <p className='text-sm text-muted-foreground'>Enter your credentials below to sign in</p>
           </div>
 
           <UserAuthForm mode='sign-in' />
 
           <p className='text-muted-foreground px-8 text-center text-sm'>
             Don&apos;t have an account?{' '}
-            <Link
-              href='/auth/sign-up'
-              className='hover:text-primary underline underline-offset-4'
-            >
+            <Link href='/auth/sign-up' className='hover:text-primary underline underline-offset-4'>
               Sign up
             </Link>
             .
@@ -69,5 +61,5 @@ export default function SignInViewPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

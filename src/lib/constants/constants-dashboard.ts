@@ -16,7 +16,7 @@ import {
   ShoppingBag,
   User,
   UserCircle,
-} from 'lucide-react';
+} from 'lucide-react'
 
 // Dashboard constants
 export const Icons = {
@@ -37,20 +37,20 @@ export const Icons = {
   barChart: BarChart3,
   calendar: Calendar,
   fileText: FileText,
-};
+}
 
 export interface NavItem {
-  title: string;
-  url: string;
-  disabled?: boolean;
-  external?: boolean;
-  openInNewTab?: boolean;
-  shortcut?: [string, string];
-  icon?: keyof typeof Icons;
-  label?: string;
-  description?: string;
-  isActive?: boolean;
-  items?: NavItem[];
+  title: string
+  url: string
+  disabled?: boolean
+  external?: boolean
+  openInNewTab?: boolean
+  shortcut?: [string, string]
+  icon?: keyof typeof Icons
+  label?: string
+  description?: string
+  isActive?: boolean
+  items?: NavItem[]
 }
 
 export const navItems: NavItem[] = [
@@ -106,19 +106,19 @@ export const navItems: NavItem[] = [
     openInNewTab: true,
     items: [],
   },
-];
+]
 
 export const company = {
   name: 'MidblckPanel',
   logo: Shield,
   plan: 'Enterprise',
-};
+}
 
 export const tenants = [
   { id: '1', name: 'Dashboard' },
   { id: '2', name: 'Admin Panel' },
   // { id: '3', name: 'Dashboard' },
-];
+]
 
 // Dashboard stats and activities
 export const DASHBOARD_STATS = [
@@ -154,7 +154,7 @@ export const DASHBOARD_STATS = [
     description: 'from last month',
     icon: 'activity',
   },
-];
+]
 
 export const RECENT_ACTIVITIES = [
   {
@@ -192,4 +192,4 @@ export const RECENT_ACTIVITIES = [
     timestamp: '20 minutes ago',
     status: 'success' as const,
   },
-];
+]

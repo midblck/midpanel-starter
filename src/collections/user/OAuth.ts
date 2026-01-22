@@ -1,5 +1,5 @@
-import type { CollectionConfig } from 'payload';
-import { groups } from '@/lib/groups';
+import type { CollectionConfig } from 'payload'
+import { groups } from '@/lib/groups'
 
 export const OAuth: CollectionConfig = {
   slug: 'oauth',
@@ -121,4 +121,4 @@ export const OAuth: CollectionConfig = {
       fields: ['providerEmail'],
     },
   ],
-};
+}

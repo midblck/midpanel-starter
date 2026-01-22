@@ -1,26 +1,23 @@
-import type { AccountIdentity } from '@/types/auth';
-import type { Payload } from 'payload';
+import type { AccountIdentity } from '@/types/auth'
+import type { Payload } from 'payload'
 
 export interface IdentityDetails {
-  existsInAdmins: boolean;
-  existsInUsers: boolean;
-  hasOAuthInAdmins: boolean;
-  hasOAuthInUsers: boolean;
+  existsInAdmins: boolean
+  existsInUsers: boolean
+  hasOAuthInAdmins: boolean
+  hasOAuthInUsers: boolean
 }
 
-export interface EnhancedIdentity {
-  identity: AccountIdentity;
-  identityDetails: IdentityDetails;
+export interface GetIdentity {
+  identity: AccountIdentity
+  identityDetails: IdentityDetails
 }
 
 /**
- * Get enhanced identity information for a user email
+ * Get identity information for a user email
  * Checks both collections and OAuth connections
  */
-export async function getIdentityDetails(
-  email: string,
-  payload: Payload
-): Promise<EnhancedIdentity> {
+export async function getIdentityDetails(email: string, payload: Payload): Promise<GetIdentity> {
   // Check which collections have this email
   const [adminResult, userResult] = await Promise.all([
     payload.find({
@@ -41,10 +38,10 @@ export async function getIdentityDetails(
       },
       limit: 1,
     }),
-  ]);
+  ])
 
-  const existsInAdmins = adminResult.docs.length > 0;
-  const existsInUsers = userResult.docs.length > 0;
+  const existsInAdmins = adminResult.docs.length > 0
+  const existsInUsers = userResult.docs.length > 0
 
   // Check OAuth connections for each collection
   const [adminOAuth, userOAuth] = await Promise.all([
@@ -70,21 +67,21 @@ export async function getIdentityDetails(
           },
         })
       : { docs: [] },
-  ]);
+  ])
 
-  const hasOAuthInAdmins = adminOAuth.docs.length > 0;
-  const hasOAuthInUsers = userOAuth.docs.length > 0;
+  const hasOAuthInAdmins = adminOAuth.docs.length > 0
+  const hasOAuthInUsers = userOAuth.docs.length > 0
 
   // Determine simple identity
-  let identity: AccountIdentity;
+  let identity: AccountIdentity
   if (existsInAdmins && existsInUsers) {
-    identity = 'both';
+    identity = 'both'
   } else if (existsInAdmins) {
-    identity = 'admin';
+    identity = 'admin'
   } else if (existsInUsers) {
-    identity = 'user';
+    identity = 'user'
   } else {
-    identity = 'none';
+    identity = 'none'
   }
 
   return {
@@ -95,24 +92,24 @@ export async function getIdentityDetails(
       hasOAuthInAdmins,
       hasOAuthInUsers,
     },
-  };
+  }
 }
 
 /**
- * Get enhanced identity for a specific user (by ID and collection)
+ * Get identity for a specific user (by ID and collection)
  * Used when we already know the user and want their full identity details
  */
 export async function getIdentityDetailsForUser(
   userId: string,
   collection: 'admins' | 'users',
   payload: Payload
-): Promise<EnhancedIdentity> {
+): Promise<GetIdentity> {
   // Get the user first
   const user = await payload.findByID({
     collection,
     id: userId,
-  });
+  })
 
   // Get identity details using their email
-  return getIdentityDetails(user.email, payload);
+  return getIdentityDetails(user.email, payload)
 }

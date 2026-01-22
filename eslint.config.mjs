@@ -1,6 +1,6 @@
-import tseslint from 'typescript-eslint';
-import prettierConfig from 'eslint-config-prettier';
-import prettierPlugin from 'eslint-plugin-prettier';
+import prettierConfig from 'eslint-config-prettier'
+import prettierPlugin from 'eslint-plugin-prettier'
+import tseslint from 'typescript-eslint'
 
 // ESLint config that lints only the src directory with TypeScript support
 const eslintConfig = [
@@ -39,7 +39,7 @@ const eslintConfig = [
       // Turn off base rule as it conflicts with TypeScript version
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
-        'warn',
+        'error',
         {
           vars: 'all',
           args: 'after-used',
@@ -56,6 +56,6 @@ const eslintConfig = [
       'prettier/prettier': 'error',
     },
   },
-];
+]
 
-export default eslintConfig;
+export default eslintConfig

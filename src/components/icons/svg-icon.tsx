@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import { type IconName } from './svg';
+import { cn } from '@/lib/utils'
+import { type IconName } from './svg'
 
 interface SvgIconProps {
-  name: IconName;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  className?: string;
-  color?: string;
-  strokeWidth?: number;
+  name: IconName
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  className?: string
+  color?: string
+  strokeWidth?: number
 }
 
 const sizeClasses = {
@@ -17,18 +17,13 @@ const sizeClasses = {
   md: 'w-5 h-5',
   lg: 'w-6 h-6',
   xl: 'w-8 h-8',
-};
+}
 
 // Inline SVG components for each icon
 const iconComponents = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   'arrow-left': (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M19 12H5M12 19L5 12L12 5'
         stroke='currentColor'
@@ -40,12 +35,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   'arrow-right': (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M5 12H19M12 5L19 12L12 19'
         stroke='currentColor'
@@ -57,12 +47,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   check: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M20 6L9 17L4 12'
         stroke='currentColor'
@@ -74,12 +59,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   close: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M18 6L6 18M6 6L18 18'
         stroke='currentColor'
@@ -91,12 +71,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   download: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'
         stroke='currentColor'
@@ -125,12 +100,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   edit: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'
         stroke='currentColor'
@@ -149,12 +119,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   eye: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'
         stroke='currentColor'
@@ -175,12 +140,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   filter: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <polygon
         points='22,3 2,3 10,12.46 10,19 14,21 14,12.46'
         stroke='currentColor'
@@ -192,12 +152,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   logo: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <circle cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='2' />
       <path
         d='M12 6v6l4 2'
@@ -210,12 +165,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   plus: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M12 5v14M5 12h14'
         stroke='currentColor'
@@ -227,12 +177,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   search: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <circle
         cx='11'
         cy='11'
@@ -253,12 +198,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   settings: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <circle
         cx='12'
         cy='12'
@@ -279,12 +219,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   trash: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'
         stroke='currentColor'
@@ -303,12 +238,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   upload: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'
         stroke='currentColor'
@@ -337,12 +267,7 @@ const iconComponents = {
   ),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user: (props: any) => (
-    <svg
-      {...props}
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-    >
+    <svg {...props} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'
         stroke='currentColor'
@@ -361,7 +286,7 @@ const iconComponents = {
       />
     </svg>
   ),
-};
+}
 
 export function SvgIcon({
   name,
@@ -370,7 +295,7 @@ export function SvgIcon({
   color = 'currentColor',
   strokeWidth = 1.5,
 }: SvgIconProps) {
-  const IconComponent = iconComponents[name];
+  const IconComponent = iconComponents[name]
 
   if (!IconComponent) {
     return (
@@ -385,7 +310,7 @@ export function SvgIcon({
       >
         ?
       </div>
-    );
+    )
   }
 
   return (
@@ -397,7 +322,7 @@ export function SvgIcon({
       }}
       aria-hidden='true'
     />
-  );
+  )
 }
 
 // Fallback component for missing icons
@@ -406,11 +331,11 @@ export function IconFallback({
   size = 'md',
   className,
 }: {
-  name: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  className?: string;
+  name: string
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  className?: string
 }) {
-  const sizeClass = sizeClasses[size];
+  const sizeClass = sizeClasses[size]
 
   return (
     <div
@@ -424,5 +349,5 @@ export function IconFallback({
     >
       {name.charAt(0).toUpperCase()}
     </div>
-  );
+  )
 }

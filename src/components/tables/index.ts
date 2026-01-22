@@ -1,5 +1,5 @@
 // Data table components
-export * from './data-table';
+export * from './data-table'
 
 // Base table components
 export {
@@ -11,7 +11,7 @@ export {
   TableHead,
   TableHeader,
   TableRow,
-} from './table';
+} from './table'
 
 // Scroll area component
-export { ScrollArea, ScrollBar } from './scroll-area';
+export { ScrollArea, ScrollBar } from './scroll-area'

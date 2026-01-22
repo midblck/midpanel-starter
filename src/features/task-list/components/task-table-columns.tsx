@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { DataTableColumnHeader } from '@/components/tables';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { DataTableColumnHeader } from '@/components/tables'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,21 +11,21 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu'
 import {
   formatDate,
   formatDateTime,
   formatTaskPriority,
   formatTaskStatus,
   getDaysUntilDue,
-} from '@/lib/data-table';
-import type { TaskTableData } from '@/types/data-table';
-import { Column, ColumnDef } from '@tanstack/react-table';
-import { Copy, Edit, MoreHorizontal, Trash2 } from 'lucide-react';
+} from '@/lib/data-table'
+import type { TaskTableData } from '@/types/data-table'
+import { Column, ColumnDef } from '@tanstack/react-table'
+import { Copy, Edit, MoreHorizontal, Trash2 } from 'lucide-react'
 
 interface TaskTableColumnsProps {
-  onEdit?: (task: TaskTableData) => void;
-  onDelete?: (task: TaskTableData) => void;
+  onEdit?: (task: TaskTableData) => void
+  onDelete?: (task: TaskTableData) => void
 }
 
 export const createTaskTableColumns = ({
@@ -37,8 +37,7 @@ export const createTaskTableColumns = ({
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
+          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
         aria-label='Select all'
@@ -66,19 +65,17 @@ export const createTaskTableColumns = ({
     size: 300,
     minSize: 200,
     cell: ({ row }) => {
-      const title = row.getValue('title') as string;
-      const description = row.original.description;
+      const title = row.getValue('title') as string
+      const description = row.original.description
 
       return (
         <div className='max-w-[300px]'>
           <div className='font-medium truncate'>{title}</div>
           {description && (
-            <div className='text-sm text-muted-foreground truncate'>
-              {description}
-            </div>
+            <div className='text-sm text-muted-foreground truncate'>{description}</div>
           )}
         </div>
-      );
+      )
     },
     meta: {
       label: 'Title',
@@ -96,8 +93,8 @@ export const createTaskTableColumns = ({
     size: 120,
     minSize: 100,
     cell: ({ row }) => {
-      const status = row.getValue('status') as { name: string; color: string };
-      const statusConfig = formatTaskStatus(status);
+      const status = row.getValue('status') as { name: string; color: string }
+      const statusConfig = formatTaskStatus(status)
 
       return (
         <Badge
@@ -107,7 +104,7 @@ export const createTaskTableColumns = ({
         >
           {statusConfig.label}
         </Badge>
-      );
+      )
     },
     meta: {
       label: 'Status',
@@ -124,26 +121,21 @@ export const createTaskTableColumns = ({
     size: 100,
     minSize: 80,
     cell: ({ row }) => {
-      const priority = row.getValue('priority') as string;
-      const priorityConfig = formatTaskPriority(priority);
+      const priority = row.getValue('priority') as string
+      const priorityConfig = formatTaskPriority(priority)
 
       const priorityVariants = {
         low: 'success' as const,
         medium: 'warning' as const,
         high: 'danger' as const,
         critical: 'danger' as const,
-      };
+      }
 
       return (
-        <Badge
-          variant={
-            priorityVariants[priority as keyof typeof priorityVariants] ||
-            'warning'
-          }
-        >
+        <Badge variant={priorityVariants[priority as keyof typeof priorityVariants] || 'warning'}>
           {priorityConfig.label}
         </Badge>
-      );
+      )
     },
     meta: {
       label: 'Priority',
@@ -166,14 +158,12 @@ export const createTaskTableColumns = ({
     size: 150,
     minSize: 120,
     cell: ({ row }) => {
-      const assignee = row.getValue('assignee') as string;
+      const assignee = row.getValue('assignee') as string
       return (
         <div className='max-w-[150px] truncate'>
-          {assignee || (
-            <span className='text-muted-foreground'>Unassigned</span>
-          )}
+          {assignee || <span className='text-muted-foreground'>Unassigned</span>}
         </div>
-      );
+      )
     },
     meta: {
       label: 'Assignee',
@@ -190,19 +180,19 @@ export const createTaskTableColumns = ({
     size: 180,
     minSize: 150,
     cell: ({ row }) => {
-      const dueDate = row.getValue('dueDate') as string;
+      const dueDate = row.getValue('dueDate') as string
       if (!dueDate) {
-        return <span className='text-muted-foreground'>No due date</span>;
+        return <span className='text-muted-foreground'>No due date</span>
       }
 
-      const status = row.getValue('status') as { name: string; color: string };
-      const dueInfo = getDaysUntilDue(dueDate, status);
+      const status = row.getValue('status') as { name: string; color: string }
+      const dueInfo = getDaysUntilDue(dueDate, status)
       return (
         <div className='max-w-[120px]'>
           <div className='text-sm'>{formatDate(dueDate)}</div>
           <div className={`text-xs ${dueInfo.className}`}>{dueInfo.text}</div>
         </div>
-      );
+      )
     },
     meta: {
       label: 'Due Date',
@@ -220,12 +210,12 @@ export const createTaskTableColumns = ({
     minSize: 120,
     cell: ({ row }) => {
       const taskTypes = row.getValue('taskTypes') as Array<{
-        id: string;
-        name: string;
-        color: string;
-      }>;
+        id: string
+        name: string
+        color: string
+      }>
       if (!taskTypes || taskTypes.length === 0) {
-        return <span className='text-muted-foreground'>No types</span>;
+        return <span className='text-muted-foreground'>No types</span>
       }
 
       return (
@@ -244,7 +234,7 @@ export const createTaskTableColumns = ({
             </Badge>
           ))}
         </div>
-      );
+      )
     },
     meta: {
       label: 'Task Types',
@@ -261,12 +251,12 @@ export const createTaskTableColumns = ({
     size: 180,
     minSize: 150,
     cell: ({ row }) => {
-      const createdAt = row.getValue('createdAt') as string;
+      const createdAt = row.getValue('createdAt') as string
       return (
         <div className='max-w-[120px] text-sm text-muted-foreground'>
           {formatDateTime(createdAt)}
         </div>
-      );
+      )
     },
   },
   {
@@ -275,7 +265,7 @@ export const createTaskTableColumns = ({
     minSize: 60,
     maxSize: 60,
     cell: ({ row }) => {
-      const task = row.original;
+      const task = row.original
 
       return (
         <DropdownMenu>
@@ -287,9 +277,7 @@ export const createTaskTableColumns = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(task.id)}
-            >
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(task.id)}>
               <Copy className='mr-2 h-4 w-4' />
               Copy ID
             </DropdownMenuItem>
@@ -298,21 +286,18 @@ export const createTaskTableColumns = ({
               <Edit className='mr-2 h-4 w-4' />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem
-              className='text-red-600'
-              onClick={() => void onDelete?.(task)}
-            >
+            <DropdownMenuItem className='text-red-600' onClick={() => void onDelete?.(task)}>
               <Trash2 className='mr-2 h-4 w-4' />
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      );
+      )
     },
     enableSorting: false,
     enableHiding: false,
   },
-];
+]
 
 // Default columns without callbacks (for backward compatibility)
-export const taskTableColumns = createTaskTableColumns();
+export const taskTableColumns = createTaskTableColumns()

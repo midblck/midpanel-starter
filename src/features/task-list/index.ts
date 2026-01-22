@@ -1,10 +1,7 @@
 // Components
-export { TaskTable } from './components/table';
-export { TaskDialog } from './components/task-dialog';
-export {
-  createTaskTableColumns,
-  taskTableColumns,
-} from './components/task-table-columns';
+export { TaskTable } from './components/table'
+export { TaskDialog } from './components/task-dialog'
+export { createTaskTableColumns, taskTableColumns } from './components/task-table-columns'
 
 // Services
 export {
@@ -15,4 +12,4 @@ export {
   fetchTaskTableData,
   fetchTaskTypes,
   updateTask,
-} from './services/task-table';
+} from './services/task-table'

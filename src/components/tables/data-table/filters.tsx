@@ -1,42 +1,42 @@
-'use client';
+'use client'
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
+} from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import type { Table } from '@tanstack/react-table';
-import { X } from 'lucide-react';
-import { useState } from 'react';
+} from '@/components/ui/select'
+import type { Table } from '@tanstack/react-table'
+import { X } from 'lucide-react'
+import { useState } from 'react'
 
 export interface FilterConfig {
-  id: string;
-  label: string;
-  type: 'select' | 'text' | 'date' | 'date-range';
-  options?: Array<{ value: string; label: string; color?: string }>;
-  placeholder?: string;
-  columnId?: string; // If different from id
+  id: string
+  label: string
+  type: 'select' | 'text' | 'date' | 'date-range'
+  options?: Array<{ value: string; label: string; color?: string }>
+  placeholder?: string
+  columnId?: string // If different from id
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface DataTableFiltersProps<TData = any> {
-  table: Table<TData>;
-  filters: FilterConfig[];
+  table: Table<TData>
+  filters: FilterConfig[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onFilterChange?: (filterId: string, value: any) => void;
-  onClearFilters?: () => void;
+  onFilterChange?: (filterId: string, value: any) => void
+  onClearFilters?: () => void
 }
 
 export function DataTableFilters<TData>({
@@ -46,86 +46,86 @@ export function DataTableFilters<TData>({
   onClearFilters,
 }: DataTableFiltersProps<TData>) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [filterValues, setFilterValues] = useState<Record<string, any>>({});
+  const [filterValues, setFilterValues] = useState<Record<string, any>>({})
 
   const clearFilters = () => {
-    setFilterValues({});
+    setFilterValues({})
 
     // Clear all table filters
     filters.forEach(filter => {
-      const columnId = filter.columnId || filter.id;
-      table.getColumn(columnId)?.setFilterValue('');
-    });
+      const columnId = filter.columnId || filter.id
+      table.getColumn(columnId)?.setFilterValue('')
+    })
 
-    onClearFilters?.();
-  };
+    onClearFilters?.()
+  }
 
   const applyFilters = () => {
     // Clear all filters first
     filters.forEach(filter => {
-      const columnId = filter.columnId || filter.id;
-      table.getColumn(columnId)?.setFilterValue('');
-    });
+      const columnId = filter.columnId || filter.id
+      table.getColumn(columnId)?.setFilterValue('')
+    })
 
     // Apply active filters
     Object.entries(filterValues).forEach(([filterId, value]) => {
       if (value) {
-        const filter = filters.find(f => f.id === filterId);
+        const filter = filters.find(f => f.id === filterId)
         if (filter) {
-          const columnId = filter.columnId || filter.id;
-          table.getColumn(columnId)?.setFilterValue(value);
-          onFilterChange?.(filterId, value);
+          const columnId = filter.columnId || filter.id
+          table.getColumn(columnId)?.setFilterValue(value)
+          onFilterChange?.(filterId, value)
         }
       }
-    });
-  };
+    })
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateFilterValue = (filterId: string, value: any) => {
     setFilterValues(prev => ({
       ...prev,
       [filterId]: value,
-    }));
-  };
+    }))
+  }
 
   const removeFilter = (filterId: string) => {
     setFilterValues(prev => {
-      const newValues = { ...prev };
-      delete newValues[filterId];
-      return newValues;
-    });
+      const newValues = { ...prev }
+      delete newValues[filterId]
+      return newValues
+    })
 
-    const filter = filters.find(f => f.id === filterId);
+    const filter = filters.find(f => f.id === filterId)
     if (filter) {
-      const columnId = filter.columnId || filter.id;
-      table.getColumn(columnId)?.setFilterValue('');
+      const columnId = filter.columnId || filter.id
+      table.getColumn(columnId)?.setFilterValue('')
     }
-  };
+  }
 
   const activeFilters = Object.entries(filterValues)
     .filter(([_, value]) => value && value !== '')
     .map(([filterId, value]) => {
-      const filter = filters.find(f => f.id === filterId);
-      if (!filter) return null;
+      const filter = filters.find(f => f.id === filterId)
+      if (!filter) return null
 
-      let displayValue = value;
+      let displayValue = value
       if (filter.type === 'select' && filter.options) {
-        const option = filter.options.find(opt => opt.value === value);
-        displayValue = option?.label || value;
+        const option = filter.options.find(opt => opt.value === value)
+        displayValue = option?.label || value
       } else if (filter.type === 'date-range' && typeof value === 'object') {
-        displayValue = `${value.startDate || 'Any'} - ${value.endDate || 'Any'}`;
+        displayValue = `${value.startDate || 'Any'} - ${value.endDate || 'Any'}`
       }
 
       return {
         key: filterId,
         value: displayValue,
         label: filter.label,
-      };
+      }
     })
-    .filter(Boolean) as Array<{ key: string; value: string; label: string }>;
+    .filter(Boolean) as Array<{ key: string; value: string; label: string }>
 
   const renderFilter = (filter: FilterConfig) => {
-    const value = filterValues[filter.id] || '';
+    const value = filterValues[filter.id] || ''
 
     switch (filter.type) {
       case 'select':
@@ -136,9 +136,7 @@ export function DataTableFilters<TData>({
           >
             <SelectTrigger className='h-8'>
               <SelectValue
-                placeholder={
-                  filter.placeholder || `All ${filter.label.toLowerCase()}`
-                }
+                placeholder={filter.placeholder || `All ${filter.label.toLowerCase()}`}
               />
             </SelectTrigger>
             <SelectContent>
@@ -159,35 +157,31 @@ export function DataTableFilters<TData>({
               ))}
             </SelectContent>
           </Select>
-        );
+        )
 
       case 'text':
         return (
           <Input
-            placeholder={
-              filter.placeholder || `Enter ${filter.label.toLowerCase()}...`
-            }
+            placeholder={filter.placeholder || `Enter ${filter.label.toLowerCase()}...`}
             value={value}
             onChange={e => updateFilterValue(filter.id, e.target.value)}
             className='h-8'
           />
-        );
+        )
 
       case 'date':
         return (
           <Input
             type='date'
-            placeholder={
-              filter.placeholder || `Select ${filter.label.toLowerCase()}`
-            }
+            placeholder={filter.placeholder || `Select ${filter.label.toLowerCase()}`}
             value={value}
             onChange={e => updateFilterValue(filter.id, e.target.value)}
             className='h-8'
           />
-        );
+        )
 
       case 'date-range':
-        const dateRange = value || { startDate: '', endDate: '' };
+        const dateRange = value || { startDate: '', endDate: '' }
         return (
           <div className='space-y-2'>
             <Input
@@ -215,12 +209,12 @@ export function DataTableFilters<TData>({
               className='h-8'
             />
           </div>
-        );
+        )
 
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   return (
     <div className='flex items-center gap-2'>
@@ -251,12 +245,7 @@ export function DataTableFilters<TData>({
             <Button size='sm' onClick={applyFilters} className='flex-1'>
               Apply
             </Button>
-            <Button
-              size='sm'
-              variant='outline'
-              onClick={clearFilters}
-              className='flex-1'
-            >
+            <Button size='sm' variant='outline' onClick={clearFilters} className='flex-1'>
               Clear
             </Button>
           </div>
@@ -282,5 +271,5 @@ export function DataTableFilters<TData>({
         </div>
       )}
     </div>
-  );
+  )
 }

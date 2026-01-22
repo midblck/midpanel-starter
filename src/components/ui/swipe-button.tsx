@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import { SwipeableButton } from 'react-swipeable-button';
+import { cn } from '@/lib/utils'
+import { SwipeableButton } from 'react-swipeable-button'
 
 interface SwipeButtonProps {
-  onConfirm: () => void;
-  text: string;
-  variant?: 'default' | 'destructive' | 'warning' | 'success';
-  disabled?: boolean;
-  className?: string;
+  onConfirm: () => void
+  text: string
+  variant?: 'default' | 'destructive' | 'warning' | 'success'
+  disabled?: boolean
+  className?: string
 }
 
 const variantStyles = {
@@ -28,7 +28,7 @@ const variantStyles = {
     color: '#10b981', // Green success color
     text: 'Slide to ',
   },
-};
+}
 
 export function SwipeButton({
   onConfirm,
@@ -37,7 +37,7 @@ export function SwipeButton({
   disabled = false,
   className,
 }: SwipeButtonProps) {
-  const styles = variantStyles[variant];
+  const styles = variantStyles[variant]
 
   return (
     <div className={cn('w-full flex justify-center', className)}>
@@ -51,5 +51,5 @@ export function SwipeButton({
         width={320}
       />
     </div>
-  );
+  )
 }

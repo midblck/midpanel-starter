@@ -1,24 +1,18 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { AlertTriangle, Bug, Copy, Home, RefreshCw } from 'lucide-react';
-import { ReactNode } from 'react';
-import { toast } from 'sonner';
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AlertTriangle, Bug, Copy, Home, RefreshCw } from 'lucide-react'
+import { ReactNode } from 'react'
+import { toast } from 'sonner'
 
 interface ErrorFallbackProps {
-  error: Error;
-  errorId?: string;
-  showDetails?: boolean;
-  title?: string;
-  description?: string;
-  actions?: ReactNode;
+  error: Error
+  errorId?: string
+  showDetails?: boolean
+  title?: string
+  description?: string
+  actions?: ReactNode
 }
 
 export function ErrorFallback({
@@ -30,12 +24,12 @@ export function ErrorFallback({
   actions,
 }: ErrorFallbackProps) {
   const handleRetry = () => {
-    window.location.reload();
-  };
+    window.location.reload()
+  }
 
   const handleGoHome = () => {
-    window.location.href = '/';
-  };
+    window.location.href = '/'
+  }
 
   const handleCopyError = () => {
     const errorDetails = {
@@ -45,7 +39,7 @@ export function ErrorFallback({
       timestamp: new Date().toISOString(),
       url: window.location.href,
       userAgent: navigator.userAgent,
-    };
+    }
 
     const errorText = `Error Details:
 Message: ${errorDetails.message}
@@ -55,22 +49,22 @@ URL: ${errorDetails.url}
 User Agent: ${errorDetails.userAgent}
 
 Stack Trace:
-${errorDetails.stack || 'No stack trace available'}`;
+${errorDetails.stack || 'No stack trace available'}`
 
     try {
-      void navigator.clipboard.writeText(errorText);
-      toast.success('Error details copied to clipboard');
+      void navigator.clipboard.writeText(errorText)
+      toast.success('Error details copied to clipboard')
     } catch {
       // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = errorText;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      toast.success('Error details copied to clipboard');
+      const textArea = document.createElement('textarea')
+      textArea.value = errorText
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      toast.success('Error details copied to clipboard')
     }
-  };
+  }
 
   return (
     <div className='min-h-screen flex items-center justify-center p-4'>
@@ -103,11 +97,7 @@ ${errorDetails.stack || 'No stack trace available'}`;
                   <RefreshCw className='h-4 w-4 mr-2' />
                   Try Again
                 </Button>
-                <Button
-                  variant='outline'
-                  onClick={handleGoHome}
-                  className='flex-1'
-                >
+                <Button variant='outline' onClick={handleGoHome} className='flex-1'>
                   <Home className='h-4 w-4 mr-2' />
                   Go Home
                 </Button>
@@ -128,14 +118,12 @@ ${errorDetails.stack || 'No stack trace available'}`;
           )}
 
           {errorId && (
-            <div className='text-center text-xs text-muted-foreground'>
-              Error ID: {errorId}
-            </div>
+            <div className='text-center text-xs text-muted-foreground'>Error ID: {errorId}</div>
           )}
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
 
 // Specific error fallbacks for different scenarios
@@ -147,7 +135,7 @@ export function KanbanErrorFallback({ error }: { error: Error }) {
       description='Failed to load the kanban board. This might be due to a network issue or server problem.'
       showDetails={true}
     />
-  );
+  )
 }
 
 export function DashboardErrorFallback({ error }: { error: Error }) {
@@ -158,7 +146,7 @@ export function DashboardErrorFallback({ error }: { error: Error }) {
       description='Failed to load dashboard data. Please check your connection and try again.'
       showDetails={true}
     />
-  );
+  )
 }
 
 export function TaskListErrorFallback({ error }: { error: Error }) {
@@ -169,7 +157,7 @@ export function TaskListErrorFallback({ error }: { error: Error }) {
       description='Failed to load the task list. This might be due to a data loading issue.'
       showDetails={true}
     />
-  );
+  )
 }
 
 export function ProfileErrorFallback({ error }: { error: Error }) {
@@ -180,22 +168,20 @@ export function ProfileErrorFallback({ error }: { error: Error }) {
       description='Failed to load profile information. Please try refreshing the page.'
       showDetails={true}
     />
-  );
+  )
 }
 
 // Inline error fallback for smaller components
 export function InlineErrorFallback({
-  error: _error,
   title = 'Error',
   description = 'Something went wrong',
 }: {
-  error: Error;
-  title?: string;
-  description?: string;
+  title?: string
+  description?: string
 }) {
   const handleRetry = () => {
-    window.location.reload();
-  };
+    window.location.reload()
+  }
 
   return (
     <div className='flex flex-col items-center justify-center p-6 text-center'>
@@ -209,5 +195,5 @@ export function InlineErrorFallback({
         Try Again
       </Button>
     </div>
-  );
+  )
 }

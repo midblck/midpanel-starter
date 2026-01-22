@@ -1,14 +1,11 @@
-import { PageContainer, PageHeader } from '@/components/layout';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { PageContainer, PageHeader } from '@/components/layout'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Loading() {
   return (
     <PageContainer>
-      <PageHeader
-        title='Tasks List'
-        description='View and manage your tasks in a list format'
-      />
+      <PageHeader title='Tasks List' description='View and manage your tasks in a list format' />
 
       {/* Content skeleton */}
       <Card>
@@ -31,5 +28,5 @@ export default function Loading() {
         </CardContent>
       </Card>
     </PageContainer>
-  );
+  )
 }

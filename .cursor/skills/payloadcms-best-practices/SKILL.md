@@ -4,7 +4,7 @@ description: PayloadCMS + Next.js + shadcn/ui Best Practices - comprehensive dev
 license: MIT
 metadata:
   author: cursor
-  version: "2.0.0"
+  version: '2.0.0'
 ---
 
 # PayloadCMS Best Practices
@@ -14,6 +14,7 @@ Comprehensive development guide for PayloadCMS applications with Next.js 15, Typ
 ## When to Apply
 
 Reference these guidelines when:
+
 - Setting up new PayloadCMS collections or fields
 - Implementing admin panel customizations
 - Building Next.js pages with PayloadCMS data
@@ -25,31 +26,32 @@ Reference these guidelines when:
 
 ## Rule Categories by Priority
 
-| Priority | Category | Impact | Prefix |
-|----------|----------|--------|--------|
-| 1 | Build & Performance | CRITICAL | `build-` |
-| 2 | Folder Structure | HIGH | `structure-` |
-| 3 | Development Rules | HIGH | `dev-` |
-| 4 | Code Quality | HIGH | `quality-` |
-| 5 | PayloadCMS Integration | CRITICAL | `payload-` |
-| 6 | TypeScript & Type Safety | HIGH | `typescript-` |
-| 7 | Component Architecture | MEDIUM | `component-` |
-| 8 | Error Handling | MEDIUM | `error-` |
-| 9 | Performance Optimization | MEDIUM-HIGH | `performance-` |
-| 10 | Accessibility & UX | LOW-MEDIUM | `accessibility-` |
-| 11 | Styling Guidelines | MEDIUM | `styling-` |
-| 12 | Import Organization | MEDIUM | `import-` |
-| 13 | Code Splitting | MEDIUM | `splitting-` |
-| 14 | Linter & Typecheck | CRITICAL | `lint-` |
-| 15 | KISS Principle | HIGH | `kiss-` |
-| 16 | Reusability | MEDIUM | `reuse-` |
-| 17 | Development Workflow | LOW | `workflow-` |
-| 18 | Feature Architecture | MEDIUM | `structure-feature-` |
-| 18 | PayloadCMS Fields | HIGH | `payload-field-` |
-| 19 | PayloadCMS Access Control | CRITICAL | `payload-access-` |
-| 20 | PayloadCMS Hooks | HIGH | `payload-hook-` |
-| 21 | PayloadCMS Upload | MEDIUM | `payload-upload-` |
-| 22 | PayloadCMS Admin | MEDIUM | `payload-admin-` |
+| Priority | Category                  | Impact      | Prefix               |
+| -------- | ------------------------- | ----------- | -------------------- |
+| 1        | Build & Performance       | CRITICAL    | `build-`             |
+| 2        | Folder Structure          | HIGH        | `structure-`         |
+| 3        | Development Rules         | HIGH        | `dev-`               |
+| 4        | Code Quality              | HIGH        | `quality-`           |
+| 5        | PayloadCMS Integration    | CRITICAL    | `payload-`           |
+| 6        | TypeScript & Type Safety  | HIGH        | `typescript-`        |
+| 7        | Component Architecture    | MEDIUM      | `component-`         |
+| 8        | Error Handling            | MEDIUM      | `error-`             |
+| 9        | Performance Optimization  | MEDIUM-HIGH | `performance-`       |
+| 10       | Accessibility & UX        | LOW-MEDIUM  | `accessibility-`     |
+| 11       | Styling Guidelines        | MEDIUM      | `styling-`           |
+| 12       | Import Organization       | MEDIUM      | `import-`            |
+| 13       | Code Splitting            | MEDIUM      | `splitting-`         |
+| 14       | Linter & Typecheck        | CRITICAL    | `lint-`              |
+| 15       | Structured Logging        | HIGH        | `logging-`           |
+| 16       | KISS Principle            | HIGH        | `kiss-`              |
+| 16       | Reusability               | MEDIUM      | `reuse-`             |
+| 17       | Development Workflow      | LOW         | `workflow-`          |
+| 19       | Feature Architecture      | MEDIUM      | `structure-feature-` |
+| 20       | PayloadCMS Fields         | HIGH        | `payload-field-`     |
+| 21       | PayloadCMS Access Control | CRITICAL    | `payload-access-`    |
+| 22       | PayloadCMS Hooks          | HIGH        | `payload-hook-`      |
+| 23       | PayloadCMS Upload         | MEDIUM      | `payload-upload-`    |
+| 24       | PayloadCMS Admin          | MEDIUM      | `payload-admin-`     |
 
 ## Quick Reference
 
@@ -68,6 +70,7 @@ Reference these guidelines when:
 - `dev-component-organization` - Structure components with clear separation of concerns
 - `dev-typescript-best-practices` - Use proper TypeScript patterns and avoid any types
 - `dev-shadcn-integration` - Properly integrate shadcn/ui components
+- `logging-structured` - Use structured logging instead of console statements
 
 ### 4. Code Quality (HIGH)
 
@@ -194,6 +197,7 @@ rules/kiss-avoid-over-engineering.md
 ```
 
 Each rule file contains:
+
 - Brief explanation of why it matters
 - Incorrect code example with explanation
 - Correct code example with explanation

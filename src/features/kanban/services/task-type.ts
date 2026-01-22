@@ -1,32 +1,29 @@
-import { convertToStoreTaskType } from './converters';
+import { convertToStoreTaskType } from './converters'
+import { logDbError } from '@/utilities/logger'
 import type {
   CreateTaskTypeData,
   PayloadTaskTypeResponse,
   TaskType,
   UpdateTaskTypeData,
-} from './types';
+} from './types'
 
 // Fetch all task types using PayloadCMS built-in REST API
 export async function fetchTaskTypes(): Promise<TaskType[]> {
   try {
-    const response = await fetch('/api/task-types?sort=order');
+    const response = await fetch('/api/task-types?sort=order')
     if (!response.ok) {
-      throw new Error('Failed to fetch task types');
+      throw new Error('Failed to fetch task types')
     }
-    const data: PayloadTaskTypeResponse = await response.json();
-    return Array.isArray(data.docs)
-      ? data.docs.map(convertToStoreTaskType)
-      : [];
+    const data: PayloadTaskTypeResponse = await response.json()
+    return Array.isArray(data.docs) ? data.docs.map(convertToStoreTaskType) : []
   } catch (error) {
-    console.error('Error fetching task types:', error);
-    return [];
+    logDbError('fetch-task-types', error)
+    return []
   }
 }
 
 // Create task type using PayloadCMS built-in REST API
-export async function createTaskType(
-  taskTypeData: CreateTaskTypeData
-): Promise<TaskType | null> {
+export async function createTaskType(taskTypeData: CreateTaskTypeData): Promise<TaskType | null> {
   try {
     const response = await fetch('/api/task-types', {
       method: 'POST',
@@ -34,19 +31,19 @@ export async function createTaskType(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(taskTypeData),
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('Failed to create task type');
+      throw new Error('Failed to create task type')
     }
 
-    const responseData = await response.json();
+    const responseData = await response.json()
     // PayloadCMS returns data in a 'doc' property for single item updates
-    const data = responseData.doc || responseData;
-    return convertToStoreTaskType(data as import('@/payload-types').TaskType);
+    const data = responseData.doc || responseData
+    return convertToStoreTaskType(data as import('@/payload-types').TaskType)
   } catch (error) {
-    console.error('Error creating task type:', error);
-    return null;
+    logDbError('create-task-type', error, { taskTypeData })
+    return null
   }
 }
 
@@ -62,19 +59,19 @@ export async function updateTaskType(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(taskTypeData),
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('Failed to update task type');
+      throw new Error('Failed to update task type')
     }
 
-    const responseData = await response.json();
+    const responseData = await response.json()
     // PayloadCMS returns data in a 'doc' property for single item updates
-    const data = responseData.doc || responseData;
-    return convertToStoreTaskType(data as import('@/payload-types').TaskType);
+    const data = responseData.doc || responseData
+    return convertToStoreTaskType(data as import('@/payload-types').TaskType)
   } catch (error) {
-    console.error('Error updating task type:', error);
-    return null;
+    logDbError('update-task-type', error, { taskTypeId: id, taskTypeData })
+    return null
   }
 }
 
@@ -83,15 +80,15 @@ export async function deleteTaskType(id: string): Promise<boolean> {
   try {
     const response = await fetch(`/api/task-types/${id}`, {
       method: 'DELETE',
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('Failed to delete task type');
+      throw new Error('Failed to delete task type')
     }
 
-    return true;
+    return true
   } catch (error) {
-    console.error('Error deleting task type:', error);
-    return false;
+    logDbError('delete-task-type', error, { taskTypeId: id })
+    return false
   }
 }

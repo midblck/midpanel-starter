@@ -1,5 +1,5 @@
-import type { CollectionConfig } from 'payload';
-import { groups } from '@/lib/groups';
+import type { CollectionConfig } from 'payload'
+import { groups } from '@/lib/groups'
 
 export const Theme: CollectionConfig = {
   slug: 'themes',
@@ -41,4 +41,4 @@ export const Theme: CollectionConfig = {
     },
   ],
   timestamps: true,
-};
+}

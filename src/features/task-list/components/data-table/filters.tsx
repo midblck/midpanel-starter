@@ -1,22 +1,19 @@
-'use client';
+'use client'
 
-import {
-  DataTableFilters,
-  type FilterConfig,
-} from '@/components/tables/data-table/filters';
-import type { Table } from '@tanstack/react-table';
+import { DataTableFilters, type FilterConfig } from '@/components/tables/data-table/filters'
+import type { Table } from '@tanstack/react-table'
 
 interface FiltersProps<TData> {
-  table: Table<TData>;
-  statusOptions?: Array<{ value: string; label: string; color: string }>;
-  priorityOptions?: Array<{ value: string; label: string }>;
-  assigneeOptions?: Array<{ value: string; label: string }>;
-  taskTypesOptions?: Array<{ value: string; label: string; color: string }>;
-  onStatusFilter?: (status: string) => void;
-  onPriorityFilter?: (priority: string) => void;
-  onAssigneeFilter?: (assignee: string) => void;
-  onTaskTypesFilter?: (taskTypes: string) => void;
-  onDateRangeFilter?: (startDate: string, endDate: string) => void;
+  table: Table<TData>
+  statusOptions?: Array<{ value: string; label: string; color: string }>
+  priorityOptions?: Array<{ value: string; label: string }>
+  assigneeOptions?: Array<{ value: string; label: string }>
+  taskTypesOptions?: Array<{ value: string; label: string; color: string }>
+  onStatusFilter?: (status: string) => void
+  onPriorityFilter?: (priority: string) => void
+  onAssigneeFilter?: (assignee: string) => void
+  onTaskTypesFilter?: (taskTypes: string) => void
+  onDateRangeFilter?: (startDate: string, endDate: string) => void
 }
 
 export function Filters<TData>({
@@ -64,36 +61,30 @@ export function Filters<TData>({
       label: 'Due Date Range',
       type: 'date-range',
     },
-  ];
+  ]
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFilterChange = (filterId: string, value: any) => {
     switch (filterId) {
       case 'status':
-        onStatusFilter?.(value);
-        break;
+        onStatusFilter?.(value)
+        break
       case 'priority':
-        onPriorityFilter?.(value);
-        break;
+        onPriorityFilter?.(value)
+        break
       case 'assignee':
-        onAssigneeFilter?.(value);
-        break;
+        onAssigneeFilter?.(value)
+        break
       case 'taskTypes':
-        onTaskTypesFilter?.(value);
-        break;
+        onTaskTypesFilter?.(value)
+        break
       case 'dueDate':
         if (value && typeof value === 'object') {
-          onDateRangeFilter?.(value.startDate || '', value.endDate || '');
+          onDateRangeFilter?.(value.startDate || '', value.endDate || '')
         }
-        break;
+        break
     }
-  };
+  }
 
-  return (
-    <DataTableFilters
-      table={table}
-      filters={filters}
-      onFilterChange={handleFilterChange}
-    />
-  );
+  return <DataTableFilters table={table} filters={filters} onFilterChange={handleFilterChange} />
 }

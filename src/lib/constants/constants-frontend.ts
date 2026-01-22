@@ -8,14 +8,13 @@ export const AVATAR_CONFIG = {
     bold: true,
     format: 'png',
   },
-};
+}
 
 export const FEATURES = [
   {
     icon: 'Kanban',
     title: 'Kanban Board',
-    description:
-      'Drag-and-drop task management with customizable columns and real-time updates.',
+    description: 'Drag-and-drop task management with customizable columns and real-time updates.',
   },
   {
     icon: 'ListTodo',
@@ -26,14 +25,12 @@ export const FEATURES = [
   {
     icon: 'KeyRound',
     title: 'OAuth Integration',
-    description:
-      'Google OAuth authentication with role-based access control and secure sessions.',
+    description: 'Google OAuth authentication with role-based access control and secure sessions.',
   },
   {
     icon: 'Palette',
     title: 'shadcn/ui Components',
-    description:
-      'Beautiful, accessible UI components with dark/light theme support built-in.',
+    description: 'Beautiful, accessible UI components with dark/light theme support built-in.',
   },
   {
     icon: 'Users',
@@ -44,22 +41,19 @@ export const FEATURES = [
   {
     icon: 'Image',
     title: 'Media Management',
-    description:
-      'Optimized file uploads with automatic resizing, focal points, and cloud storage.',
+    description: 'Optimized file uploads with automatic resizing, focal points, and cloud storage.',
   },
   {
     icon: 'Moon',
     title: 'Dark/Light Theme',
-    description:
-      'Seamless theme switching with system preference detection and manual controls.',
+    description: 'Seamless theme switching with system preference detection and manual controls.',
   },
   {
     icon: 'RefreshCw',
     title: 'Real-time Updates',
-    description:
-      'Live data synchronization with optimistic updates and conflict resolution.',
+    description: 'Live data synchronization with optimistic updates and conflict resolution.',
   },
-];
+]
 
 export const TESTIMONIALS = [
   {
@@ -80,4 +74,4 @@ export const TESTIMONIALS = [
     content:
       'Finally, a PayloadCMS starter that includes everything - TypeScript, Next.js 15, and beautiful UI components.',
   },
-];
+]

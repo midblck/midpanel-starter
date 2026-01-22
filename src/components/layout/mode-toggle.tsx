@@ -1,26 +1,26 @@
-'use client';
+'use client'
 
-import { Moon, Sun } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import * as React from 'react';
+import { Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import * as React from 'react'
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button'
 
 export function ModeToggle() {
-  const { setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
+  const { setTheme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
 
   // Avoid hydration mismatch
   React.useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
   const handleThemeToggle = React.useCallback(() => {
-    const newMode = resolvedTheme === 'dark' ? 'light' : 'dark';
+    const newMode = resolvedTheme === 'dark' ? 'light' : 'dark'
 
     // Simple theme toggle without View Transitions API
-    setTheme(newMode);
-  }, [resolvedTheme, setTheme]);
+    setTheme(newMode)
+  }, [resolvedTheme, setTheme])
 
   if (!mounted) {
     return (
@@ -33,7 +33,7 @@ export function ModeToggle() {
       >
         <Sun className='h-4 w-4 shrink-0' />
       </Button>
-    );
+    )
   }
 
   return (
@@ -50,5 +50,5 @@ export function ModeToggle() {
         <Sun className='h-4 w-4 shrink-0' />
       )}
     </Button>
-  );
+  )
 }

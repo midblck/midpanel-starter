@@ -1,11 +1,9 @@
-import {
-  DashboardErrorFallback,
-  ErrorBoundary,
-} from '@/components/error-boundary';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DashboardGreeting } from '@/components/dashboard-greeting';
-import type { DashboardData, DashboardStat } from '@/types/dashboard';
-import configPromise from '@payload-config';
+import { DashboardGreeting } from '@/components/dashboard-greeting'
+import { DashboardErrorFallback, ErrorBoundary } from '@/components/error-boundary'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import type { DashboardData, DashboardStat } from '@/types/dashboard'
+import { logError } from '@/utilities/logger'
+import configPromise from '@payload-config'
 import {
   Activity,
   ArrowDownRight,
@@ -13,10 +11,10 @@ import {
   TrendingDown,
   TrendingUp,
   Users,
-} from 'lucide-react';
-import { getPayload } from 'payload';
-import { headers } from 'next/headers';
-import { Suspense } from 'react';
+} from 'lucide-react'
+import { headers } from 'next/headers'
+import { getPayload } from 'payload'
+import { Suspense } from 'react'
 
 // Icon mapping for dynamic icon rendering
 const iconMap = {
@@ -24,24 +22,24 @@ const iconMap = {
   TrendingDown,
   Users,
   Activity,
-} as const;
+} as const
 
 interface DashboardPageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 async function getDashboardData(userId: string): Promise<DashboardData> {
   try {
-    const payload = await getPayload({ config: configPromise });
+    const payload = await getPayload({ config: configPromise })
 
     // Get today's date range (start of day to end of day) in UTC
-    const now = new Date();
+    const now = new Date()
     const startOfToday = new Date(
       Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
-    );
+    )
     const endOfToday = new Date(
       Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)
-    );
+    )
 
     // Fetch tasks created today by the current user
     const [todayTasksResult, totalTasksResult] = await Promise.all([
@@ -67,11 +65,11 @@ async function getDashboardData(userId: string): Promise<DashboardData> {
         },
         limit: 0,
       }),
-    ]);
+    ])
 
-    const todayTasks = todayTasksResult.docs;
-    const totalTasks = totalTasksResult.docs;
-    const tasksCreatedToday = todayTasks.length;
+    const todayTasks = todayTasksResult.docs
+    const totalTasks = totalTasksResult.docs
+    const tasksCreatedToday = todayTasks.length
 
     // Create user-specific stats - only keep My Total Tasks
     const stats: DashboardStat[] = [
@@ -83,7 +81,7 @@ async function getDashboardData(userId: string): Promise<DashboardData> {
         description: 'tasks created',
         icon: 'trending-up',
       },
-    ];
+    ]
 
     return {
       stats,
@@ -91,9 +89,12 @@ async function getDashboardData(userId: string): Promise<DashboardData> {
       totalUsers: 0, // Not relevant for user dashboard
       totalRevenue: 0, // Not relevant for user dashboard
       growthRate: 0, // Not relevant for user dashboard
-    };
+    }
   } catch (error) {
-    console.error('Failed to fetch dashboard data:', error);
+    logError('Failed to fetch dashboard data', error, {
+      component: 'DashboardPage',
+      action: 'fetch-dashboard-data',
+    })
     // Return fallback data on error
     return {
       stats: [
@@ -110,19 +111,17 @@ async function getDashboardData(userId: string): Promise<DashboardData> {
       totalUsers: 0,
       totalRevenue: 0,
       growthRate: 0,
-    };
+    }
   }
 }
 
 function StatsCard({ stat }: { stat: DashboardStat }) {
-  const IconComponent = iconMap[stat.icon as keyof typeof iconMap] || Activity;
+  const IconComponent = iconMap[stat.icon as keyof typeof iconMap] || Activity
 
   return (
     <Card className='relative overflow-hidden'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-        <CardTitle className='text-sm font-medium text-muted-foreground'>
-          {stat.title}
-        </CardTitle>
+        <CardTitle className='text-sm font-medium text-muted-foreground'>{stat.title}</CardTitle>
         <IconComponent className='h-4 w-4 text-muted-foreground' />
       </CardHeader>
       <CardContent>
@@ -133,47 +132,46 @@ function StatsCard({ stat }: { stat: DashboardStat }) {
           ) : (
             <ArrowDownRight className='h-3 w-3 text-red-500' />
           )}
-          <span
-            className={stat.trend === 'up' ? 'text-green-500' : 'text-red-500'}
-          >
+          <span className={stat.trend === 'up' ? 'text-green-500' : 'text-red-500'}>
             {stat.change}
           </span>
           <span>{stat.description}</span>
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 function DashboardContent() {
   return (
     <ErrorBoundary
-      fallback={
-        <DashboardErrorFallback error={new Error('Dashboard failed to load')} />
-      }
+      fallback={<DashboardErrorFallback error={new Error('Dashboard failed to load')} />}
     >
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardData />
       </Suspense>
     </ErrorBoundary>
-  );
+  )
 }
 
 async function DashboardData() {
   // Get authenticated user data server-side
-  let user = null;
+  let user = null
   try {
-    const payload = await getPayload({ config: configPromise });
-    const headersList = await headers();
+    const payload = await getPayload({ config: configPromise })
+    const headersList = await headers()
     const authResult = await payload.auth({
       headers: headersList,
-    });
-    user = authResult.user;
+    })
+    user = authResult.user
   } catch (error) {
-    console.error('Failed to get user data:', error);
+    logError('Failed to get user data in dashboard', error, {
+      component: 'DashboardPage',
+      action: 'get-user-data',
+    })
   }
 
-  const data = await getDashboardData(user?.id || '');
+  const data = await getDashboardData(user?.id || '')
 
   return (
     <div className='flex flex-1 flex-col space-y-4'>
@@ -185,7 +183,7 @@ async function DashboardData() {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 function DashboardSkeleton() {
@@ -210,15 +208,16 @@ function DashboardSkeleton() {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
-export default async function DashboardPage({
-  searchParams,
-}: DashboardPageProps) {
+export default async function DashboardPage(
+  {
+    // searchParams,
+  }: DashboardPageProps
+) {
   // This would be where you'd add authentication checks
   // For now, we'll assume the user is authenticated via middleware
-  const _searchParams = await searchParams;
 
-  return <DashboardContent />;
+  return <DashboardContent />
 }

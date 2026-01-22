@@ -1,28 +1,15 @@
-import { AlertCircle, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import { AlertCircle, AlertTriangle, CheckCircle, XCircle } from 'lucide-react'
 
-export type ConfirmationVariant =
-  | 'default'
-  | 'destructive'
-  | 'warning'
-  | 'success';
+export type ConfirmationVariant = 'default' | 'destructive' | 'warning' | 'success'
 
 export interface VariantConfig {
-  icon: typeof AlertCircle;
-  iconColor: string;
-  iconBg: string;
-  buttonVariant:
-    | 'default'
-    | 'destructive'
-    | 'outline'
-    | 'secondary'
-    | 'ghost'
-    | 'link';
+  icon: typeof AlertCircle
+  iconColor: string
+  iconBg: string
+  buttonVariant: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
 }
 
-export const CONFIRMATION_VARIANT_CONFIG: Record<
-  ConfirmationVariant,
-  VariantConfig
-> = {
+export const CONFIRMATION_VARIANT_CONFIG: Record<ConfirmationVariant, VariantConfig> = {
   default: {
     icon: AlertCircle,
     iconColor: 'text-blue-600 dark:text-blue-400',
@@ -47,7 +34,7 @@ export const CONFIRMATION_VARIANT_CONFIG: Record<
     iconBg: 'bg-green-100 dark:bg-green-900/20',
     buttonVariant: 'default',
   },
-};
+}
 
 export const DEFAULT_TEXTS = {
   confirm: 'Confirm',
@@ -58,7 +45,7 @@ export const DEFAULT_TEXTS = {
   save: 'Save',
   update: 'Update',
   create: 'Create',
-} as const;
+} as const
 
 export const DEFAULT_DESCRIPTIONS = {
   delete: (itemName?: string) =>
@@ -85,4 +72,4 @@ export const DEFAULT_DESCRIPTIONS = {
     itemName
       ? `Are you sure you want to create "${itemName}"?`
       : 'Are you sure you want to create this item?',
-} as const;
+} as const

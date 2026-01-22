@@ -1,8 +1,6 @@
-import type { KBarAction } from './navigation-actions';
+import type { KBarAction } from './navigation-actions'
 
-export const createProfileActions = (
-  navigateTo: (url: string) => void
-): KBarAction[] => {
+export const createProfileActions = (navigateTo: (url: string) => void): KBarAction[] => {
   return [
     {
       id: 'profileAction',
@@ -13,5 +11,5 @@ export const createProfileActions = (
       shortcut: ['m', 'p'],
       perform: () => navigateTo('/app/profile'),
     },
-  ];
-};
+  ]
+}

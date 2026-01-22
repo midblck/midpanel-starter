@@ -1,28 +1,24 @@
-'use client';
+'use client'
 
 import {
   DataTableBulkActions,
   type BulkActionConfig,
-} from '@/components/tables/data-table/bulk-actions';
-import {
-  exportToCSV,
-  exportToJSON,
-  getExportFilename,
-} from '@/lib/export-utils';
-import type { Table } from '@tanstack/react-table';
-import { FileJson, FileText, Flag, Tag, Trash2, User } from 'lucide-react';
+} from '@/components/tables/data-table/bulk-actions'
+import { exportToCSV, exportToJSON, getExportFilename } from '@/lib/export-utils'
+import type { Table } from '@tanstack/react-table'
+import { FileJson, FileText, Flag, Tag, Trash2, User } from 'lucide-react'
 
 interface BulkActionsProps<TData> {
-  table: Table<TData>;
-  statusOptions?: Array<{ value: string; label: string; color: string }>;
-  priorityOptions?: Array<{ value: string; label: string }>;
-  assigneeOptions?: Array<{ value: string; label: string }>;
-  onBulkDelete?: (selectedRows: TData[]) => void;
-  onBulkUpdateStatus?: (selectedRows: TData[], status: string) => void;
-  onBulkUpdatePriority?: (selectedRows: TData[], priority: string) => void;
-  onBulkAssign?: (selectedRows: TData[], assignee: string) => void;
-  onBulkExport?: (selectedRows: TData[], format: 'csv' | 'json') => void;
-  filename?: string;
+  table: Table<TData>
+  statusOptions?: Array<{ value: string; label: string; color: string }>
+  priorityOptions?: Array<{ value: string; label: string }>
+  assigneeOptions?: Array<{ value: string; label: string }>
+  onBulkDelete?: (selectedRows: TData[]) => void
+  onBulkUpdateStatus?: (selectedRows: TData[], status: string) => void
+  onBulkUpdatePriority?: (selectedRows: TData[], priority: string) => void
+  onBulkAssign?: (selectedRows: TData[], assignee: string) => void
+  onBulkExport?: (selectedRows: TData[], format: 'csv' | 'json') => void
+  filename?: string
 }
 
 export function BulkActions<TData>({
@@ -38,16 +34,16 @@ export function BulkActions<TData>({
   filename = 'tasks',
 }: BulkActionsProps<TData>) {
   const handleExportCSV = (selectedRows: TData[]) => {
-    const csvFilename = getExportFilename(filename, 'csv');
+    const csvFilename = getExportFilename(filename, 'csv')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    exportToCSV(selectedRows as any[], { filename: csvFilename });
-  };
+    exportToCSV(selectedRows as any[], { filename: csvFilename })
+  }
 
   const handleExportJSON = (selectedRows: TData[]) => {
-    const jsonFilename = getExportFilename(filename, 'json');
+    const jsonFilename = getExportFilename(filename, 'json')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    exportToJSON(selectedRows as any[], { filename: jsonFilename });
-  };
+    exportToJSON(selectedRows as any[], { filename: jsonFilename })
+  }
 
   const actions: BulkActionConfig[] = [
     {
@@ -64,8 +60,7 @@ export function BulkActions<TData>({
       icon: <Flag className='mr-2 h-4 w-4' />,
       type: 'select',
       options: statusOptions,
-      onAction: (selectedRows, value) =>
-        onBulkUpdateStatus?.(selectedRows, value || ''),
+      onAction: (selectedRows, value) => onBulkUpdateStatus?.(selectedRows, value || ''),
     },
     {
       id: 'updatePriority',
@@ -73,8 +68,7 @@ export function BulkActions<TData>({
       icon: <Tag className='mr-2 h-4 w-4' />,
       type: 'select',
       options: priorityOptions,
-      onAction: (selectedRows, value) =>
-        onBulkUpdatePriority?.(selectedRows, value || ''),
+      onAction: (selectedRows, value) => onBulkUpdatePriority?.(selectedRows, value || ''),
     },
     {
       id: 'assign',
@@ -82,8 +76,7 @@ export function BulkActions<TData>({
       icon: <User className='mr-2 h-4 w-4' />,
       type: 'select',
       options: assigneeOptions,
-      onAction: (selectedRows, value) =>
-        onBulkAssign?.(selectedRows, value || ''),
+      onAction: (selectedRows, value) => onBulkAssign?.(selectedRows, value || ''),
     },
     {
       id: 'exportCSV',
@@ -101,7 +94,7 @@ export function BulkActions<TData>({
       variant: 'outline',
       onAction: handleExportJSON,
     },
-  ];
+  ]
 
-  return <DataTableBulkActions table={table} actions={actions} />;
+  return <DataTableBulkActions table={table} actions={actions} />
 }

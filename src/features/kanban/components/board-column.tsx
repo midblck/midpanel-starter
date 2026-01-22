@@ -1,35 +1,31 @@
-'use client';
+'use client'
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import type { Column, Task } from '@/features/kanban';
-import { useTaskStore } from '@/features/kanban';
-import { useDroppable } from '@dnd-kit/core';
-import { ChevronLeft, ChevronRight, MoreHorizontal, Plus } from 'lucide-react';
-import { useCallback } from 'react';
-import EditColumnDialog from './edit-column-dialog';
-import {
-  DropZone,
-  DropZoneAfterTask,
-  InsertionIndicator,
-} from './insertion-indicator';
-import { TaskCard } from './task-card';
+} from '@/components/ui/dropdown-menu'
+import type { Column, Task } from '@/features/kanban'
+import { useTaskStore } from '@/features/kanban'
+import { useDroppable } from '@dnd-kit/core'
+import { ChevronLeft, ChevronRight, MoreHorizontal, Plus } from 'lucide-react'
+import { useCallback } from 'react'
+import EditColumnDialog from './edit-column-dialog'
+import { DropZone, DropZoneAfterTask, InsertionIndicator } from './insertion-indicator'
+import { TaskCard } from './task-card'
 
 export interface BoardColumnProps {
-  column: Column;
-  tasks: Task[];
-  onAddTask?: (columnId: string) => void;
-  onEditTask?: (task: Task) => void;
-  onDeleteTask?: (taskId: string) => void;
-  onEditColumn?: (column: Column) => void;
-  onDeleteColumn?: (columnId: string) => void;
+  column: Column
+  tasks: Task[]
+  onAddTask?: (columnId: string) => void
+  onEditTask?: (task: Task) => void
+  onDeleteTask?: (taskId: string) => void
+  onEditColumn?: (column: Column) => void
+  onDeleteColumn?: (columnId: string) => void
 }
 
 export function BoardColumn({
@@ -40,69 +36,61 @@ export function BoardColumn({
   onDeleteTask,
   onDeleteColumn,
 }: BoardColumnProps) {
-  const statuses = useTaskStore(state => state.statuses);
-  const updateStatusOrders = useTaskStore(state => state.updateStatusOrders);
-  const currentStatus = statuses.find(
-    (s: { id: string }) => s.id === column.id
-  );
+  const statuses = useTaskStore(state => state.statuses)
+  const updateStatusOrders = useTaskStore(state => state.updateStatusOrders)
+  const currentStatus = statuses.find((s: { id: string }) => s.id === column.id)
 
   // Determine if this is first or last column
-  const currentIndex = statuses.findIndex(
-    (s: { id: string }) => s.id === column.id
-  );
-  const isFirstColumn = currentIndex === 0;
-  const isLastColumn = currentIndex === statuses.length - 1;
+  const currentIndex = statuses.findIndex((s: { id: string }) => s.id === column.id)
+  const isFirstColumn = currentIndex === 0
+  const isLastColumn = currentIndex === statuses.length - 1
 
   // Move column functions
   const moveColumnLeft = useCallback(
     async (columnId: string) => {
-      if (isFirstColumn) return;
+      if (isFirstColumn) return
 
-      const newStatuses = [...statuses];
-      const currentIndex = newStatuses.findIndex(
-        (s: { id: string }) => s.id === columnId
-      );
-      const newIndex = currentIndex - 1;
+      const newStatuses = [...statuses]
+      const currentIndex = newStatuses.findIndex((s: { id: string }) => s.id === columnId)
+      const newIndex = currentIndex - 1
 
       // Swap positions
-      [newStatuses[currentIndex], newStatuses[newIndex]] = [
+      ;[newStatuses[currentIndex], newStatuses[newIndex]] = [
         newStatuses[newIndex],
         newStatuses[currentIndex],
-      ];
+      ]
 
       // Update store
-      useTaskStore.getState().setStatuses(newStatuses);
+      useTaskStore.getState().setStatuses(newStatuses)
 
       // Update database
-      await updateStatusOrders();
+      await updateStatusOrders()
     },
     [isFirstColumn, statuses, updateStatusOrders]
-  );
+  )
 
   const moveColumnRight = useCallback(
     async (columnId: string) => {
-      if (isLastColumn) return;
+      if (isLastColumn) return
 
-      const newStatuses = [...statuses];
-      const currentIndex = newStatuses.findIndex(
-        (s: { id: string }) => s.id === columnId
-      );
-      const newIndex = currentIndex + 1;
+      const newStatuses = [...statuses]
+      const currentIndex = newStatuses.findIndex((s: { id: string }) => s.id === columnId)
+      const newIndex = currentIndex + 1
 
       // Swap positions
-      [newStatuses[currentIndex], newStatuses[newIndex]] = [
+      ;[newStatuses[currentIndex], newStatuses[newIndex]] = [
         newStatuses[newIndex],
         newStatuses[currentIndex],
-      ];
+      ]
 
       // Update store
-      useTaskStore.getState().setStatuses(newStatuses);
+      useTaskStore.getState().setStatuses(newStatuses)
 
       // Update database
-      await updateStatusOrders();
+      await updateStatusOrders()
     },
     [isLastColumn, statuses, updateStatusOrders]
-  );
+  )
 
   // Column is no longer draggable - only uses arrow buttons for reordering
 
@@ -112,7 +100,7 @@ export function BoardColumn({
       type: 'column',
       column,
     },
-  });
+  })
 
   // Top drop zone for placing tasks at the top
   const { setNodeRef: setTopDropRef, isOver: isTopOver } = useDroppable({
@@ -122,24 +110,24 @@ export function BoardColumn({
       columnId: column.id,
       position: 'top',
     },
-  });
+  })
 
   // No drag styling needed since columns are not draggable
 
   const sortedTasks = tasks.sort((a, b) => {
     // Always prioritize order field for consistent sorting
-    const aOrder = a.order ?? 0;
-    const bOrder = b.order ?? 0;
+    const aOrder = a.order ?? 0
+    const bOrder = b.order ?? 0
 
     if (aOrder !== bOrder) {
-      return aOrder - bOrder;
+      return aOrder - bOrder
     }
 
     // Fallback to updatedAt (newest first) if orders are equal
-    const aTime = new Date(a.updatedAt || a.createdAt || 0).getTime();
-    const bTime = new Date(b.updatedAt || b.createdAt || 0).getTime();
-    return bTime - aTime;
-  });
+    const aTime = new Date(a.updatedAt || a.createdAt || 0).getTime()
+    const bTime = new Date(b.updatedAt || b.createdAt || 0).getTime()
+    return bTime - aTime
+  })
 
   return (
     <Card
@@ -162,9 +150,7 @@ export function BoardColumn({
               />
             )}
             <div className='flex flex-col min-w-0 flex-1'>
-              <CardTitle className='text-sm font-semibold truncate'>
-                {column.title}
-              </CardTitle>
+              <CardTitle className='text-sm font-semibold truncate'>{column.title}</CardTitle>
               {currentStatus?.description && (
                 <p className='text-xs text-muted-foreground mt-0.5 line-clamp-1'>
                   {currentStatus.description}
@@ -230,16 +216,9 @@ export function BoardColumn({
         </div>
       </CardHeader>
 
-      <CardContent
-        ref={setDroppableRef}
-        className='pt-0 space-y-2 min-h-[200px] px-3 sm:px-6'
-      >
+      <CardContent ref={setDroppableRef} className='pt-0 space-y-2 min-h-[200px] px-3 sm:px-6'>
         {/* Top drop zone for placing tasks at the top */}
-        <DropZone
-          id={`${column.id}-top`}
-          isActive={isTopOver}
-          className='min-h-1'
-        >
+        <DropZone id={`${column.id}-top`} isActive={isTopOver} className='min-h-1'>
           <div ref={setTopDropRef} className='h-2 -mt-2' />
           <InsertionIndicator isVisible={isTopOver} />
         </DropZone>
@@ -272,7 +251,7 @@ export function BoardColumn({
         </Button>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 export function BoardContainer({ children }: { children: React.ReactNode }) {
@@ -280,5 +259,5 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
     <div className='flex gap-4 sm:gap-6 overflow-x-auto pb-4 min-h-[600px] px-2 sm:px-0 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent'>
       {children}
     </div>
-  );
+  )
 }

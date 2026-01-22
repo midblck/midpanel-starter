@@ -1,26 +1,26 @@
-'use client';
+'use client'
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useDebouncedCallback } from '@/lib/hooks/use-debounced-callback';
-import { cn } from '@/lib/utils';
-import { Cross2Icon } from '@radix-ui/react-icons';
-import type { Table } from '@tanstack/react-table';
-import { Loader2, Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import { ExportButton } from './export-button';
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { useDebouncedCallback } from '@/lib/hooks/use-debounced-callback'
+import { cn } from '@/lib/utils'
+import { Cross2Icon } from '@radix-ui/react-icons'
+import type { Table } from '@tanstack/react-table'
+import { Loader2, Trash2 } from 'lucide-react'
+import { useState } from 'react'
+import { ExportButton } from './export-button'
 
 interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
-  data: TData[];
-  onSearch?: (searchTerm: string) => void;
-  searchPlaceholder?: string;
-  filename?: string;
-  onBulkDelete?: (selectedRows: TData[]) => void;
-  children?: React.ReactNode; // For custom filter components
-  className?: string;
-  isSearchPending?: boolean; // For useTransition loading state
+  table: Table<TData>
+  data: TData[]
+  onSearch?: (searchTerm: string) => void
+  searchPlaceholder?: string
+  filename?: string
+  onBulkDelete?: (selectedRows: TData[]) => void
+  children?: React.ReactNode // For custom filter components
+  className?: string
+  isSearchPending?: boolean // For useTransition loading state
 }
 
 export function DataTableToolbar<TData>({
@@ -34,25 +34,25 @@ export function DataTableToolbar<TData>({
   className,
   isSearchPending = false,
 }: DataTableToolbarProps<TData>) {
-  const [searchValue, setSearchValue] = useState('');
-  const isFiltered = table.getState().columnFilters.length > 0;
-  const selectedRows = table.getFilteredSelectedRowModel().rows;
-  const hasSelectedRows = selectedRows.length > 0;
+  const [searchValue, setSearchValue] = useState('')
+  const isFiltered = table.getState().columnFilters.length > 0
+  const selectedRows = table.getFilteredSelectedRowModel().rows
+  const hasSelectedRows = selectedRows.length > 0
 
   const onReset = () => {
-    table.resetColumnFilters();
-    setSearchValue('');
-  };
+    table.resetColumnFilters()
+    setSearchValue('')
+  }
 
   const debouncedSearch = useDebouncedCallback((searchTerm: string) => {
-    onSearch?.(searchTerm);
-  }, 500);
+    onSearch?.(searchTerm)
+  }, 500)
 
   const handleBulkDelete = () => {
     if (onBulkDelete && hasSelectedRows) {
-      onBulkDelete(selectedRows.map(row => row.original));
+      onBulkDelete(selectedRows.map(row => row.original))
     }
-  };
+  }
 
   return (
     <div
@@ -66,16 +66,16 @@ export function DataTableToolbar<TData>({
           placeholder={searchPlaceholder}
           value={searchValue}
           onChange={event => {
-            setSearchValue(event.target.value);
+            setSearchValue(event.target.value)
           }}
           onBlur={event => {
-            const searchTerm = event.target.value;
-            debouncedSearch(searchTerm);
+            const searchTerm = event.target.value
+            debouncedSearch(searchTerm)
           }}
           onKeyDown={event => {
             if (event.key === 'Enter') {
-              const searchTerm = event.currentTarget.value;
-              debouncedSearch(searchTerm);
+              const searchTerm = event.currentTarget.value
+              debouncedSearch(searchTerm)
             }
           }}
           className='h-8 w-[150px] lg:w-[250px] pr-8'
@@ -114,16 +114,11 @@ export function DataTableToolbar<TData>({
 
       {/* Delete button */}
       {hasSelectedRows && onBulkDelete && (
-        <Button
-          variant='destructive'
-          size='sm'
-          className='h-8'
-          onClick={handleBulkDelete}
-        >
+        <Button variant='destructive' size='sm' className='h-8' onClick={handleBulkDelete}>
           <Trash2 className='mr-2 h-4 w-4' />
           Delete
         </Button>
       )}
     </div>
-  );
+  )
 }

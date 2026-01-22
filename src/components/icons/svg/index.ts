@@ -5,24 +5,24 @@
  * Add new icons by importing them here and adding to the registry.
  */
 
-import React from 'react';
+import React from 'react'
 
 // Import SVG icons
-import ArrowLeft from './arrow-left.svg';
-import ArrowRight from './arrow-right.svg';
-import Check from './check.svg';
-import Close from './close.svg';
-import Download from './download.svg';
-import Edit from './edit.svg';
-import Eye from './eye.svg';
-import Filter from './filter.svg';
-import Logo from './logo.svg';
-import Plus from './plus.svg';
-import Search from './search.svg';
-import Settings from './settings.svg';
-import Trash from './trash.svg';
-import Upload from './upload.svg';
-import User from './user.svg';
+import ArrowLeft from './arrow-left.svg'
+import ArrowRight from './arrow-right.svg'
+import Check from './check.svg'
+import Close from './close.svg'
+import Download from './download.svg'
+import Edit from './edit.svg'
+import Eye from './eye.svg'
+import Filter from './filter.svg'
+import Logo from './logo.svg'
+import Plus from './plus.svg'
+import Search from './search.svg'
+import Settings from './settings.svg'
+import Trash from './trash.svg'
+import Upload from './upload.svg'
+import User from './user.svg'
 
 // Icon registry for type-safe access
 export const iconRegistry = {
@@ -41,10 +41,10 @@ export const iconRegistry = {
   trash: Trash as React.FC<React.SVGProps<SVGSVGElement>>,
   upload: Upload as React.FC<React.SVGProps<SVGSVGElement>>,
   user: User as React.FC<React.SVGProps<SVGSVGElement>>,
-} as const;
+} as const
 
 // Type for icon names
-export type IconName = keyof typeof iconRegistry;
+export type IconName = keyof typeof iconRegistry
 
 // Export individual icons for direct import
 export {
@@ -63,4 +63,4 @@ export {
   Trash,
   Upload,
   User,
-};
+}

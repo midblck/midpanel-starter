@@ -1,13 +1,9 @@
-'use client';
+'use client'
 
-import {
-  fetchKanbanTasks,
-  fetchTaskStatuses,
-  fetchTaskTypes,
-} from '../services';
-import type { Task, Status, TaskType } from '../store';
-import { useCallback } from 'react';
-import useSWR from 'swr';
+import { fetchKanbanTasks, fetchTaskStatuses, fetchTaskTypes } from '../services'
+import type { Task, Status, TaskType } from '../store'
+import { useCallback } from 'react'
+import useSWR from 'swr'
 
 export function useKanbanTasks() {
   const {
@@ -20,43 +16,41 @@ export function useKanbanTasks() {
     revalidateOnReconnect: true,
     dedupingInterval: 2000,
     errorRetryCount: 3,
-  });
+  })
 
   const refreshTasks = useCallback(() => {
-    mutate();
-  }, [mutate]);
+    mutate()
+  }, [mutate])
 
   const updateTaskOptimistically = useCallback(
     (updatedTask: Task) => {
       mutate(currentTasks => {
-        if (!currentTasks) return currentTasks;
-        return currentTasks.map(task =>
-          task.id === updatedTask.id ? updatedTask : task
-        );
-      }, false);
+        if (!currentTasks) return currentTasks
+        return currentTasks.map(task => (task.id === updatedTask.id ? updatedTask : task))
+      }, false)
     },
     [mutate]
-  );
+  )
 
   const addTaskOptimistically = useCallback(
     (newTask: Task) => {
       mutate(currentTasks => {
-        if (!currentTasks) return [newTask];
-        return [...currentTasks, newTask];
-      }, false);
+        if (!currentTasks) return [newTask]
+        return [...currentTasks, newTask]
+      }, false)
     },
     [mutate]
-  );
+  )
 
   const removeTaskOptimistically = useCallback(
     (taskId: string) => {
       mutate(currentTasks => {
-        if (!currentTasks) return currentTasks;
-        return currentTasks.filter(task => task.id !== taskId);
-      }, false);
+        if (!currentTasks) return currentTasks
+        return currentTasks.filter(task => task.id !== taskId)
+      }, false)
     },
     [mutate]
-  );
+  )
 
   return {
     tasks: tasks || [],
@@ -66,7 +60,7 @@ export function useKanbanTasks() {
     updateTaskOptimistically,
     addTaskOptimistically,
     removeTaskOptimistically,
-  };
+  }
 }
 
 export function useKanbanStatuses() {
@@ -80,18 +74,18 @@ export function useKanbanStatuses() {
     revalidateOnReconnect: true,
     dedupingInterval: 5000, // Statuses change less frequently
     errorRetryCount: 3,
-  });
+  })
 
   const refreshStatuses = useCallback(() => {
-    mutate();
-  }, [mutate]);
+    mutate()
+  }, [mutate])
 
   return {
     statuses: statuses || [],
     isLoading,
     error,
     refreshStatuses,
-  };
+  }
 }
 
 export function useKanbanTypes() {
@@ -105,31 +99,31 @@ export function useKanbanTypes() {
     revalidateOnReconnect: true,
     dedupingInterval: 5000, // Types change less frequently
     errorRetryCount: 3,
-  });
+  })
 
   const refreshTypes = useCallback(() => {
-    mutate();
-  }, [mutate]);
+    mutate()
+  }, [mutate])
 
   return {
     types: types || [],
     isLoading,
     error,
     refreshTypes,
-  };
+  }
 }
 
 // Combined hook for all kanban data
 export function useKanbanData() {
-  const tasks = useKanbanTasks();
-  const statuses = useKanbanStatuses();
-  const types = useKanbanTypes();
+  const tasks = useKanbanTasks()
+  const statuses = useKanbanStatuses()
+  const types = useKanbanTypes()
 
   const refreshAll = useCallback(() => {
-    tasks.refreshTasks();
-    statuses.refreshStatuses();
-    types.refreshTypes();
-  }, [tasks.refreshTasks, statuses.refreshStatuses, types.refreshTypes]);
+    tasks.refreshTasks()
+    statuses.refreshStatuses()
+    types.refreshTypes()
+  }, [tasks.refreshTasks, statuses.refreshStatuses, types.refreshTypes])
 
   return {
     tasks: tasks.tasks,
@@ -146,5 +140,5 @@ export function useKanbanData() {
     updateTaskOptimistically: tasks.updateTaskOptimistically,
     addTaskOptimistically: tasks.addTaskOptimistically,
     removeTaskOptimistically: tasks.removeTaskOptimistically,
-  };
+  }
 }

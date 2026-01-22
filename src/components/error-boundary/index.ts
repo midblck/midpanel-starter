@@ -3,7 +3,7 @@ export {
   ErrorBoundary,
   useErrorHandler as useErrorBoundaryHandler,
   withErrorBoundary,
-} from './error-boundary';
+} from './error-boundary'
 
 // Error fallback components
 export {
@@ -13,12 +13,7 @@ export {
   KanbanErrorFallback,
   ProfileErrorFallback,
   TaskListErrorFallback,
-} from './error-fallback';
+} from './error-fallback'
 
 // Error provider and context
-export {
-  ErrorProvider,
-  useErrorClear,
-  useErrorContext,
-  useErrorHandler,
-} from './error-provider';
+export { ErrorProvider, useErrorClear, useErrorContext, useErrorHandler } from './error-provider'

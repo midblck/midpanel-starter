@@ -1,26 +1,17 @@
-'use client';
+'use client'
 
-import { PageContainer, PageHeader } from '@/components/layout';
-import { Button } from '@/components/ui/button';
-import {
-  AddStatusDialog,
-  DateRangeFilter,
-  KanbanBoard,
-  NewTaskDialog,
-} from '@/features/kanban';
-import { Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import type { Task as StoreTask } from '@/features/kanban/store';
-import type {
-  Task as PayloadTask,
-  TaskStatus,
-  TaskType as PayloadTaskType,
-} from '@/payload-types';
+import { PageContainer, PageHeader } from '@/components/layout'
+import { Button } from '@/components/ui/button'
+import { AddStatusDialog, DateRangeFilter, KanbanBoard, NewTaskDialog } from '@/features/kanban'
+import { Plus } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import type { Task as StoreTask } from '@/features/kanban/store'
+import type { Task as PayloadTask, TaskStatus, TaskType as PayloadTaskType } from '@/payload-types'
 
 // Convert PayloadCMS Task to Store Task format
 function convertPayloadTaskToStoreTask(payloadTask: PayloadTask): StoreTask {
-  const status = payloadTask.status as TaskStatus;
-  const taskTypes = payloadTask.taskTypes as PayloadTaskType[];
+  const status = payloadTask.status as TaskStatus
+  const taskTypes = payloadTask.taskTypes as PayloadTaskType[]
 
   return {
     id: payloadTask.id,
@@ -46,57 +37,45 @@ function convertPayloadTaskToStoreTask(payloadTask: PayloadTask): StoreTask {
     order: payloadTask.order || 0,
     createdAt: payloadTask.createdAt,
     updatedAt: payloadTask.updatedAt,
-  };
+  }
 }
 
 export default function KanbanPage() {
-  const [newTaskDialogOpen, setNewTaskDialogOpen] = useState(false);
-  const [selectedColumnId, setSelectedColumnId] = useState<string>('');
-  const [editingTask, setEditingTask] = useState<StoreTask | null>(null);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [newTaskDialogOpen, setNewTaskDialogOpen] = useState(false)
+  const [selectedColumnId, setSelectedColumnId] = useState<string>('')
+  const [editingTask, setEditingTask] = useState<StoreTask | null>(null)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   const handleTaskChange = () => {
     // Trigger a refresh by updating the key
-    setRefreshKey(prev => prev + 1);
-  };
+    setRefreshKey(prev => prev + 1)
+  }
 
   useEffect(() => {
     const handleAddTask = (event: CustomEvent<{ columnId: string }>) => {
-      setSelectedColumnId(event.detail.columnId);
-      setEditingTask(null);
-      setNewTaskDialogOpen(true);
-    };
+      setSelectedColumnId(event.detail.columnId)
+      setEditingTask(null)
+      setNewTaskDialogOpen(true)
+    }
 
     const handleEditTask = (event: CustomEvent<{ task: PayloadTask }>) => {
-      setEditingTask(convertPayloadTaskToStoreTask(event.detail.task));
-      setSelectedColumnId('');
-      setNewTaskDialogOpen(true);
-    };
+      setEditingTask(convertPayloadTaskToStoreTask(event.detail.task))
+      setSelectedColumnId('')
+      setNewTaskDialogOpen(true)
+    }
 
-    window.addEventListener('kanban-add-task', handleAddTask as EventListener);
-    window.addEventListener(
-      'kanban-edit-task',
-      handleEditTask as EventListener
-    );
+    window.addEventListener('kanban-add-task', handleAddTask as EventListener)
+    window.addEventListener('kanban-edit-task', handleEditTask as EventListener)
 
     return () => {
-      window.removeEventListener(
-        'kanban-add-task',
-        handleAddTask as EventListener
-      );
-      window.removeEventListener(
-        'kanban-edit-task',
-        handleEditTask as EventListener
-      );
-    };
-  }, []);
+      window.removeEventListener('kanban-add-task', handleAddTask as EventListener)
+      window.removeEventListener('kanban-edit-task', handleEditTask as EventListener)
+    }
+  }, [])
 
   return (
     <PageContainer>
-      <PageHeader
-        title='Kanban Board'
-        description='Manage your tasks with drag and drop'
-      >
+      <PageHeader title='Kanban Board' description='Manage your tasks with drag and drop'>
         <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto'>
           <DateRangeFilter />
           <Button
@@ -114,10 +93,10 @@ export default function KanbanPage() {
       <NewTaskDialog
         open={newTaskDialogOpen}
         onOpenChange={open => {
-          setNewTaskDialogOpen(open);
+          setNewTaskDialogOpen(open)
           if (!open) {
-            setSelectedColumnId('');
-            setEditingTask(null);
+            setSelectedColumnId('')
+            setEditingTask(null)
           }
         }}
         columnId={selectedColumnId}
@@ -127,5 +106,5 @@ export default function KanbanPage() {
 
       <KanbanBoard key={refreshKey} />
     </PageContainer>
-  );
+  )
 }

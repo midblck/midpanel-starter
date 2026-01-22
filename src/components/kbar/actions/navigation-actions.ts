@@ -1,13 +1,13 @@
-import { navItems } from '@/lib/constants/constants-dashboard';
+import { navItems } from '@/lib/constants/constants-dashboard'
 
 export interface KBarAction {
-  id: string;
-  name: string;
-  keywords: string;
-  section: string;
-  subtitle: string;
-  shortcut?: [string, string];
-  perform: () => void;
+  id: string
+  name: string
+  keywords: string
+  section: string
+  subtitle: string
+  shortcut?: [string, string]
+  perform: () => void
 }
 
 export const createNavigationActions = (
@@ -32,11 +32,9 @@ export const createNavigationActions = (
                 : `Go to ${navItem.title}`,
               shortcut: navItem.shortcut,
               perform: () =>
-                navItem.openInNewTab
-                  ? openInNewTab(navItem.url)
-                  : navigateTo(navItem.url),
+                navItem.openInNewTab ? openInNewTab(navItem.url) : navigateTo(navItem.url),
             }
-          : null;
+          : null
 
       const childActions =
         navItem.items?.map(childItem => ({
@@ -47,8 +45,8 @@ export const createNavigationActions = (
           subtitle: `Go to ${childItem.title}`,
           shortcut: childItem.shortcut,
           perform: () => navigateTo(childItem.url),
-        })) ?? [];
+        })) ?? []
 
-      return baseAction ? [baseAction, ...childActions] : childActions;
-    });
-};
+      return baseAction ? [baseAction, ...childActions] : childActions
+    })
+}

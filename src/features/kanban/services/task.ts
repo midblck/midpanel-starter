@@ -1,89 +1,103 @@
-import { convertToPayloadTask, convertToStoreTask } from './converters';
-import type { CreateTaskData, PayloadResponse, Task } from './types';
+import { logApiError, logDbError, logInfo } from '@/utilities/logger'
+import { convertToPayloadTask, convertToStoreTask } from './converters'
+import type { CreateTaskData, PayloadResponse, Task } from './types'
 
 // Fetch all tasks using PayloadCMS built-in REST API
 export async function fetchKanbanTasks(): Promise<Task[]> {
   try {
-    console.log('Kanban: Fetching tasks from built-in PayloadCMS API...');
+    logInfo('Fetching tasks from built-in PayloadCMS API', {
+      component: 'Kanban',
+      action: 'fetch-tasks',
+    })
 
     // Get JWT token from cookies for authentication
     const token = document.cookie
       .split('; ')
       .find(row => row.startsWith('payload-token='))
-      ?.split('=')[1];
+      ?.split('=')[1]
 
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
-    };
+    }
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-      console.log('Kanban: Using authentication token for API request');
+      headers['Authorization'] = `Bearer ${token}`
+      logInfo('Using authentication token for API request', {
+        component: 'Kanban',
+        action: 'fetch-tasks',
+        hasToken: true,
+      })
     } else {
-      console.log('Kanban: No authentication token found');
+      logInfo('No authentication token found', {
+        component: 'Kanban',
+        action: 'fetch-tasks',
+        hasToken: false,
+      })
     }
 
     const response = await fetch('/api/tasks?sort=order', {
       headers,
       credentials: 'include', // Include cookies
-    });
+    })
 
-    console.log('Kanban: API response status:', response.status);
+    logInfo('API response received', {
+      component: 'Kanban',
+      action: 'fetch-tasks',
+      status: response.status,
+    })
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Kanban: API error response:', errorText);
-      throw new Error(
-        `Failed to fetch tasks: ${response.status} ${response.statusText}`
-      );
+      const errorText = await response.text()
+      logApiError('/api/tasks', 'GET', new Error(errorText), {
+        component: 'Kanban',
+        action: 'fetch-tasks',
+        status: response.status,
+      })
+      throw new Error(`Failed to fetch tasks: ${response.status} ${response.statusText}`)
     }
 
-    const data: PayloadResponse = await response.json();
-    console.log(
-      'Kanban: Raw API data received:',
-      data.docs?.length || 0,
-      'tasks'
-    );
+    const data: PayloadResponse = await response.json()
+    logInfo('Raw API data received', {
+      component: 'Kanban',
+      action: 'fetch-tasks',
+      taskCount: data.docs?.length || 0,
+    })
 
-    const tasks = Array.isArray(data.docs)
-      ? data.docs.map(convertToStoreTask)
-      : [];
-    console.log('Kanban: Converted tasks:', tasks.length, 'tasks');
-    console.log(
-      'Kanban: Task creators:',
-      tasks.map(t => ({
-        id: t.id,
-        creator: 'creator' in t ? (t as any).creator : 'unknown',
-        title: t.title,
-      }))
-    );
+    const tasks = Array.isArray(data.docs) ? data.docs.map(convertToStoreTask) : []
+    logInfo('Tasks converted successfully', {
+      component: 'Kanban',
+      action: 'fetch-tasks',
+      convertedCount: tasks.length,
+    })
 
-    return tasks;
+    return tasks
   } catch (error) {
-    console.error('Error fetching kanban tasks:', error);
-    return [];
+    logDbError('fetch-kanban-tasks', error)
+    return []
   }
 }
 
 // Create task using PayloadCMS built-in REST API
-export async function createKanbanTask(
-  taskData: CreateTaskData
-): Promise<Task | null> {
+export async function createKanbanTask(taskData: CreateTaskData): Promise<Task | null> {
   try {
-    console.log('Kanban: Creating task with data:', taskData);
+    logInfo('Creating task', {
+      component: 'Kanban',
+      action: 'create-task',
+      taskData,
+    })
 
     // Get JWT token from cookies for authentication
     const token = document.cookie
       .split('; ')
       .find(row => row.startsWith('payload-token='))
-      ?.split('=')[1];
+      ?.split('=')[1]
 
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
-    };
+    }
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      headers['Authorization'] = `Bearer ${token}`
     }
 
     // Truncate description if it exceeds maxLength (1000)
@@ -93,35 +107,53 @@ export async function createKanbanTask(
         taskData.description && taskData.description.length > 1000
           ? taskData.description.substring(0, 1000)
           : taskData.description,
-    };
+    }
 
-    console.log('Kanban: Sending payload with auth:', !!token);
+    logInfo('Sending create request', {
+      component: 'Kanban',
+      action: 'create-task',
+      hasAuth: !!token,
+    })
     const response = await fetch('/api/tasks', {
       method: 'POST',
       headers,
       credentials: 'include',
       body: JSON.stringify(payloadData),
-    });
+    })
 
-    console.log('Kanban: Create response status:', response.status);
+    logInfo('Create response received', {
+      component: 'Kanban',
+      action: 'create-task',
+      status: response.status,
+    })
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Kanban: Create error response:', errorText);
-      throw new Error('Failed to create task');
+      const errorText = await response.text()
+      logApiError('/api/tasks', 'POST', new Error(errorText), {
+        component: 'Kanban',
+        action: 'create-task',
+        status: response.status,
+      })
+      throw new Error('Failed to create task')
     }
 
-    const responseData = await response.json();
-    console.log('Kanban: Create response data:', responseData);
+    const responseData = await response.json()
+    logInfo('Create response processed', {
+      component: 'Kanban',
+      action: 'create-task',
+      hasDoc: !!responseData.doc,
+    })
     // PayloadCMS returns data in a 'doc' property for single item updates
-    const data = responseData.doc || responseData;
-    const convertedTask = convertToStoreTask(
-      data as import('@/payload-types').Task
-    );
-    console.log('Kanban: Converted created task:', convertedTask);
-    return convertedTask;
+    const data = responseData.doc || responseData
+    const convertedTask = convertToStoreTask(data as import('@/payload-types').Task)
+    logInfo('Task created successfully', {
+      component: 'Kanban',
+      action: 'create-task',
+      taskId: convertedTask.id,
+    })
+    return convertedTask
   } catch (error) {
-    console.error('Error creating kanban task:', error);
-    return null;
+    logDbError('create-kanban-task', error)
+    return null
   }
 }
 
@@ -135,14 +167,14 @@ export async function updateKanbanTask(
     const token = document.cookie
       .split('; ')
       .find(row => row.startsWith('payload-token='))
-      ?.split('=')[1];
+      ?.split('=')[1]
 
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
-    };
+    }
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      headers['Authorization'] = `Bearer ${token}`
     }
 
     // Ensure we're sending the correct format for PayloadCMS
@@ -160,31 +192,34 @@ export async function updateKanbanTask(
         taskData.description && taskData.description.length > 1000
           ? taskData.description.substring(0, 1000)
           : taskData.description,
-    };
+    }
 
     const response = await fetch(`/api/tasks/${id}`, {
       method: 'PATCH',
       headers,
       credentials: 'include',
       body: JSON.stringify(payloadData),
-    });
+    })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('Update task error response:', errorData);
-      throw new Error(
-        `Failed to update task: ${response.status} ${response.statusText}`
-      );
+      const errorData = await response.json().catch(() => ({}))
+      logApiError(`/api/tasks/${id}`, 'PATCH', new Error(JSON.stringify(errorData)), {
+        component: 'Kanban',
+        action: 'update-task',
+        taskId: id,
+        status: response.status,
+      })
+      throw new Error(`Failed to update task: ${response.status} ${response.statusText}`)
     }
 
-    const responseData = await response.json();
+    const responseData = await response.json()
 
     // PayloadCMS returns data in a 'doc' property for single item updates
-    const data = responseData.doc || responseData;
-    return convertToStoreTask(data as import('@/payload-types').Task);
+    const data = responseData.doc || responseData
+    return convertToStoreTask(data as import('@/payload-types').Task)
   } catch (error) {
-    console.error('Error updating kanban task:', error);
-    return null;
+    logDbError('update-kanban-task', error, { taskId: id })
+    return null
   }
 }
 
@@ -195,28 +230,28 @@ export async function deleteKanbanTask(id: string): Promise<boolean> {
     const token = document.cookie
       .split('; ')
       .find(row => row.startsWith('payload-token='))
-      ?.split('=')[1];
+      ?.split('=')[1]
 
-    const headers: HeadersInit = {};
+    const headers: HeadersInit = {}
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      headers['Authorization'] = `Bearer ${token}`
     }
 
     const response = await fetch(`/api/tasks/${id}`, {
       method: 'DELETE',
       headers,
       credentials: 'include',
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('Failed to delete task');
+      throw new Error('Failed to delete task')
     }
 
-    return true;
+    return true
   } catch (error) {
-    console.error('Error deleting kanban task:', error);
-    return false;
+    logDbError('delete-kanban-task', error, { taskId: id })
+    return false
   }
 }
 
@@ -234,18 +269,20 @@ export async function bulkUpdateKanbanTasks(tasks: Task[]): Promise<boolean> {
           order: index,
         }),
       })
-    );
+    )
 
-    const responses = await Promise.all(updatePromises);
-    const failedResponses = responses.filter(response => !response.ok);
+    const responses = await Promise.all(updatePromises)
+    const failedResponses = responses.filter(response => !response.ok)
 
     if (failedResponses.length > 0) {
-      throw new Error('Failed to update some tasks');
+      throw new Error('Failed to update some tasks')
     }
 
-    return true;
+    return true
   } catch (error) {
-    console.error('Error bulk updating kanban tasks:', error);
-    return false;
+    logDbError('bulk-update-kanban-tasks', error, {
+      taskIds: tasks.map(task => task.id),
+    })
+    return false
   }
 }

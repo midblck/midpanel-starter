@@ -1,6 +1,6 @@
-import { Icon } from '@/components/icons';
-import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Icon } from '@/components/icons'
+import { Card, CardContent } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function LoadingFallback() {
   return (
@@ -15,9 +15,7 @@ export function LoadingFallback() {
 
             {/* Loading text */}
             <div className='text-center space-y-2'>
-              <h2 className='text-lg font-semibold text-foreground'>
-                Loading...
-              </h2>
+              <h2 className='text-lg font-semibold text-foreground'>Loading...</h2>
               <p className='text-sm text-muted-foreground'>
                 Please wait while we verify your access
               </p>
@@ -33,5 +31,5 @@ export function LoadingFallback() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

@@ -1,24 +1,24 @@
-'use client';
+'use client'
 
-import { Icon } from '@/components/icons';
-import { Button } from '@/components/ui/button';
-import { useSearchParams } from 'next/navigation';
+import { Icon } from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { useSearchParams } from 'next/navigation'
 
 export default function GoogleSignInButton() {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/app';
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') || '/app'
 
   const handleGoogleAuth = () => {
     // Use users collection with customer role - FORCE UPDATE v2
-    const collection = 'users';
-    const role = 'customer';
-    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+    const collection = 'users'
+    const role = 'customer'
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl)
     // Add multiple cache-busting parameters to prevent browser caching
-    const cacheBust = Date.now();
-    const version = 'v2';
+    const cacheBust = Date.now()
+    const version = 'v2'
 
-    window.location.href = `/api/auth/google?collection=${collection}&role=${role}&callbackUrl=${encodedCallbackUrl}&_cb=${cacheBust}&_v=${version}`;
-  };
+    window.location.href = `/api/auth/google?collection=${collection}&role=${role}&callbackUrl=${encodedCallbackUrl}&_cb=${cacheBust}&_v=${version}`
+  }
 
   return (
     <Button
@@ -30,5 +30,5 @@ export default function GoogleSignInButton() {
       <Icon name='google' size='sm' className='mr-3' />
       Continue with Google
     </Button>
-  );
+  )
 }

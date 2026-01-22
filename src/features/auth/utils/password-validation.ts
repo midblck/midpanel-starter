@@ -1,6 +1,6 @@
 export interface PasswordRequirement {
-  test: (password: string) => boolean;
-  label: string;
+  test: (password: string) => boolean
+  label: string
 }
 
 export const passwordRequirements: PasswordRequirement[] = [
@@ -24,8 +24,8 @@ export const passwordRequirements: PasswordRequirement[] = [
     test: password => /[^A-Za-z0-9]/.test(password),
     label: 'One special character',
   },
-];
+]
 
 export const isPasswordStrong = (password: string): boolean => {
-  return passwordRequirements.every(requirement => requirement.test(password));
-};
+  return passwordRequirements.every(requirement => requirement.test(password))
+}

@@ -1,42 +1,33 @@
-import {
-  createKanbanTask,
-  deleteKanbanTask,
-  updateKanbanTask,
-} from '@/features/kanban';
-import type {
-  TaskTableData,
-  TaskTableFilters,
-  TaskTablePagination,
-} from '@/types/data-table';
-import type { Task, TaskStatus, TaskType } from '@/payload-types';
+import { createKanbanTask, deleteKanbanTask, updateKanbanTask } from '@/features/kanban'
+import type { TaskTableData, TaskTableFilters, TaskTablePagination } from '@/types/data-table'
+import type { Task, TaskStatus, TaskType } from '@/payload-types'
+import { logDbError } from '@/utilities/logger'
 
 export interface TaskTableResponse {
-  docs: TaskTableData[];
-  totalDocs: number;
-  limit: number;
-  totalPages: number;
-  page: number;
-  pagingCounter: number;
-  hasPrevPage: boolean;
-  hasNextPage: boolean;
-  prevPage: number | null;
-  nextPage: number | null;
+  docs: TaskTableData[]
+  totalDocs: number
+  limit: number
+  totalPages: number
+  page: number
+  pagingCounter: number
+  hasPrevPage: boolean
+  hasNextPage: boolean
+  prevPage: number | null
+  nextPage: number | null
 }
 
 export interface TaskTableParams {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  search?: string;
-  filters?: TaskTableFilters;
+  page?: number
+  limit?: number
+  sort?: string
+  search?: string
+  filters?: TaskTableFilters
 }
 
 // Fetch tasks with pagination and filtering using PayloadCMS built-in API
-export async function fetchTaskTableData(
-  params: TaskTableParams = {}
-): Promise<{
-  data: TaskTableData[];
-  pagination: TaskTablePagination;
+export async function fetchTaskTableData(params: TaskTableParams = {}): Promise<{
+  data: TaskTableData[]
+  pagination: TaskTablePagination
 }> {
   try {
     const {
@@ -45,107 +36,102 @@ export async function fetchTaskTableData(
       sort = '-createdAt', // Default sort by created date (newest first)
       search,
       filters = {},
-    } = params;
+    } = params
 
     // Build query parameters
     const queryParams = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
       sort,
-    });
+    })
 
     // Add search parameter
     if (search) {
-      queryParams.append('where[title][like]', search);
+      queryParams.append('where[title][like]', search)
     }
 
     // Add filters
     if (filters.status && filters.status.length > 0) {
-      queryParams.append('where[status][in]', filters.status.join(','));
+      queryParams.append('where[status][in]', filters.status.join(','))
     }
 
     if (filters.priority && filters.priority.length > 0) {
-      queryParams.append('where[priority][in]', filters.priority.join(','));
+      queryParams.append('where[priority][in]', filters.priority.join(','))
     }
 
     if (filters.assignee && filters.assignee.length > 0) {
-      queryParams.append('where[assignee][in]', filters.assignee.join(','));
+      queryParams.append('where[assignee][in]', filters.assignee.join(','))
     }
 
     if (filters.taskTypes && filters.taskTypes.length > 0) {
-      queryParams.append('where[taskTypes][in]', filters.taskTypes.join(','));
+      queryParams.append('where[taskTypes][in]', filters.taskTypes.join(','))
     }
 
     if (filters.dueDateFrom) {
-      queryParams.append(
-        'where[dueDate][greater_than_equal]',
-        filters.dueDateFrom
-      );
+      queryParams.append('where[dueDate][greater_than_equal]', filters.dueDateFrom)
     }
 
     if (filters.dueDateTo) {
-      queryParams.append('where[dueDate][less_than_equal]', filters.dueDateTo);
+      queryParams.append('where[dueDate][less_than_equal]', filters.dueDateTo)
     }
 
     // Add populate parameters to get related data
-    queryParams.append('populate', 'status,taskTypes');
-    queryParams.append('depth', '2'); // Populate relationships up to 2 levels deep
+    queryParams.append('populate', 'status,taskTypes')
+    queryParams.append('depth', '2') // Populate relationships up to 2 levels deep
 
     // Get the base URL for requests
     const baseUrl =
       typeof window !== 'undefined'
         ? window.location.origin
-        : process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000';
-    const apiUrl = `${baseUrl}/api/task-list?${queryParams.toString()}`;
+        : process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+    const apiUrl = `${baseUrl}/api/task-list?${queryParams.toString()}`
 
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl)
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch tasks: ${response.statusText}`);
+      throw new Error(`Failed to fetch tasks: ${response.statusText}`)
     }
 
-    const result: TaskTableResponse = await response.json();
+    const result: TaskTableResponse = await response.json()
 
     // Transform the data to match our table structure
-    const transformedData: TaskTableData[] = result.docs.map(
-      (task: TaskTableData) => ({
-        id: task.id,
-        title: task.title,
-        description: task.description,
-        status: {
-          id: task.status?.id || '',
-          name: task.status?.name || 'Unknown',
-          color: task.status?.color || '#6B7280',
-        },
-        priority: task.priority,
-        assignee: task.assignee,
-        dueDate: task.dueDate,
-        taskTypes:
-          task.taskTypes?.map(type => ({
-            id: type.id,
-            name: type.name,
-            color: type.color,
-          })) || [],
-        order: task.order,
-        createdAt: task.createdAt,
-        updatedAt: task.updatedAt,
-      })
-    );
+    const transformedData: TaskTableData[] = result.docs.map((task: TaskTableData) => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      status: {
+        id: task.status?.id || '',
+        name: task.status?.name || 'Unknown',
+        color: task.status?.color || '#6B7280',
+      },
+      priority: task.priority,
+      assignee: task.assignee,
+      dueDate: task.dueDate,
+      taskTypes:
+        task.taskTypes?.map(type => ({
+          id: type.id,
+          name: type.name,
+          color: type.color,
+        })) || [],
+      order: task.order,
+      createdAt: task.createdAt,
+      updatedAt: task.updatedAt,
+    }))
 
     const pagination: TaskTablePagination = {
       page: result.page,
       limit: result.limit,
       total: result.totalDocs,
       totalPages: result.totalPages,
-    };
+    }
 
     return {
       data: transformedData,
       pagination,
-    };
+    }
   } catch (error) {
-    console.error('Error fetching task table data:', error);
-    throw error;
+    logDbError('fetch-task-table-data', error)
+    throw error
   }
 }
 
@@ -155,24 +141,24 @@ export async function fetchTaskStatuses() {
     const baseUrl =
       typeof window !== 'undefined'
         ? window.location.origin
-        : process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/task-statuses?limit=100`);
+        : process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+    const response = await fetch(`${baseUrl}/api/task-statuses?limit=100`)
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch task statuses: ${response.statusText}`);
+      throw new Error(`Failed to fetch task statuses: ${response.statusText}`)
     }
 
-    const result = await response.json();
+    const result = await response.json()
     // Handle both possible response formats
-    const statuses = result.docs || result.data || [];
+    const statuses = result.docs || result.data || []
     return statuses.map((status: TaskStatus) => ({
       label: status.name,
       value: status.id,
       color: status.color,
-    }));
+    }))
   } catch (error) {
-    console.error('Error fetching task statuses:', error);
-    return [];
+    logDbError('fetch-task-statuses', error)
+    return []
   }
 }
 
@@ -182,22 +168,22 @@ export async function fetchTaskTypes() {
     const baseUrl =
       typeof window !== 'undefined'
         ? window.location.origin
-        : process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/task-types?limit=100`);
+        : process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+    const response = await fetch(`${baseUrl}/api/task-types?limit=100`)
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch task types: ${response.statusText}`);
+      throw new Error(`Failed to fetch task types: ${response.statusText}`)
     }
 
-    const result = await response.json();
+    const result = await response.json()
     return result.docs.map((type: TaskType) => ({
       label: type.name,
       value: type.id,
       color: type.color,
-    }));
+    }))
   } catch (error) {
-    console.error('Error fetching task types:', error);
-    return [];
+    logDbError('fetch-task-types', error)
+    return []
   }
 }
 
@@ -207,85 +193,80 @@ export async function fetchTaskAssignees() {
     const baseUrl =
       typeof window !== 'undefined'
         ? window.location.origin
-        : process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000';
-    const response = await fetch(
-      `${baseUrl}/api/tasks?limit=1000&select=assignee`
-    );
+        : process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+    const response = await fetch(`${baseUrl}/api/tasks?limit=1000&select=assignee`)
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch task assignees: ${response.statusText}`);
+      throw new Error(`Failed to fetch task assignees: ${response.statusText}`)
     }
 
-    const result = await response.json();
+    const result = await response.json()
     const assignees = result.data
       .map((task: Pick<Task, 'assignee'>) => task.assignee)
       .filter((assignee: string | null | undefined): assignee is string => {
-        return (
-          assignee !== null && assignee !== undefined && assignee.trim() !== ''
-        );
+        return assignee !== null && assignee !== undefined && assignee.trim() !== ''
       })
       .filter(
-        (assignee: string, index: number, array: string[]) =>
-          array.indexOf(assignee) === index
+        (assignee: string, index: number, array: string[]) => array.indexOf(assignee) === index
       )
-      .sort();
+      .sort()
 
     return assignees.map((assignee: string) => ({
       label: assignee,
       value: assignee,
-    }));
+    }))
   } catch (error) {
-    console.error('Error fetching task assignees:', error);
-    return [];
+    logDbError('fetch-task-assignees', error)
+    return []
   }
 }
 
 // Task CRUD operations using kanban services
 export async function createTask(taskData: {
-  title: string;
-  description?: string;
-  status: string;
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  assignee?: string;
-  dueDate?: string;
-  taskTypes?: string[];
+  title: string
+  description?: string
+  status: string
+  priority: 'low' | 'medium' | 'high' | 'critical'
+  assignee?: string
+  dueDate?: string
+  taskTypes?: string[]
 }) {
   try {
-    const result = await createKanbanTask(taskData);
-    return result;
+    const result = await createKanbanTask(taskData)
+    return result
   } catch (error) {
-    console.error('Error creating task:', error);
-    throw error;
+    logDbError('create-task', error, { taskData })
+    throw error
   }
 }
 
 export async function updateTask(
   id: string,
   taskData: {
-    title?: string;
-    description?: string;
-    status?: string;
-    priority?: 'low' | 'medium' | 'high' | 'critical';
-    assignee?: string;
-    dueDate?: string;
-    taskTypes?: string[];
+    title?: string
+    description?: string
+    status?: string
+    priority?: 'low' | 'medium' | 'high' | 'critical'
+    assignee?: string
+    dueDate?: string
+    taskTypes?: string[]
   }
 ) {
   try {
-    const result = await updateKanbanTask(id, taskData);
-    return result;
+    const result = await updateKanbanTask(id, taskData)
+    return result
   } catch (error) {
-    console.error('Error updating task:', error);
-    throw error;
+    logDbError('update-task', error, { taskId: id, taskData })
+    throw error
   }
 }
 
 export async function deleteTask(id: string) {
   try {
-    const result = await deleteKanbanTask(id);
-    return result;
+    const result = await deleteKanbanTask(id)
+    return result
   } catch (error) {
-    console.error('Error deleting task:', error);
-    throw error;
+    logDbError('delete-task', error, { taskId: id })
+    throw error
   }
 }

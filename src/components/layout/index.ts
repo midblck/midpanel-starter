@@ -1,2 +1,2 @@
-export * from './page-container';
-export * from './page-header';
+export * from './page-container'
+export * from './page-header'

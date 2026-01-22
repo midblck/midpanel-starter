@@ -31,7 +31,7 @@ import {
   DataTableToolbar,
   DataTableFilters,
   DataTableBulkActions,
-} from '@/components/tables/data-table';
+} from '@/components/tables/data-table'
 
 function MyTable({ table }: { table: Table<MyData> }) {
   const filters: FilterConfig[] = [
@@ -55,7 +55,7 @@ function MyTable({ table }: { table: Table<MyData> }) {
       label: 'Date Range',
       type: 'date-range',
     },
-  ];
+  ]
 
   const actions: BulkActionConfig[] = [
     {
@@ -73,10 +73,9 @@ function MyTable({ table }: { table: Table<MyData> }) {
         { value: 'active', label: 'Active' },
         { value: 'inactive', label: 'Inactive' },
       ],
-      onAction: (selectedRows, status) =>
-        handleUpdateStatus(selectedRows, status),
+      onAction: (selectedRows, status) => handleUpdateStatus(selectedRows, status),
     },
-  ];
+  ]
 
   return (
     <DataTable table={table}>
@@ -85,25 +84,22 @@ function MyTable({ table }: { table: Table<MyData> }) {
           table={table}
           filters={filters}
           onFilterChange={(filterId, value) => {
-            table.getColumn(filterId)?.setFilterValue(value);
+            table.getColumn(filterId)?.setFilterValue(value)
           }}
         />
       </DataTableToolbar>
 
       <DataTableBulkActions table={table} actions={actions} />
     </DataTable>
-  );
+  )
 }
 ```
 
 ### 2. Using Collection-Specific Components
 
 ```tsx
-import { DataTable, DataTableToolbar } from '@/components/tables/data-table';
-import {
-  Filters,
-  BulkActions,
-} from '@/features/task-list/components/data-table';
+import { DataTable, DataTableToolbar } from '@/components/tables/data-table'
+import { Filters, BulkActions } from '@/features/task-list/components/data-table'
 
 function TaskTable({ table }: { table: Table<TaskData> }) {
   return (
@@ -113,12 +109,8 @@ function TaskTable({ table }: { table: Table<TaskData> }) {
           table={table}
           statusOptions={statusOptions}
           priorityOptions={priorityOptions}
-          onStatusFilter={status =>
-            table.getColumn('status')?.setFilterValue(status)
-          }
-          onPriorityFilter={priority =>
-            table.getColumn('priority')?.setFilterValue(priority)
-          }
+          onStatusFilter={status => table.getColumn('status')?.setFilterValue(status)}
+          onPriorityFilter={priority => table.getColumn('priority')?.setFilterValue(priority)}
         />
       </DataTableToolbar>
 
@@ -129,7 +121,7 @@ function TaskTable({ table }: { table: Table<TaskData> }) {
         onBulkUpdateStatus={handleBulkUpdateStatus}
       />
     </DataTable>
-  );
+  )
 }
 ```
 
@@ -139,17 +131,17 @@ function TaskTable({ table }: { table: Table<TaskData> }) {
 
 ```tsx
 interface FilterConfig {
-  id: string; // Column ID
-  label: string; // Display label
-  type: 'select' | 'text' | 'date' | 'date-range';
+  id: string // Column ID
+  label: string // Display label
+  type: 'select' | 'text' | 'date' | 'date-range'
   options?: Array<{
     // For select type
-    value: string;
-    label: string;
-    color?: string; // Optional color indicator
-  }>;
-  placeholder?: string; // Input placeholder
-  columnId?: string; // Override column ID if different from id
+    value: string
+    label: string
+    color?: string // Optional color indicator
+  }>
+  placeholder?: string // Input placeholder
+  columnId?: string // Override column ID if different from id
 }
 ```
 
@@ -157,23 +149,17 @@ interface FilterConfig {
 
 ```tsx
 interface BulkActionConfig {
-  id: string; // Unique action ID
-  label: string; // Display label
-  icon?: React.ReactNode; // Optional icon
-  type: 'action' | 'select'; // Action type
+  id: string // Unique action ID
+  label: string // Display label
+  icon?: React.ReactNode // Optional icon
+  type: 'action' | 'select' // Action type
   options?: Array<{
     // For select type
-    value: string;
-    label: string;
-  }>;
-  onAction?: (selectedRows: any[], value?: string) => void;
-  variant?:
-    | 'default'
-    | 'destructive'
-    | 'outline'
-    | 'secondary'
-    | 'ghost'
-    | 'link';
+    value: string
+    label: string
+  }>
+  onAction?: (selectedRows: any[], value?: string) => void
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
 }
 ```
 
@@ -262,15 +248,9 @@ interface BulkActionConfig {
 
 ```tsx
 // src/features/users/components/data-table/user-filters.tsx
-import {
-  DataTableFilters,
-  type FilterConfig,
-} from '@/components/tables/data-table/filters';
+import { DataTableFilters, type FilterConfig } from '@/components/tables/data-table/filters'
 
-export function UserFilters<TData>({
-  table,
-  roleOptions = [],
-}: UserFiltersProps<TData>) {
+export function UserFilters<TData>({ table, roleOptions = [] }: UserFiltersProps<TData>) {
   const filters: FilterConfig[] = [
     {
       id: 'role',
@@ -280,17 +260,17 @@ export function UserFilters<TData>({
       placeholder: 'All roles',
     },
     // ... more filters
-  ];
+  ]
 
   return (
     <DataTableFilters
       table={table}
       filters={filters}
       onFilterChange={(filterId, value) => {
-        table.getColumn(filterId)?.setFilterValue(value);
+        table.getColumn(filterId)?.setFilterValue(value)
       }}
     />
-  );
+  )
 }
 ```
 
@@ -301,12 +281,9 @@ export function UserFilters<TData>({
 import {
   DataTableBulkActions,
   type BulkActionConfig,
-} from '@/components/tables/data-table/bulk-actions';
+} from '@/components/tables/data-table/bulk-actions'
 
-export function UserBulkActions<TData>({
-  table,
-  onBulkDelete,
-}: UserBulkActionsProps<TData>) {
+export function UserBulkActions<TData>({ table, onBulkDelete }: UserBulkActionsProps<TData>) {
   const actions: BulkActionConfig[] = [
     {
       id: 'delete',
@@ -316,9 +293,9 @@ export function UserBulkActions<TData>({
       onAction: onBulkDelete,
     },
     // ... more actions
-  ];
+  ]
 
-  return <DataTableBulkActions table={table} actions={actions} />;
+  return <DataTableBulkActions table={table} actions={actions} />
 }
 ```
 

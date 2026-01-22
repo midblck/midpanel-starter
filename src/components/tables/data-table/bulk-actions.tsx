@@ -1,7 +1,8 @@
-'use client';
+'use client'
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge'
+import { logError } from '@/utilities/logger'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,39 +10,33 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import type { Table } from '@tanstack/react-table';
-import { Download, MoreHorizontal } from 'lucide-react';
-import { useState } from 'react';
+} from '@/components/ui/select'
+import type { Table } from '@tanstack/react-table'
+import { Download, MoreHorizontal } from 'lucide-react'
+import { useState } from 'react'
 
 export interface BulkActionConfig {
-  id: string;
-  label: string;
-  icon?: React.ReactNode;
-  type: 'action' | 'select';
-  options?: Array<{ value: string; label: string }>;
+  id: string
+  label: string
+  icon?: React.ReactNode
+  type: 'action' | 'select'
+  options?: Array<{ value: string; label: string }>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onAction?: (selectedRows: any[], value?: string) => void;
-  variant?:
-    | 'default'
-    | 'destructive'
-    | 'outline'
-    | 'secondary'
-    | 'ghost'
-    | 'link';
+  onAction?: (selectedRows: any[], value?: string) => void
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
 }
 
 interface DataTableBulkActionsProps<TData> {
-  table: Table<TData>;
-  actions: BulkActionConfig[];
-  selectedCount?: number;
+  table: Table<TData>
+  actions: BulkActionConfig[]
+  selectedCount?: number
 }
 
 export function DataTableBulkActions<TData>({
@@ -49,41 +44,41 @@ export function DataTableBulkActions<TData>({
   actions,
   selectedCount,
 }: DataTableBulkActionsProps<TData>) {
-  const [isUpdating, setIsUpdating] = useState(false);
-  const selectedRows = table.getFilteredSelectedRowModel().rows;
-  const actualSelectedCount = selectedCount ?? selectedRows.length;
-  const selectedData = selectedRows.map(row => row.original);
+  const [isUpdating, setIsUpdating] = useState(false)
+  const selectedRows = table.getFilteredSelectedRowModel().rows
+  const actualSelectedCount = selectedCount ?? selectedRows.length
+  const selectedData = selectedRows.map(row => row.original)
 
   if (actualSelectedCount === 0) {
-    return null;
+    return null
   }
 
   const handleAction = async (action: BulkActionConfig, value?: string) => {
-    if (!action.onAction) return;
+    if (!action.onAction) return
 
-    setIsUpdating(true);
+    setIsUpdating(true)
     try {
-      await action.onAction(selectedData, value);
+      await action.onAction(selectedData, value)
     } catch (error) {
-      console.error(`Failed to execute bulk action ${action.id}:`, error);
+      logError(`Failed to execute bulk action ${action.id}`, error, {
+        component: 'BulkActions',
+        action: 'execute-bulk-action',
+        actionId: action.id,
+        selectedCount: selectedData.length,
+      })
     } finally {
-      setIsUpdating(false);
+      setIsUpdating(false)
     }
-  };
+  }
 
   const renderAction = (action: BulkActionConfig) => {
     if (action.type === 'select' && action.options) {
       return (
         <div key={action.id} className='flex items-center gap-2'>
           <span className='text-sm font-medium'>{action.label}:</span>
-          <Select
-            onValueChange={value => void handleAction(action, value)}
-            disabled={isUpdating}
-          >
+          <Select onValueChange={value => void handleAction(action, value)} disabled={isUpdating}>
             <SelectTrigger className='h-8 w-[140px]'>
-              <SelectValue
-                placeholder={`Select ${action.label.toLowerCase()}`}
-              />
+              <SelectValue placeholder={`Select ${action.label.toLowerCase()}`} />
             </SelectTrigger>
             <SelectContent>
               {action.options.map(option => (
@@ -94,7 +89,7 @@ export function DataTableBulkActions<TData>({
             </SelectContent>
           </Select>
         </div>
-      );
+      )
     }
 
     return (
@@ -109,8 +104,8 @@ export function DataTableBulkActions<TData>({
         {action.icon}
         {action.label}
       </Button>
-    );
-  };
+    )
+  }
 
   return (
     <div className='flex items-center gap-2'>
@@ -118,9 +113,7 @@ export function DataTableBulkActions<TData>({
         {actualSelectedCount} selected
       </Badge>
 
-      <div className='flex items-center gap-2'>
-        {actions.map(action => renderAction(action))}
-      </div>
+      <div className='flex items-center gap-2'>{actions.map(action => renderAction(action))}</div>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -134,8 +127,8 @@ export function DataTableBulkActions<TData>({
           <DropdownMenuItem
             onClick={() => {
               // Generic export functionality
-              const csvContent = convertToCSV(selectedData);
-              downloadFile(csvContent, 'export.csv', 'text/csv');
+              const csvContent = convertToCSV(selectedData)
+              downloadFile(csvContent, 'export.csv', 'text/csv')
             }}
           >
             <Download className='mr-2 h-4 w-4' />
@@ -143,8 +136,8 @@ export function DataTableBulkActions<TData>({
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              const jsonContent = JSON.stringify(selectedData, null, 2);
-              downloadFile(jsonContent, 'export.json', 'application/json');
+              const jsonContent = JSON.stringify(selectedData, null, 2)
+              downloadFile(jsonContent, 'export.json', 'application/json')
             }}
           >
             <Download className='mr-2 h-4 w-4' />
@@ -153,39 +146,39 @@ export function DataTableBulkActions<TData>({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
 }
 
 // Helper functions for export
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function convertToCSV(data: any[]): string {
-  if (data.length === 0) return '';
+  if (data.length === 0) return ''
 
-  const headers = Object.keys(data[0]);
-  const csvHeaders = headers.join(',');
+  const headers = Object.keys(data[0])
+  const csvHeaders = headers.join(',')
 
   const csvRows = data.map(row =>
     headers
       .map(header => {
-        const value = row[header];
-        if (value === null || value === undefined) return '';
-        if (typeof value === 'object') return JSON.stringify(value);
-        return String(value).replace(/"/g, '""');
+        const value = row[header]
+        if (value === null || value === undefined) return ''
+        if (typeof value === 'object') return JSON.stringify(value)
+        return String(value).replace(/"/g, '""')
       })
       .join(',')
-  );
+  )
 
-  return [csvHeaders, ...csvRows].join('\n');
+  return [csvHeaders, ...csvRows].join('\n')
 }
 
 function downloadFile(content: string, filename: string, mimeType: string) {
-  const blob = new Blob([content], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  const blob = new Blob([content], { type: mimeType })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
 }

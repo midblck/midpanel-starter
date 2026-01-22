@@ -1,24 +1,17 @@
-'use client';
-import React, { useCallback, useEffect } from 'react';
+'use client'
+import React, { useCallback, useEffect } from 'react'
 
-import {
-  Button,
-  FieldLabel,
-  TextInput,
-  useField,
-  useForm,
-  useFormFields,
-} from '@payloadcms/ui';
-import { TextFieldClientProps } from 'payload';
+import { Button, FieldLabel, TextInput, useField, useForm, useFormFields } from '@payloadcms/ui'
+import { TextFieldClientProps } from 'payload'
 
-import { formatSlug } from './formatSlug';
+import { formatSlug } from './formatSlug'
 
-import './index.scss';
+import './index.scss'
 
 type SlugComponentProps = {
-  fieldToUse: string;
-  checkboxFieldPath: string;
-} & TextFieldClientProps;
+  fieldToUse: string
+  checkboxFieldPath: string
+} & TextFieldClientProps
 
 export const SlugComponent: React.FC<SlugComponentProps> = ({
   checkboxFieldPath: checkboxFieldPathFromProps,
@@ -27,53 +20,53 @@ export const SlugComponent: React.FC<SlugComponentProps> = ({
   path,
   readOnly: readOnlyFromProps,
 }) => {
-  const { label } = field;
+  const { label } = field
 
   const checkboxFieldPath = path?.includes('.')
     ? `${path}.${checkboxFieldPathFromProps}`
-    : checkboxFieldPathFromProps;
+    : checkboxFieldPathFromProps
 
-  const { setValue, value } = useField<string>({ path: path || field.name });
+  const { setValue, value } = useField<string>({ path: path || field.name })
 
-  const { dispatchFields } = useForm();
+  const { dispatchFields } = useForm()
 
   // The value of the checkbox
   // We're using separate useFormFields to minimise re-renders
   const checkboxValue = useFormFields(([fields]) => {
-    return fields[checkboxFieldPath]?.value as string;
-  });
+    return fields[checkboxFieldPath]?.value as string
+  })
 
   // The value of the field we're listening to for the slug
   const targetFieldValue = useFormFields(([fields]) => {
-    return fields[fieldToUse]?.value as string;
-  });
+    return fields[fieldToUse]?.value as string
+  })
 
   useEffect(() => {
     if (checkboxValue) {
       if (targetFieldValue) {
-        const formattedSlug = formatSlug(targetFieldValue);
+        const formattedSlug = formatSlug(targetFieldValue)
 
-        if (value !== formattedSlug) setValue(formattedSlug);
+        if (value !== formattedSlug) setValue(formattedSlug)
       } else {
-        if (value !== '') setValue('');
+        if (value !== '') setValue('')
       }
     }
-  }, [targetFieldValue, checkboxValue, setValue, value]);
+  }, [targetFieldValue, checkboxValue, setValue, value])
 
   const handleLock = useCallback(
     (e: React.MouseEvent<Element>) => {
-      e.preventDefault();
+      e.preventDefault()
 
       dispatchFields({
         path: checkboxFieldPath,
         type: 'UPDATE',
         value: !checkboxValue,
-      });
+      })
     },
     [checkboxValue, checkboxFieldPath, dispatchFields]
-  );
+  )
 
-  const readOnly = readOnlyFromProps || checkboxValue;
+  const readOnly = readOnlyFromProps || checkboxValue
 
   return (
     <div className='field-type slug-field-component'>
@@ -92,5 +85,5 @@ export const SlugComponent: React.FC<SlugComponentProps> = ({
         readOnly={Boolean(readOnly)}
       />
     </div>
-  );
-};
+  )
+}

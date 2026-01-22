@@ -1,28 +1,19 @@
-import type { TaskTableData } from '@/types/data-table';
+import type { TaskTableData } from '@/types/data-table'
 
 export interface ExportOptions {
-  filename?: string;
-  includeHeaders?: boolean;
-  dateFormat?: 'iso' | 'readable';
+  filename?: string
+  includeHeaders?: boolean
+  dateFormat?: 'iso' | 'readable'
 }
 
-export function exportToCSV(
-  data: TaskTableData[],
-  options: ExportOptions = {}
-): void {
-  const {
-    filename = 'tasks.csv',
-    includeHeaders = true,
-    dateFormat = 'readable',
-  } = options;
+export function exportToCSV(data: TaskTableData[], options: ExportOptions = {}): void {
+  const { filename = 'tasks.csv', includeHeaders = true, dateFormat = 'readable' } = options
 
   const formatDate = (dateString: string) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return dateFormat === 'iso'
-      ? date.toISOString()
-      : date.toLocaleDateString();
-  };
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    return dateFormat === 'iso' ? date.toISOString() : date.toLocaleDateString()
+  }
 
   const headers = [
     'ID',
@@ -36,7 +27,7 @@ export function exportToCSV(
     'Order',
     'Created At',
     'Updated At',
-  ];
+  ]
 
   const csvContent = [
     // Headers
@@ -57,58 +48,46 @@ export function exportToCSV(
         `"${formatDate(row.updatedAt)}"`,
       ].join(',')
     ),
-  ].join('\n');
+  ].join('\n')
 
-  downloadFile(csvContent, filename, 'text/csv');
+  downloadFile(csvContent, filename, 'text/csv')
 }
 
-export function exportToJSON(
-  data: TaskTableData[],
-  options: ExportOptions = {}
-): void {
-  const { filename = 'tasks.json', dateFormat = 'iso' } = options;
+export function exportToJSON(data: TaskTableData[], options: ExportOptions = {}): void {
+  const { filename = 'tasks.json', dateFormat = 'iso' } = options
 
   const formatDate = (dateString: string) => {
-    if (!dateString) return null;
-    const date = new Date(dateString);
-    return dateFormat === 'iso'
-      ? date.toISOString()
-      : date.toLocaleDateString();
-  };
+    if (!dateString) return null
+    const date = new Date(dateString)
+    return dateFormat === 'iso' ? date.toISOString() : date.toLocaleDateString()
+  }
 
   const jsonData = data.map(row => ({
     ...row,
     dueDate: formatDate(row.dueDate || ''),
     createdAt: formatDate(row.createdAt),
     updatedAt: formatDate(row.updatedAt),
-  }));
+  }))
 
-  const jsonContent = JSON.stringify(jsonData, null, 2);
-  downloadFile(jsonContent, filename, 'application/json');
+  const jsonContent = JSON.stringify(jsonData, null, 2)
+  downloadFile(jsonContent, filename, 'application/json')
 }
 
-function downloadFile(
-  content: string,
-  filename: string,
-  mimeType: string
-): void {
-  const blob = new Blob([content], { type: mimeType });
-  const url = URL.createObjectURL(blob);
+function downloadFile(content: string, filename: string, mimeType: string): void {
+  const blob = new Blob([content], { type: mimeType })
+  const url = URL.createObjectURL(blob)
 
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 
-  URL.revokeObjectURL(url);
+  URL.revokeObjectURL(url)
 }
 
-export function getExportFilename(
-  prefix: string = 'tasks',
-  format: 'csv' | 'json'
-): string {
-  const timestamp = new Date().toISOString().split('T')[0];
-  return `${prefix}_${timestamp}.${format}`;
+export function getExportFilename(prefix: string = 'tasks', format: 'csv' | 'json'): string {
+  const timestamp = new Date().toISOString().split('T')[0]
+  return `${prefix}_${timestamp}.${format}`
 }

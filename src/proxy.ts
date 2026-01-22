@@ -1,15 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server'
 
 // Define protected routes that require authentication
-const protectedRoutes = ['/app'];
+const protectedRoutes = ['/app']
 
 export default function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl
 
   // Check if the current path is protected
-  const isProtectedRoute = protectedRoutes.some(route =>
-    pathname.startsWith(route)
-  );
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
   if (isProtectedRoute) {
     // For now, we'll allow access but in a real app you'd check:
@@ -24,12 +22,12 @@ export default function proxy(request: NextRequest) {
   }
 
   // Set header for admin routes
-  const response = NextResponse.next();
+  const response = NextResponse.next()
   if (pathname.startsWith('/admin') || pathname.startsWith('/api')) {
-    response.headers.set('x-admin-route', 'true');
+    response.headers.set('x-admin-route', 'true')
   }
 
-  return response;
+  return response
 }
 
 export const config = {
@@ -39,4 +37,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-};
+}

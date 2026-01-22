@@ -9,11 +9,10 @@ A comprehensive error boundary system for handling React errors gracefully throu
 The main error boundary component that catches JavaScript errors anywhere in the child component tree.
 
 ```tsx
-import { ErrorBoundary } from '@/components/error-boundary';
-
-<ErrorBoundary fallback={<CustomFallback />}>
+import { ErrorBoundary } from '@/components/error-boundary'
+;<ErrorBoundary fallback={<CustomFallback />}>
   <YourComponent />
-</ErrorBoundary>;
+</ErrorBoundary>
 ```
 
 ### Error Fallbacks
@@ -32,11 +31,10 @@ Pre-built error fallback components for different scenarios:
 Context provider for managing error state across the application.
 
 ```tsx
-import { ErrorProvider } from '@/components/error-boundary';
-
-<ErrorProvider>
+import { ErrorProvider } from '@/components/error-boundary'
+;<ErrorProvider>
   <App />
-</ErrorProvider>;
+</ErrorProvider>
 ```
 
 ## Hooks
@@ -46,12 +44,12 @@ import { ErrorProvider } from '@/components/error-boundary';
 Hook for manually triggering errors and handling them consistently.
 
 ```tsx
-import { useErrorHandler } from '@/hooks/use-error-handler';
+import { useErrorHandler } from '@/hooks/use-error-handler'
 
-const { handleError } = useErrorHandler();
+const { handleError } = useErrorHandler()
 
 // Handle an error
-handleError(new Error('Something went wrong'));
+handleError(new Error('Something went wrong'))
 ```
 
 ### useAsyncErrorHandler
@@ -59,14 +57,14 @@ handleError(new Error('Something went wrong'));
 Hook for handling async operations with automatic error handling.
 
 ```tsx
-import { useAsyncErrorHandler } from '@/hooks/use-error-handler';
+import { useAsyncErrorHandler } from '@/hooks/use-error-handler'
 
-const { executeWithErrorHandling } = useAsyncErrorHandler();
+const { executeWithErrorHandling } = useAsyncErrorHandler()
 
 // Execute async operation with error handling
 const result = await executeWithErrorHandling(async () => {
-  return await fetchData();
-});
+  return await fetchData()
+})
 ```
 
 ## Usage Examples
@@ -74,43 +72,38 @@ const result = await executeWithErrorHandling(async () => {
 ### Basic Error Boundary
 
 ```tsx
-import { ErrorBoundary, ErrorFallback } from '@/components/error-boundary';
+import { ErrorBoundary, ErrorFallback } from '@/components/error-boundary'
 
 function App() {
   return (
     <ErrorBoundary fallback={<ErrorFallback error={new Error('App failed')} />}>
       <YourApp />
     </ErrorBoundary>
-  );
+  )
 }
 ```
 
 ### Specific Error Fallback
 
 ```tsx
-import {
-  ErrorBoundary,
-  KanbanErrorFallback,
-} from '@/components/error-boundary';
+import { ErrorBoundary, KanbanErrorFallback } from '@/components/error-boundary'
 
 function KanbanPage() {
   return (
-    <ErrorBoundary
-      fallback={<KanbanErrorFallback error={new Error('Kanban failed')} />}
-    >
+    <ErrorBoundary fallback={<KanbanErrorFallback error={new Error('Kanban failed')} />}>
       <KanbanBoard />
     </ErrorBoundary>
-  );
+  )
 }
 ```
 
 ### Inline Error Handling
 
 ```tsx
-import { InlineErrorFallback } from '@/components/error-boundary';
+import { InlineErrorFallback } from '@/components/error-boundary'
 
 function ComponentWithError() {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null)
 
   if (error) {
     return (
@@ -119,25 +112,25 @@ function ComponentWithError() {
         title='Component Error'
         description='This component failed to load'
       />
-    );
+    )
   }
 
-  return <div>Your component content</div>;
+  return <div>Your component content</div>
 }
 ```
 
 ### Error Context Usage
 
 ```tsx
-import { useErrorContext, useErrorHandler } from '@/components/error-boundary';
+import { useErrorContext, useErrorHandler } from '@/components/error-boundary'
 
 function MyComponent() {
-  const { error, clearError } = useErrorContext();
-  const triggerError = useErrorHandler();
+  const { error, clearError } = useErrorContext()
+  const triggerError = useErrorHandler()
 
   const handleClick = () => {
-    triggerError(new Error('Manual error'));
-  };
+    triggerError(new Error('Manual error'))
+  }
 
   return (
     <div>
@@ -145,7 +138,7 @@ function MyComponent() {
       <button onClick={handleClick}>Trigger Error</button>
       <button onClick={clearError}>Clear Error</button>
     </div>
-  );
+  )
 }
 ```
 
@@ -176,17 +169,17 @@ To test error boundary functionality, you can create a simple test component tha
 
 ```tsx
 function TestErrorComponent() {
-  const [shouldThrow, setShouldThrow] = useState(false);
+  const [shouldThrow, setShouldThrow] = useState(false)
 
   if (shouldThrow) {
-    throw new Error('Test error for error boundary');
+    throw new Error('Test error for error boundary')
   }
 
   return (
     <div>
       <button onClick={() => setShouldThrow(true)}>Trigger Error</button>
     </div>
-  );
+  )
 }
 ```
 

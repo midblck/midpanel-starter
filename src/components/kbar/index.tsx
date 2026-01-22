@@ -1,41 +1,35 @@
-'use client';
-import {
-  KBarAnimator,
-  KBarPortal,
-  KBarPositioner,
-  KBarProvider,
-  KBarSearch,
-} from 'kbar';
-import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
-import { createAllKBarActions } from './actions';
-import RenderResults from './render-result';
-import useThemeSwitching from './use-theme-switching';
+'use client'
+import { KBarAnimator, KBarPortal, KBarPositioner, KBarProvider, KBarSearch } from 'kbar'
+import { useRouter } from 'next/navigation'
+import { useMemo } from 'react'
+import { createAllKBarActions } from './actions'
+import RenderResults from './render-result'
+import useThemeSwitching from './use-theme-switching'
 
 export default function KBar({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
+  const router = useRouter()
 
   const actions = useMemo(() => {
     const navigateTo = (url: string) => {
-      router.push(url);
-    };
+      router.push(url)
+    }
 
     const openInNewTab = (url: string) => {
-      window.open(url, '_blank');
-    };
+      window.open(url, '_blank')
+    }
 
-    return createAllKBarActions(navigateTo, openInNewTab);
-  }, [router]);
+    return createAllKBarActions(navigateTo, openInNewTab)
+  }, [router])
 
   return (
     <KBarProvider actions={actions}>
       <KBarComponent>{children}</KBarComponent>
     </KBarProvider>
-  );
+  )
 }
 
 const KBarComponent = ({ children }: { children: React.ReactNode }) => {
-  useThemeSwitching();
+  useThemeSwitching()
 
   return (
     <>
@@ -56,5 +50,5 @@ const KBarComponent = ({ children }: { children: React.ReactNode }) => {
       </KBarPortal>
       {children}
     </>
-  );
-};
+  )
+}

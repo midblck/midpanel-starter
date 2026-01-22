@@ -1,5 +1,5 @@
-import type { CollectionConfig } from 'payload';
-import { groups } from '@/lib/groups';
+import type { CollectionConfig } from 'payload'
+import { groups } from '@/lib/groups'
 export const Users: CollectionConfig = {
   slug: 'users',
   auth: true,
@@ -74,4 +74,4 @@ export const Users: CollectionConfig = {
       },
     },
   ],
-};
+}

@@ -1,8 +1,9 @@
-import type { CollectionConfig, CollectionSlug } from 'payload';
-import { taskAccess } from '@/lib/access';
-import configPromise from '@payload-config';
-import { getPayload } from 'payload';
-import { groups } from '@/lib/groups';
+import { taskAccess } from '@/lib/access'
+import { groups } from '@/lib/groups'
+import { logError } from '@/utilities/logger'
+import configPromise from '@payload-config'
+import type { CollectionConfig, CollectionSlug } from 'payload'
+import { getPayload } from 'payload'
 
 export const Tasks: CollectionConfig = {
   slug: 'tasks',
@@ -12,14 +13,7 @@ export const Tasks: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: [
-      'title',
-      'status',
-      'priority',
-      'assignee',
-      'dueDate',
-      'createdAt',
-    ],
+    defaultColumns: ['title', 'status', 'priority', 'assignee', 'dueDate', 'createdAt'],
     group: groups.misc,
   },
   access: {
@@ -86,31 +80,30 @@ export const Tasks: CollectionConfig = {
       hasMany: true,
       hooks: {
         beforeChange: [
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          async ({ value, req }) => {
+          async ({ value }) => {
             // If no task types are provided, auto-assign the "General" task type
             if (!value || (Array.isArray(value) && value.length === 0)) {
               try {
-                const payload = await getPayload({ config: configPromise });
+                const payload = await getPayload({ config: configPromise })
                 const { docs: taskTypes } = await payload.find({
                   collection: 'task-types',
                   where: {
                     name: { equals: 'General' },
                   },
                   limit: 1,
-                });
+                })
 
                 if (taskTypes.length > 0) {
-                  return [taskTypes[0].id];
+                  return [taskTypes[0].id]
                 }
               } catch (error) {
-                console.error(
-                  'Failed to auto-assign General task type:',
-                  error
-                );
+                logError('Failed to auto-assign General task type', error, {
+                  component: 'TaskCollection',
+                  action: 'auto-assign-task-type',
+                })
               }
             }
-            return value as string[];
+            return value as string[]
           },
         ],
       },
@@ -129,7 +122,7 @@ export const Tasks: CollectionConfig = {
         beforeChange: [
           ({ req, operation }) => {
             if (operation === 'create' && req.user) {
-              return req.user.id;
+              return req.user.id
             }
           },
         ],
@@ -140,4 +133,4 @@ export const Tasks: CollectionConfig = {
     },
   ],
   timestamps: true,
-};
+}

@@ -35,9 +35,9 @@ actions/
 ## Usage
 
 ```typescript
-import { createAllKBarActions } from './actions';
+import { createAllKBarActions } from './actions'
 
-const actions = createAllKBarActions(navigateTo, openInNewTab);
+const actions = createAllKBarActions(navigateTo, openInNewTab)
 ```
 
 ## Adding New Action Types

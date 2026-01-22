@@ -1,38 +1,34 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import { useDroppable } from '@dnd-kit/core';
+import { cn } from '@/lib/utils'
+import { logError } from '@/utilities/logger'
+import { useDroppable } from '@dnd-kit/core'
 
 interface InsertionIndicatorProps {
-  isVisible: boolean;
-  className?: string;
+  isVisible: boolean
+  className?: string
 }
 
-export function InsertionIndicator({
-  isVisible,
-  className,
-}: InsertionIndicatorProps) {
+export function InsertionIndicator({ isVisible, className }: InsertionIndicatorProps) {
   return (
     <div
       className={cn(
         'h-0.5 bg-primary rounded-full transition-all duration-200 ease-in-out',
         'mx-2 my-1 shadow-sm',
-        isVisible
-          ? 'opacity-100 scale-x-100 shadow-primary/30'
-          : 'opacity-0 scale-x-0',
+        isVisible ? 'opacity-100 scale-x-100 shadow-primary/30' : 'opacity-0 scale-x-0',
         className
       )}
       role='presentation'
       aria-hidden='true'
     />
-  );
+  )
 }
 
 interface DropZoneAfterTaskProps {
-  columnId: string;
-  taskId: string;
-  position: number;
-  isHovered: boolean;
+  columnId: string
+  taskId: string
+  position: number
+  isHovered: boolean
 }
 
 export function DropZoneAfterTask({
@@ -41,7 +37,7 @@ export function DropZoneAfterTask({
   position,
   isHovered,
 }: DropZoneAfterTaskProps) {
-  const dropZoneId = `${columnId}-after-${taskId}`;
+  const dropZoneId = `${columnId}-after-${taskId}`
 
   const { setNodeRef, isOver } = useDroppable({
     id: dropZoneId,
@@ -51,7 +47,7 @@ export function DropZoneAfterTask({
       afterTaskId: taskId,
       insertionIndex: position,
     },
-  });
+  })
 
   return (
     <div
@@ -65,14 +61,14 @@ export function DropZoneAfterTask({
     >
       <InsertionIndicator isVisible={isOver || isHovered} />
     </div>
-  );
+  )
 }
 
 interface DropZoneProps {
-  id: string;
-  isActive: boolean;
-  children?: React.ReactNode;
-  className?: string;
+  id: string
+  isActive: boolean
+  children?: React.ReactNode
+  className?: string
 }
 
 export function DropZone({ id, isActive, children, className }: DropZoneProps) {
@@ -89,21 +85,17 @@ export function DropZone({ id, isActive, children, className }: DropZoneProps) {
     >
       {children}
     </div>
-  );
+  )
 }
 
 interface DropZoneAfterColumnProps {
-  columnId: string;
-  position: number;
-  isHovered: boolean;
+  columnId: string
+  position: number
+  isHovered: boolean
 }
 
-export function DropZoneAfterColumn({
-  columnId,
-  position,
-  isHovered,
-}: DropZoneAfterColumnProps) {
-  const dropZoneId = `column-after-${columnId}`;
+export function DropZoneAfterColumn({ columnId, position, isHovered }: DropZoneAfterColumnProps) {
+  const dropZoneId = `column-after-${columnId}`
 
   const { setNodeRef, isOver } = useDroppable({
     id: dropZoneId,
@@ -112,7 +104,7 @@ export function DropZoneAfterColumn({
       columnId,
       insertionIndex: position,
     },
-  });
+  })
 
   try {
     return (
@@ -137,9 +129,12 @@ export function DropZoneAfterColumn({
           </div>
         </div>
       </div>
-    );
+    )
   } catch (error) {
-    console.error('DropZoneAfterColumn error:', error);
-    return null;
+    logError('DropZoneAfterColumn error', error, {
+      component: 'InsertionIndicator',
+      action: 'drop-zone',
+    })
+    return null
   }
 }

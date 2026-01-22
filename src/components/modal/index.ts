@@ -1,4 +1,4 @@
-export { SwipeButton } from '../ui/swipe-button';
+export { SwipeButton } from '../ui/swipe-button'
 export {
   ApproveConfirmationDialog,
   ConfirmationDialog,
@@ -8,4 +8,4 @@ export {
   SaveConfirmationDialog,
   UpdateConfirmationDialog,
   type ConfirmationVariant,
-} from './confirmation-dialog';
+} from './confirmation-dialog'

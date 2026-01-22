@@ -1,21 +1,21 @@
 // Kanban feature exports
-export { default as AddStatusDialog } from './components/add-status-dialog';
-export { BoardColumn, BoardContainer } from './components/board-column';
-export { DateRangeFilter } from './components/date-range-filter';
-export { default as EditColumnDialog } from './components/edit-column-dialog';
+export { default as AddStatusDialog } from './components/add-status-dialog'
+export { BoardColumn, BoardContainer } from './components/board-column'
+export { DateRangeFilter } from './components/date-range-filter'
+export { default as EditColumnDialog } from './components/edit-column-dialog'
 export {
   DropZone,
   DropZoneAfterColumn,
   DropZoneAfterTask,
   InsertionIndicator,
-} from './components/insertion-indicator';
-export { KanbanBoard } from './components/kanban-board';
-export { default as NewTaskDialog } from './components/new-task-dialog';
-export { TaskCard } from './components/task-card';
+} from './components/insertion-indicator'
+export { KanbanBoard } from './components/kanban-board'
+export { default as NewTaskDialog } from './components/new-task-dialog'
+export { TaskCard } from './components/task-card'
 
 // Store exports
-export { useTaskStore } from './store';
-export type { Column, ColumnId, Status, Task, TaskType } from './store';
+export { useTaskStore } from './store'
+export type { Column, ColumnId, Status, Task, TaskType } from './store'
 
 // Hooks exports
 export {
@@ -23,7 +23,7 @@ export {
   useKanbanTasks,
   useKanbanStatuses,
   useKanbanTypes,
-} from './hooks/use-kanban-data';
+} from './hooks/use-kanban-data'
 
 // Services exports (client-side REST API)
 export {
@@ -40,7 +40,7 @@ export {
   updateKanbanTask,
   updateTaskStatus,
   updateTaskType,
-} from './services';
+} from './services'
 
 // Utils exports
 export {
@@ -50,7 +50,7 @@ export {
   isColumn,
   isOverdue,
   isTask,
-} from './utils';
+} from './utils'
 
 // Constants exports
 export {
@@ -59,4 +59,4 @@ export {
   PRIORITY_COLORS,
   getPriorityCardColors,
   getPriorityColor,
-} from './constants';
+} from './constants'

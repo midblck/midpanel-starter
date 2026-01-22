@@ -1,119 +1,95 @@
-'use client';
+'use client'
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import type { Task } from '@/features/kanban';
-import {
-  formatDate,
-  getPriorityCardColors,
-  getPriorityLabel,
-  isOverdue,
-} from '@/features/kanban';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import {
-  Calendar,
-  GripVertical,
-  MoreHorizontal,
-  Tag,
-  User,
-} from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+} from '@/components/ui/dropdown-menu'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import type { Task } from '@/features/kanban'
+import { formatDate, getPriorityCardColors, getPriorityLabel, isOverdue } from '@/features/kanban'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { Calendar, GripVertical, MoreHorizontal, Tag, User } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 interface TaskCardProps {
-  task: Task;
-  onEdit?: (task: Task) => void;
-  onDelete?: (taskId: string) => void;
+  task: Task
+  onEdit?: (task: Task) => void
+  onDelete?: (taskId: string) => void
 }
 
 // Hook to detect if text is truncated
 function useIsTextTruncated(text: string) {
-  const [isTruncated, setIsTruncated] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const textRef = useRef<HTMLParagraphElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+  const textRef = useRef<HTMLParagraphElement>(null)
 
   // Estimate if text might be truncated based on character count
   // This provides a consistent SSR/client experience
-  const estimatedTruncated = text.length > 120; // Rough estimate for 2 lines
+  const estimatedTruncated = text.length > 120 // Rough estimate for 2 lines
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    setIsMounted(true)
+  }, [])
 
   useEffect(() => {
-    if (!isMounted) return;
+    if (!isMounted) return
 
     const checkTruncation = () => {
       if (textRef.current) {
-        const element = textRef.current;
-        setIsTruncated(element.scrollHeight > element.clientHeight);
+        const element = textRef.current
+        setIsTruncated(element.scrollHeight > element.clientHeight)
       }
-    };
+    }
 
     // Use requestAnimationFrame to ensure DOM is fully rendered
     const rafId = requestAnimationFrame(() => {
-      checkTruncation();
-    });
+      checkTruncation()
+    })
 
-    window.addEventListener('resize', checkTruncation);
+    window.addEventListener('resize', checkTruncation)
 
     return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', checkTruncation);
-    };
-  }, [text, isMounted]);
+      cancelAnimationFrame(rafId)
+      window.removeEventListener('resize', checkTruncation)
+    }
+  }, [text, isMounted])
 
   // Use estimated truncation for SSR, actual measurement for client
   return {
     textRef,
     isTruncated: isMounted ? isTruncated : estimatedTruncated,
-  };
+  }
 }
 
 export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: task.id,
     data: {
       type: 'task',
       task,
     },
-  });
+  })
 
-  const { textRef, isTruncated } = useIsTextTruncated(task.description || '');
+  const { textRef, isTruncated } = useIsTextTruncated(task.description || '')
 
   // Ensure we have a valid priority value
   const taskPriority =
-    task.priority &&
-    ['low', 'medium', 'high', 'critical'].includes(task.priority)
+    task.priority && ['low', 'medium', 'high', 'critical'].includes(task.priority)
       ? task.priority
-      : 'medium';
-  const priorityColors = getPriorityCardColors(taskPriority);
+      : 'medium'
+  const priorityColors = getPriorityCardColors(taskPriority)
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-  };
+  }
 
   return (
     <Card
@@ -148,13 +124,8 @@ export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
-              <DropdownMenuItem onClick={() => onEdit?.(task)}>
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => onDelete?.(task.id)}
-                className='text-red-600'
-              >
+              <DropdownMenuItem onClick={() => onEdit?.(task)}>Edit</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onDelete?.(task.id)} className='text-red-600'>
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -162,9 +133,7 @@ export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
         </div>
         <div className='flex items-center gap-1 mt-2 opacity-60 group-hover:opacity-100 transition-opacity'>
           <GripVertical className='h-3 w-3 text-muted-foreground' />
-          <span className='text-xs text-muted-foreground font-medium'>
-            Drag to move
-          </span>
+          <span className='text-xs text-muted-foreground font-medium'>Drag to move</span>
         </div>
       </CardHeader>
 
@@ -207,9 +176,7 @@ export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
                   <div className='space-y-3'>
                     <div className='flex items-center gap-2'>
                       <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                      <p className='font-semibold text-sm text-foreground'>
-                        Task Description
-                      </p>
+                      <p className='font-semibold text-sm text-foreground'>Task Description</p>
                     </div>
                     <div className='bg-muted/10 rounded-md p-3'>
                       <p className='whitespace-pre-wrap break-words leading-relaxed text-sm'>
@@ -289,5 +256,5 @@ export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
