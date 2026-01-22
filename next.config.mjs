@@ -14,8 +14,8 @@ const nextConfig = {
 
   // Output configuration
   // - For Vercel: Leave undefined (default) - Vercel handles this automatically
-  // - For Docker: Uncomment 'standalone' to enable standalone output
-  // output: process.env.VERCEL ? undefined : 'standalone',
+  // - For Docker: Use 'standalone' to enable standalone output for optimized container builds
+  output: process.env.DOCKER_BUILD ? 'standalone' : undefined,
 
   // Image optimization
   // Vercel automatically optimizes images via their CDN

@@ -6,11 +6,12 @@ A modern, production-ready PayloadCMS admin starter template built with Next.js 
 
 ### 🚀 Core Technologies
 
-- **PayloadCMS 3.59.1** - Modern headless CMS with TypeScript
-- **Next.js 15** - Latest React framework with App Router
-- **TypeScript** - Full type safety and developer experience
+- **PayloadCMS 3.72.0** - Modern headless CMS with TypeScript
+- **Next.js 16.1.3** - Latest React framework with App Router
+- **React 19.2.3** - Modern React with concurrent features
+- **TypeScript 5.7.3** - Full type safety and developer experience
 - **shadcn/ui** - Beautiful, accessible UI components
-- **Tailwind CSS** - Utility-first CSS framework
+- **Tailwind CSS 3.4.18** - Utility-first CSS framework
 - **MongoDB** - Flexible document database
 
 ### 🎨 UI & Design
@@ -37,7 +38,10 @@ A modern, production-ready PayloadCMS admin starter template built with Next.js 
 - **Code Splitting** - Optimized bundle sizes
 - **Performance** - Build time ~2.5min (30% improvement)
 - **Turborepo** - Enhanced build performance
-- **ESLint & Prettier** - Code quality tools
+- **Automated Code Quality** - ESLint, Prettier, and lint-staged
+- **Pre-commit Hooks** - Automatic formatting and linting
+- **CI/CD Integration** - GitHub Actions with quality checks
+- **Cross-Editor Consistency** - EditorConfig and VS Code settings
 
 ## 🚀 Quick Start
 
@@ -56,11 +60,17 @@ A modern, production-ready PayloadCMS admin starter template built with Next.js 
    cd midblck-admin-starter
    ```
 
-2. **Install dependencies**
+2. **Set up development environment**
 
    ```bash
-   pnpm install
+   pnpm setup:dev
    ```
+
+   This command will:
+   - Install all dependencies
+   - Set up git hooks for automated code quality
+   - Run initial code formatting
+   - Configure your development environment
 
 3. **Set up environment variables**
 
@@ -73,8 +83,11 @@ A modern, production-ready PayloadCMS admin starter template built with Next.js 
    ```env
    DATABASE_URI=mongodb://localhost:27017/midblck-admin
    PAYLOAD_SECRET=your-secret-key
-   NEXTAUTH_SECRET=your-nextauth-secret
-   NEXTAUTH_URL=http://localhost:3000
+   NEXT_PUBLIC_GOOGLE_REDIRECT_URI=your-public-google-redirect-uri
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
+   UPLOADTHING_TOKEN=your-uploadthing-token
    ```
 
 4. **Start development server**
@@ -86,7 +99,7 @@ A modern, production-ready PayloadCMS admin starter template built with Next.js 
 5. **Open your browser**
    - Frontend: http://localhost:3000
    - Admin Panel: http://localhost:3000/admin
-   - Dashboard: http://localhost:3000/dashboard
+   - Dashboard: http://localhost:3000/app
 
 ## 📁 Project Structure
 
@@ -99,30 +112,53 @@ src/
 │   ├── (payload)/         # PayloadCMS admin & API routes
 │   │   ├── admin/         # Admin panel
 │   │   └── api/           # API routes
+│   ├── app/               # Dashboard application pages
+│   │   ├── kanban/        # Kanban board pages
+│   │   ├── task-list/     # Task management pages
+│   │   └── profile/       # User profile pages
+│   ├── api/               # Custom API routes
 │   ├── auth/              # Authentication pages
-│   ├── dashboard/         # Dashboard pages
 │   └── globals.css        # Global styles
-├── collections/           # PayloadCMS collections
-│   ├── Admins.ts          # Admin users
-│   ├── Users.ts           # Regular users
-│   ├── Tasks.ts           # Task management
-│   ├── Media.ts           # Media uploads
-│   └── OAuth.ts            # OAuth providers
-├── components/            # Reusable components
-│   ├── ui/               # shadcn/ui components
-│   ├── layout/           # Layout components
-│   ├── forms/            # Form components
-│   └── tables/           # Data table components
+├── collections/           # PayloadCMS collections (organized by domain)
+│   ├── configuration/     # App configuration collections
+│   │   └── Theme.ts       # Theme settings
+│   ├── content/           # Content management collections
+│   │   └── Media.ts       # Media uploads and management
+│   ├── misc/              # Miscellaneous collections
+│   │   ├── Task.ts        # Task management
+│   │   ├── TaskStatus.ts  # Task status definitions
+│   │   └── TaskType.ts    # Task type categories
+│   └── user/              # User management collections
+│       ├── Admins.ts      # Admin users
+│       ├── Users.ts       # Regular users
+│       └── OAuth.ts       # OAuth providers
+├── components/            # Reusable React components
+│   ├── ui/               # shadcn/ui component library
+│   ├── layout/           # Layout and navigation components
+│   ├── forms/            # Form components and utilities
+│   ├── tables/           # Data table components
+│   ├── features/         # Feature-specific components
+│   ├── icons/            # Icon components and SVG assets
+│   ├── kbar/             # Command palette components
+│   └── modal/            # Modal and dialog components
 ├── features/             # Feature-based modules
-│   ├── auth/             # Authentication
-│   ├── kanban/           # Kanban board
-│   ├── task-list/        # Task management
-│   └── profile/           # User profiles
-├── lib/                  # Utilities and configurations
+│   ├── auth/             # Authentication logic and components
+│   ├── kanban/           # Kanban board functionality
+│   ├── task-list/        # Task management features
+│   └── profile/          # User profile management
+├── lib/                  # Utilities and shared code
+│   ├── access/           # PayloadCMS access control
 │   ├── constants/        # Application constants
-│   ├── utils.ts          # General utilities
-│   └── validations.ts    # Form validation
-└── types/                # TypeScript definitions
+│   ├── fields/           # Custom PayloadCMS fields
+│   ├── hooks/            # Custom React hooks
+│   ├── translations/     # Internationalization
+│   ├── utils.ts          # General utility functions
+│   ├── validations.ts    # Form validation schemas
+│   └── groups.ts         # Component groups configuration
+├── i18n/                 # Internationalization configuration
+├── types/                # TypeScript type definitions
+├── utilities/            # Utility functions
+└── payload.config.ts     # PayloadCMS configuration
 ```
 
 ## 🎯 Key Collections
@@ -154,59 +190,115 @@ src/
 ### Available Scripts
 
 ```bash
-# Development
+# Setup & Development
+pnpm setup:dev        # Set up development environment with hooks
 pnpm dev              # Start development server
-pnpm devsafe          # Clean dev build and start
+pnpm dev:clean        # Clean dev build and start
 
 # Production
 pnpm build            # Full production build (8GB memory)
-pnpm build:fast       # Fast build (4GB memory)
 pnpm start            # Start production server
-
-# Utilities
-pnpm clean            # Clean all build directories
-pnpm analyze          # Bundle analysis
-pnpm lint             # Run ESLint
-pnpm typecheck        # TypeScript type checking
-
-# Turborepo (Enhanced Performance)
-pnpm turbo:dev        # Start dev server with Turborepo
-pnpm turbo:build      # Build with Turborepo caching
-pnpm turbo:lint       # Run linting with Turborepo
 
 # Code Quality & Formatting
 pnpm format           # Format code with Prettier
 pnpm format:check     # Check code formatting
 pnpm format:fix       # Format and fix linting issues
+pnpm lint             # Run ESLint
 pnpm lint:fix         # Auto-fix linting issues
+pnpm typecheck        # TypeScript type checking
 pnpm ci:check         # Run full CI checks (typecheck, lint, format)
+
+# Utilities
+pnpm clean            # Clean all build directories
+pnpm clean:dev        # Clean development build
+pnpm clean:build      # Clean production build
+pnpm analyze          # Bundle analysis
+
+# Turborepo (Enhanced Performance)
+pnpm turbo:dev        # Start dev server with Turborepo
+pnpm turbo:build      # Build with Turborepo caching
+pnpm turbo:lint       # Run linting with Turborepo
 ```
 
-### Code Quality Tools
+### Code Quality & Automation
 
-This project uses automated code quality tools that run across all environments:
+This project implements enterprise-grade automated code quality that runs across all environments:
 
-- **Prettier** - Code formatting (runs on save, pre-commit, and CI)
-- **ESLint** - Code linting with TypeScript support
-- **lint-staged** - Run tools only on staged files (pre-commit hook)
-- **Husky** - Git hooks for automated quality checks
-- **EditorConfig** - Consistent editor settings across environments
+#### 🛠️ **Code Quality Tools**
 
-### Automatic Formatting
+- **Prettier** - Automated code formatting with consistent style rules
+- **ESLint** - TypeScript-aware linting with auto-fix capabilities
+- **lint-staged** - Runs quality tools only on staged files for efficiency
+- **Husky** - Git hooks for automated pre-commit quality checks
+- **EditorConfig** - Cross-editor consistency (spaces, line endings, etc.)
+- **GitHub Actions** - CI/CD pipeline with automated quality validation
 
-Code formatting happens automatically in multiple places:
+#### 🔄 **Automatic Code Quality**
 
-- **On Save**: Prettier formats files when you save in your editor
-- **Pre-commit**: lint-staged runs formatting on staged files before commits
-- **CI/CD**: GitHub Actions checks formatting on every pull request
-- **Manual**: Run `pnpm format` or `pnpm format:fix` anytime
+Code formatting and linting happen automatically in multiple contexts:
 
-### Build Performance
+- **💾 On Save**: Prettier formats files automatically in supported editors
+- **🔗 Pre-commit**: lint-staged runs formatting + linting on staged files
+- **🚀 CI/CD**: GitHub Actions validates formatting on every PR/push
+- **👥 Team Consistency**: Same rules apply regardless of editor or environment
+- **⚡ Manual Control**: Run `pnpm format`, `pnpm lint:fix`, or `pnpm ci:check` anytime
 
-- **Development Build**: ~2.5min (30% improvement)
-- **Memory Optimization**: 4GB (fast) / 8GB (production)
+#### 📋 **Quality Gates**
+
+The project enforces these quality standards:
+
+- ✅ **Consistent Code Style** - Prettier formatting rules
+- ✅ **TypeScript Best Practices** - ESLint with strict type checking
+- ✅ **No Unformatted Code** - Pre-commit hooks prevent bad commits
+- ✅ **CI Validation** - Automated checks on all pull requests
+- ✅ **Cross-Platform Consistency** - Works on Windows, macOS, Linux
+
+### 🚀 **Development Workflow**
+
+#### **For New Developers**
+
+```bash
+git clone <repository>
+cd midblck-admin-starter
+pnpm setup:dev  # Sets up everything automatically
+```
+
+#### **Daily Development**
+
+```bash
+pnpm dev                    # Start development
+# Code is automatically formatted on save
+# Pre-commit hooks ensure quality
+```
+
+#### **Before Pushing**
+
+```bash
+pnpm ci:check              # Run all quality checks locally
+```
+
+#### **CI/CD Pipeline**
+
+- ✅ Automatic formatting checks
+- ✅ TypeScript type checking
+- ✅ ESLint validation
+- ✅ Build verification
+
+### Build Performance & Quality
+
+#### ⚡ **Performance Optimizations**
+
+- **Development Build**: ~2.5min (30% improvement with Turborepo)
+- **Memory Optimization**: 4GB (fast) / 8GB (production builds)
 - **Code Splitting**: Automatic route-based splitting
-- **Bundle Analysis**: Built-in webpack analyzer
+- **Bundle Analysis**: Built-in webpack analyzer (`pnpm analyze`)
+
+#### 🔧 **Quality Integration**
+
+- **Pre-build Formatting**: Code is automatically formatted before builds
+- **Type Checking**: Full TypeScript validation in CI/CD
+- **Linting**: ESLint checks run as part of build process
+- **Consistency**: Same quality standards across all environments
 
 ## 🎨 UI Components
 

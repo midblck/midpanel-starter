@@ -1,65 +1,104 @@
-# To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.mjs file.
-# From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+# Optimized Dockerfile for PayloadCMS + Next.js application
+# Based on https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+# Requires output: 'standalone' in next.config.mjs for Docker builds
+#
+# Optimizations:
+# - Multi-stage build for minimal production image
+# - PayloadCMS-specific build steps (generate:importmap, generate:types)
+# - Native dependencies for PayloadCMS (python3, make, g++)
+# - Memory-optimized Node.js settings
+# - Security hardening with non-root user
+# - Layer caching for faster rebuilds
 
-FROM node:22.17.0-alpine AS base
+FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Required for some Node.js packages and PayloadCMS
+RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+# Copy package files for dependency installation
+COPY package.json pnpm-lock.yaml* ./
+# Copy additional config files that may affect dependency resolution
+COPY .npmrc .pnpmrc* turbo.json* ./
+# Install dependencies with optimized settings for PayloadCMS
 RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
+  if [ -f pnpm-lock.yaml ]; then \
+    corepack enable pnpm && \
+    pnpm install --frozen-lockfile --ignore-scripts; \
+  elif [ -f yarn.lock ]; then \
+    yarn install --frozen-lockfile --ignore-scripts; \
+  elif [ -f package-lock.json ]; then \
+    npm ci --ignore-scripts; \
+  else \
+    echo "No lockfile found." && exit 1; \
   fi
-
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+
+# Install build dependencies for native modules
+RUN apk add --no-cache libc6-compat python3 make g++
+
+# Copy installed dependencies
 COPY --from=deps /app/node_modules ./node_modules
+
+# Copy source code and config files
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Disable Next.js telemetry during build
+ENV NEXT_TELEMETRY_DISABLED 1
 
+# Set environment for Docker-optimized build
+ENV DOCKER_BUILD=1
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
+# Build the application with PayloadCMS optimizations
 RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
+  if [ -f pnpm-lock.yaml ]; then \
+    corepack enable pnpm && \
+    pnpm generate:importmap && \
+    pnpm generate:types && \
+    pnpm build; \
+  elif [ -f yarn.lock ]; then \
+    yarn generate:importmap && \
+    yarn generate:types && \
+    yarn build; \
+  elif [ -f package-lock.json ]; then \
+    npm run generate:importmap && \
+    npm run generate:types && \
+    npm run build; \
+  else \
+    echo "No lockfile found." && exit 1; \
   fi
 
-# Production image, copy all the files and run next
+# Production image, optimized for PayloadCMS + Next.js
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Production environment settings
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Create non-root user for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
-# Remove this line if you do not have this folder
-COPY --from=builder /app/public ./public
+# Copy public assets
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+# Create necessary directories with correct permissions
+RUN mkdir -p .next && \
+    chown -R nextjs:nodejs .next
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+# Copy optimized standalone build output
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Switch to non-root user
 USER nextjs
 
 EXPOSE 3000
