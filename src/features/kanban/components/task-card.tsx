@@ -265,7 +265,7 @@ export function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
           {task.taskTypes && task.taskTypes.length > 0 && (
             <div className='flex items-center gap-1.5 flex-wrap'>
               <Tag className='h-3 w-3 text-muted-foreground' />
-              {task.taskTypes.slice(0, 2).map((taskType) => (
+              {task.taskTypes.slice(0, 2).map(taskType => (
                 <Badge
                   key={taskType.id}
                   variant='outline'

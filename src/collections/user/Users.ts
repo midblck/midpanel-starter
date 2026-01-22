@@ -1,16 +1,30 @@
 import type { CollectionConfig } from 'payload';
-
-export const Admins: CollectionConfig = {
-  slug: 'admins',
+import { groups } from '@/lib/groups';
+export const Users: CollectionConfig = {
+  slug: 'users',
+  auth: true,
+  labels: {
+    plural: { en: 'Users', id: 'User' },
+    singular: { en: 'User', id: 'User' },
+  },
   admin: {
     useAsTitle: 'email',
+    group: groups.user,
   },
-  auth: true,
   fields: [
+    {
+      name: 'email',
+      type: 'email',
+      required: true,
+    },
     {
       name: 'name',
       type: 'text',
       required: true,
+    },
+    {
+      name: 'phone',
+      type: 'text',
     },
     {
       name: 'role',
@@ -18,15 +32,15 @@ export const Admins: CollectionConfig = {
       required: true,
       options: [
         {
-          label: 'Master',
-          value: 'master',
+          label: 'Customer',
+          value: 'customer',
         },
         {
-          label: 'Staff',
-          value: 'staff',
+          label: 'Premium',
+          value: 'premium',
         },
       ],
-      defaultValue: 'staff',
+      defaultValue: 'customer',
     },
     {
       name: 'isActive',

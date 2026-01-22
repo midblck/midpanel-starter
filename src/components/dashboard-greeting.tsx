@@ -9,9 +9,7 @@ export function DashboardGreeting({ user }: DashboardGreetingProps) {
 
   return (
     <div className='flex items-center justify-between space-y-2'>
-      <h2 className='text-2xl font-bold tracking-tight'>
-        Hi, {userName} 👋
-      </h2>
+      <h2 className='text-2xl font-bold tracking-tight'>Hi, {userName} 👋</h2>
     </div>
   );
 }

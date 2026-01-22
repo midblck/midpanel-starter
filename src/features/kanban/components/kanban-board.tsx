@@ -22,20 +22,20 @@ export function KanbanBoard() {
   const [, setTaskToDelete] = useState<Task | null>(null);
   // Column drop zones removed - using arrow buttons for reordering
 
-  const columns = useTaskStore((state) => state.columns);
-  const tasks = useTaskStore((state) => state.tasks);
-  const dateFilter = useTaskStore((state) => state.dateFilter);
-  const isTasksLoading = useTaskStore((state) => state.isTasksLoading);
-  const isStatusesLoading = useTaskStore((state) => state.isStatusesLoading);
-  const loadTasks = useTaskStore((state) => state.loadTasks);
-  const loadStatuses = useTaskStore((state) => state.loadStatuses);
+  const columns = useTaskStore(state => state.columns);
+  const tasks = useTaskStore(state => state.tasks);
+  const dateFilter = useTaskStore(state => state.dateFilter);
+  const isTasksLoading = useTaskStore(state => state.isTasksLoading);
+  const isStatusesLoading = useTaskStore(state => state.isStatusesLoading);
+  const loadTasks = useTaskStore(state => state.loadTasks);
+  const loadStatuses = useTaskStore(state => state.loadStatuses);
 
   // Calculate filtered tasks and column mapping inline
   const getColumnTasks = (columnId: string) => {
     let filteredTasks = tasks;
 
     if (dateFilter.enabled) {
-      filteredTasks = tasks.filter((task) => {
+      filteredTasks = tasks.filter(task => {
         if (!task.dueDate) {
           return true;
         }
@@ -57,7 +57,8 @@ export function KanbanBoard() {
     }
 
     return filteredTasks.filter(task => {
-      const taskStatusId = typeof task.status === 'string' ? task.status : task.status.id;
+      const taskStatusId =
+        typeof task.status === 'string' ? task.status : task.status.id;
       return taskStatusId === columnId;
     });
   };

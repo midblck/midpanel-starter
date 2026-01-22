@@ -2,9 +2,14 @@ import type { CollectionConfig, CollectionSlug } from 'payload';
 import { taskAccess } from '@/lib/access';
 import configPromise from '@payload-config';
 import { getPayload } from 'payload';
+import { groups } from '@/lib/groups';
 
 export const Tasks: CollectionConfig = {
   slug: 'tasks',
+  labels: {
+    plural: { en: 'Tasks', id: 'Task' },
+    singular: { en: 'Task', id: 'Task' },
+  },
   admin: {
     useAsTitle: 'title',
     defaultColumns: [
@@ -15,6 +20,7 @@ export const Tasks: CollectionConfig = {
       'dueDate',
       'createdAt',
     ],
+    group: groups.misc,
   },
   access: {
     read: taskAccess,
@@ -80,6 +86,7 @@ export const Tasks: CollectionConfig = {
       hasMany: true,
       hooks: {
         beforeChange: [
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           async ({ value, req }) => {
             // If no task types are provided, auto-assign the "General" task type
             if (!value || (Array.isArray(value) && value.length === 0)) {
@@ -97,7 +104,10 @@ export const Tasks: CollectionConfig = {
                   return [taskTypes[0].id];
                 }
               } catch (error) {
-                console.error('Failed to auto-assign General task type:', error);
+                console.error(
+                  'Failed to auto-assign General task type:',
+                  error
+                );
               }
             }
             return value as string[];

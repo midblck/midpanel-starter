@@ -25,11 +25,11 @@ export function useTaskFormHandlers({
     status: columnId || '',
   });
 
-  const addTask = useTaskStore((state) => state.addTask);
-  const updateTask = useTaskStore((state) => state.updateTask);
-  const loadTaskTypes = useTaskStore((state) => state.loadTaskTypes);
-  const taskTypes = useTaskStore((state) => state.taskTypes);
-  const statuses = useTaskStore((state) => state.statuses);
+  const addTask = useTaskStore(state => state.addTask);
+  const updateTask = useTaskStore(state => state.updateTask);
+  const loadTaskTypes = useTaskStore(state => state.loadTaskTypes);
+  const taskTypes = useTaskStore(state => state.taskTypes);
+  const statuses = useTaskStore(state => state.statuses);
 
   // Load task types on component mount
   useEffect(() => {

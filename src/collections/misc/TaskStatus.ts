@@ -1,11 +1,17 @@
 import type { CollectionConfig, CollectionSlug } from 'payload';
 import { statusAccess } from '@/lib/access';
+import { groups } from '@/lib/groups';
 
 export const TaskStatuses: CollectionConfig = {
   slug: 'task-statuses',
+  labels: {
+    plural: { en: 'Task Statuses', id: 'Task Status' },
+    singular: { en: 'Task Status', id: 'Task Status' },
+  },
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'color', 'order', 'createdAt'],
+    group: groups.misc,
   },
   access: {
     read: statusAccess,

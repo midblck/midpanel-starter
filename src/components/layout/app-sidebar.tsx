@@ -113,69 +113,71 @@ export default function AppSidebar() {
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarMenu>
             {/* Hide Payload Admin from sidebar navigation */}
-            {navItems.filter(item => item.title !== 'Payload Admin').map(item => {
-              const Icon = item.icon ? Icons[item.icon] : Icons.dashboard;
-              return item?.items && item?.items?.length > 0 ? (
-                <Collapsible
-                  key={item.title}
-                  asChild
-                  defaultOpen={
-                    item.isActive ||
-                    item.items?.some(subItem => pathname === subItem.url)
-                  }
-                  className='group/collapsible'
-                >
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton
-                        tooltip={item.title}
-                        isActive={
-                          item.items?.some(
-                            subItem => pathname === subItem.url
-                          ) || pathname === item.url
-                        }
-                      >
-                        {item.icon && <Icon className='size-4' />}
-                        <span>{item.title}</span>
-                        <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {item.items?.map(subItem => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={pathname === subItem.url}
-                            >
-                              <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
-              ) : (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
+            {navItems
+              .filter(item => item.title !== 'Payload Admin')
+              .map(item => {
+                const Icon = item.icon ? Icons[item.icon] : Icons.dashboard;
+                return item?.items && item?.items?.length > 0 ? (
+                  <Collapsible
+                    key={item.title}
                     asChild
-                    tooltip={item.title}
-                    isActive={pathname === item.url}
+                    defaultOpen={
+                      item.isActive ||
+                      item.items?.some(subItem => pathname === subItem.url)
+                    }
+                    className='group/collapsible'
                   >
-                    <Link
-                      href={item.url}
-                      target={item.external ? '_blank' : undefined}
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          tooltip={item.title}
+                          isActive={
+                            item.items?.some(
+                              subItem => pathname === subItem.url
+                            ) || pathname === item.url
+                          }
+                        >
+                          {item.icon && <Icon className='size-4' />}
+                          <span>{item.title}</span>
+                          <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {item.items?.map(subItem => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={pathname === subItem.url}
+                              >
+                                <Link href={subItem.url}>
+                                  <span>{subItem.title}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                ) : (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={item.title}
+                      isActive={pathname === item.url}
                     >
-                      <Icon className='size-4' />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );
-            })}
+                      <Link
+                        href={item.url}
+                        target={item.external ? '_blank' : undefined}
+                      >
+                        <Icon className='size-4' />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

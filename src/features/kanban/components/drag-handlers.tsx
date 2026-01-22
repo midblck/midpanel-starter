@@ -32,11 +32,11 @@ export function DragHandlers({ children, columns, tasks }: DragHandlersProps) {
   const [, setHoveredDropZone] = useState<string | null>(null);
   const pickedUpTaskColumn = useRef<ColumnId>('');
 
-  const setTasks = useTaskStore((state) => state.setTasks);
-  const dragTask = useTaskStore((state) => state.dragTask);
-  const updateTask = useTaskStore((state) => state.updateTask);
+  const setTasks = useTaskStore(state => state.setTasks);
+  const dragTask = useTaskStore(state => state.dragTask);
+  const updateTask = useTaskStore(state => state.updateTask);
   const recalculateColumnOrders = useTaskStore(
-    (state) => state.recalculateColumnOrders
+    state => state.recalculateColumnOrders
   );
 
   const sensors = useSensors(
@@ -114,7 +114,9 @@ export function DragHandlers({ children, columns, tasks }: DragHandlersProps) {
             // Find the new status object from the columns/statuses
             const newStatus = columns.find(col => col.id === newStatusId);
             const statuses = useTaskStore.getState().statuses;
-            const statusInfo = statuses.find((s: { id: string }) => s.id === newStatusId);
+            const statusInfo = statuses.find(
+              (s: { id: string }) => s.id === newStatusId
+            );
 
             const updatedTask = {
               ...activeTask,

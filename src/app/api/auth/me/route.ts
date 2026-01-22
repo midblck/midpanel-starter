@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
 // POST method for identity checking (combines check-identity functionality)
 export async function POST(request: NextRequest) {
   try {
-    const requestBody = await request.json() as { email?: string };
+    const requestBody = (await request.json()) as { email?: string };
     const email = requestBody.email || '';
 
     if (!email) {

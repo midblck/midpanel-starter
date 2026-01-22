@@ -9,27 +9,22 @@ import type { TaskTableData } from '@/types/data-table';
 import { useCallback } from 'react';
 
 export function useBulkActions() {
-  const handleBulkDelete = useCallback(
-    (selectedRows: TaskTableData[]) => {
-      if (
-        confirm(
-          `Are you sure you want to delete ${selectedRows.length} task(s)?`
-        )
-      ) {
-        try {
-          // TODO: Implement bulk delete API call
-          console.log(
-            'Bulk delete:',
-            selectedRows.map(row => row.id)
-          );
-          // await bulkDeleteTasks(selectedRows.map(row => row.id));
-        } catch (error) {
-          console.error('Failed to delete tasks:', error);
-        }
+  const handleBulkDelete = useCallback((selectedRows: TaskTableData[]) => {
+    if (
+      confirm(`Are you sure you want to delete ${selectedRows.length} task(s)?`)
+    ) {
+      try {
+        // TODO: Implement bulk delete API call
+        console.log(
+          'Bulk delete:',
+          selectedRows.map(row => row.id)
+        );
+        // await bulkDeleteTasks(selectedRows.map(row => row.id));
+      } catch (error) {
+        console.error('Failed to delete tasks:', error);
       }
-    },
-    []
-  );
+    }
+  }, []);
 
   const handleBulkUpdateStatus = useCallback(
     (selectedRows: TaskTableData[], status: string) => {

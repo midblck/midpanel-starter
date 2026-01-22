@@ -31,8 +31,8 @@ interface TaskFormFieldsProps {
 }
 
 export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
-  const statuses = useTaskStore((state) => state.statuses);
-  const taskTypes = useTaskStore((state) => state.taskTypes);
+  const statuses = useTaskStore(state => state.statuses);
+  const taskTypes = useTaskStore(state => state.taskTypes);
 
   return (
     <>
@@ -87,7 +87,10 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
           </SelectTrigger>
           <SelectContent>
             {taskTypes
-              .filter((taskType: TaskType) => !formData.taskTypes.includes(taskType.id))
+              .filter(
+                (taskType: TaskType) =>
+                  !formData.taskTypes.includes(taskType.id)
+              )
               .map((taskType: TaskType) => (
                 <SelectItem key={taskType.id} value={taskType.id}>
                   <div className='flex items-center gap-2'>
@@ -104,7 +107,9 @@ export function TaskFormFields({ formData, setFormData }: TaskFormFieldsProps) {
         {formData.taskTypes.length > 0 && (
           <div className='flex flex-wrap gap-1 mt-2'>
             {formData.taskTypes.map((taskTypeId: string) => {
-              const taskType = taskTypes.find((tt: { id: string }) => tt.id === taskTypeId);
+              const taskType = taskTypes.find(
+                (tt: { id: string }) => tt.id === taskTypeId
+              );
               return taskType ? (
                 <Badge
                   key={taskTypeId}

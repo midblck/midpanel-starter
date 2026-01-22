@@ -11,7 +11,11 @@ import {
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { Task as StoreTask } from '@/features/kanban/store';
-import type { Task as PayloadTask, TaskStatus, TaskType as PayloadTaskType } from '@/payload-types';
+import type {
+  Task as PayloadTask,
+  TaskStatus,
+  TaskType as PayloadTaskType,
+} from '@/payload-types';
 
 // Convert PayloadCMS Task to Store Task format
 function convertPayloadTaskToStoreTask(payloadTask: PayloadTask): StoreTask {

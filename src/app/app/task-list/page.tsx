@@ -18,18 +18,18 @@ export default async function TasksListPage() {
   let initialData: TaskTableData[] = [];
   let initialPagination:
     | {
-      page: number;
-      limit: number;
-      total: number;
-      totalPages: number;
-    }
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      }
     | undefined = undefined;
   let filterOptions:
     | {
-      statuses: Array<{ value: string; label: string; color: string }>;
-      taskTypes: Array<{ value: string; label: string; color: string }>;
-      assignees: Array<{ value: string; label: string }>;
-    }
+        statuses: Array<{ value: string; label: string; color: string }>;
+        taskTypes: Array<{ value: string; label: string; color: string }>;
+        assignees: Array<{ value: string; label: string }>;
+      }
     | undefined = undefined;
 
   try {
@@ -74,7 +74,8 @@ export default async function TasksListPage() {
       const payload = await getCachedPayload();
 
       // Filter by creator for multi-tenancy if not admin
-      const whereClause = user && !isAdmin(user) ? { creator: { equals: user.id } } : undefined;
+      const whereClause =
+        user && !isAdmin(user) ? { creator: { equals: user.id } } : undefined;
 
       return payload.find({
         collection: 'task-statuses',
@@ -95,7 +96,8 @@ export default async function TasksListPage() {
       const payload = await getCachedPayload();
 
       // Filter by creator for multi-tenancy if not admin
-      const whereClause = user && !isAdmin(user) ? { creator: { equals: user.id } } : undefined;
+      const whereClause =
+        user && !isAdmin(user) ? { creator: { equals: user.id } } : undefined;
 
       return payload.find({
         collection: 'tasks',
@@ -123,12 +125,13 @@ export default async function TasksListPage() {
     }
 
     // Use cached database operations with React.cache() for deduplication
-    const [taskResult, statusResult, taskTypesResult, assigneeResult] = await Promise.all([
-      getCachedTasks(user),
-      getCachedStatuses(user),
-      getCachedTaskTypes(),
-      getCachedAssigneeTasks(user),
-    ]);
+    const [taskResult, statusResult, taskTypesResult, assigneeResult] =
+      await Promise.all([
+        getCachedTasks(user),
+        getCachedStatuses(user),
+        getCachedTaskTypes(),
+        getCachedAssigneeTasks(user),
+      ]);
 
     // Create filtered result for initial display
     const filteredResult = {
@@ -137,28 +140,30 @@ export default async function TasksListPage() {
     };
 
     // Transform the data to match our table structure
-    initialData = filteredResult.docs.map((task: Task): TaskTableData => ({
-      id: task.id,
-      title: task.title,
-      description: task.description || undefined,
-      status: {
-        id: (task.status as TaskStatus)?.id || '',
-        name: (task.status as TaskStatus)?.name || 'Unknown',
-        color: (task.status as TaskStatus)?.color || '#6B7280',
-      },
-      priority: task.priority,
-      assignee: task.assignee || undefined,
-      dueDate: task.dueDate || undefined,
-      taskTypes:
-        task.taskTypes?.map((type: string | TaskType) =>
-          typeof type === 'string'
-            ? { id: type, name: 'Unknown', color: '#6B7280' }
-            : { id: type.id, name: type.name, color: type.color }
-        ) || [],
-      order: task.order || 0,
-      createdAt: task.createdAt,
-      updatedAt: task.updatedAt,
-    }));
+    initialData = filteredResult.docs.map(
+      (task: Task): TaskTableData => ({
+        id: task.id,
+        title: task.title,
+        description: task.description || undefined,
+        status: {
+          id: (task.status as TaskStatus)?.id || '',
+          name: (task.status as TaskStatus)?.name || 'Unknown',
+          color: (task.status as TaskStatus)?.color || '#6B7280',
+        },
+        priority: task.priority,
+        assignee: task.assignee || undefined,
+        dueDate: task.dueDate || undefined,
+        taskTypes:
+          task.taskTypes?.map((type: string | TaskType) =>
+            typeof type === 'string'
+              ? { id: type, name: 'Unknown', color: '#6B7280' }
+              : { id: type.id, name: type.name, color: type.color }
+          ) || [],
+        order: task.order || 0,
+        createdAt: task.createdAt,
+        updatedAt: task.updatedAt,
+      })
+    );
 
     initialPagination = {
       page: filteredResult.page || 1,
@@ -171,7 +176,12 @@ export default async function TasksListPage() {
       ...new Set(
         assigneeResult.docs
           .map((task: Pick<Task, 'assignee'>) => task.assignee)
-          .filter((assignee): assignee is string => assignee !== null && assignee !== undefined && assignee.trim() !== '')
+          .filter(
+            (assignee): assignee is string =>
+              assignee !== null &&
+              assignee !== undefined &&
+              assignee.trim() !== ''
+          )
       ),
     ].sort();
 

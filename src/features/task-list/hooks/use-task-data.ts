@@ -58,25 +58,32 @@ export function useTaskData({
   const [currentKey, setCurrentKey] = useState<string | null>(null);
 
   // SWR hook for data fetching with automatic deduplication and caching
-  const { data: swrData, error, isLoading, mutate: swrMutate } = useSWR(
-    currentKey,
-    {
-      fallbackData: initialData.length > 0 ? { docs: initialData, ...initialPagination } : undefined,
-      revalidateOnFocus: false, // Disable revalidation on window focus for better UX
-      revalidateOnReconnect: true,
-      dedupingInterval: 2000, // Dedupe requests within 2 seconds
-      errorRetryCount: 3,
-    }
-  );
+  const {
+    data: swrData,
+    error,
+    isLoading,
+    mutate: swrMutate,
+  } = useSWR(currentKey, {
+    fallbackData:
+      initialData.length > 0
+        ? { docs: initialData, ...initialPagination }
+        : undefined,
+    revalidateOnFocus: false, // Disable revalidation on window focus for better UX
+    revalidateOnReconnect: true,
+    dedupingInterval: 2000, // Dedupe requests within 2 seconds
+    errorRetryCount: 3,
+  });
 
   // Extract data from SWR response
   const data = swrData?.docs || initialData;
-  const paginationData = swrData ? {
-    page: swrData.page,
-    limit: swrData.limit,
-    total: swrData.totalDocs,
-    totalPages: swrData.totalPages,
-  } : pagination;
+  const paginationData = swrData
+    ? {
+        page: swrData.page,
+        limit: swrData.limit,
+        total: swrData.totalDocs,
+        totalPages: swrData.totalPages,
+      }
+    : pagination;
 
   // Server-side data fetching function (now uses SWR mutate)
   const fetchTasks = useCallback(
@@ -160,15 +167,18 @@ export function useTaskData({
   }, [currentKey, swrMutate]);
 
   // Function to update data optimistically
-  const updateData = useCallback((updater: (currentData: TaskTableData[]) => TaskTableData[]) => {
-    swrMutate((current: any) => {
-      if (!current) return current;
-      return {
-        ...current,
-        docs: updater(current.docs || [])
-      };
-    }, false); // false = don't revalidate after optimistic update
-  }, [swrMutate]);
+  const updateData = useCallback(
+    (updater: (currentData: TaskTableData[]) => TaskTableData[]) => {
+      swrMutate((current: any) => {
+        if (!current) return current;
+        return {
+          ...current,
+          docs: updater(current.docs || []),
+        };
+      }, false); // false = don't revalidate after optimistic update
+    },
+    [swrMutate]
+  );
 
   return {
     data,

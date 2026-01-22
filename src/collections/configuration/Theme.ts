@@ -1,10 +1,16 @@
 import type { CollectionConfig } from 'payload';
+import { groups } from '@/lib/groups';
 
 export const Theme: CollectionConfig = {
   slug: 'themes',
+  labels: {
+    plural: { en: 'Themes', id: 'Theme' },
+    singular: { en: 'Theme', id: 'Theme' },
+  },
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'isDefault', 'createdAt'],
+    group: groups.configuration,
   },
   fields: [
     {

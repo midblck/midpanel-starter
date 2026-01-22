@@ -19,8 +19,8 @@ export function KanbanActions({
   setColumnToDelete: setColumnToDeleteState,
   setTaskToDelete: setTaskToDeleteState,
 }: KanbanActionsProps) {
-  const deleteStatus = useTaskStore((state) => state.deleteStatus);
-  const deleteTask = useTaskStore((state) => state.deleteTask);
+  const deleteStatus = useTaskStore(state => state.deleteStatus);
+  const deleteTask = useTaskStore(state => state.deleteTask);
 
   // We need to track the current items to delete locally for the confirmation dialogs
   const [currentColumnToDelete, setCurrentColumnToDelete] =

@@ -15,15 +15,12 @@ export function ModeToggle() {
     setMounted(true);
   }, []);
 
-  const handleThemeToggle = React.useCallback(
-    () => {
-      const newMode = resolvedTheme === 'dark' ? 'light' : 'dark';
+  const handleThemeToggle = React.useCallback(() => {
+    const newMode = resolvedTheme === 'dark' ? 'light' : 'dark';
 
-      // Simple theme toggle without View Transitions API
-      setTheme(newMode);
-    },
-    [resolvedTheme, setTheme]
-  );
+    // Simple theme toggle without View Transitions API
+    setTheme(newMode);
+  }, [resolvedTheme, setTheme]);
 
   if (!mounted) {
     return (

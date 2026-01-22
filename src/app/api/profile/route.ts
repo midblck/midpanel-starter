@@ -66,7 +66,7 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const requestBody = await request.json() as { name?: string };
+    const requestBody = (await request.json()) as { name?: string };
     const name = requestBody.name || '';
 
     if (!name || name.length === 0) {

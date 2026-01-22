@@ -36,7 +36,9 @@ export default function EditColumnDialog({
   const { updateStatus, statuses } = useTaskStore();
 
   // Find the current status data
-  const currentStatus = statuses.find((s: { id: string }) => s.id === column.id);
+  const currentStatus = statuses.find(
+    (s: { id: string }) => s.id === column.id
+  );
 
   const [formData, setFormData] = useState({
     name: currentStatus?.name || column.title,

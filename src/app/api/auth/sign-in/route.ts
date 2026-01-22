@@ -37,8 +37,7 @@ export async function POST(request: NextRequest) {
         enhancedIdentity.identityDetails.existsInUsers
       ) {
         targetCollection = 'users'; // Priority: users over admins
-        warning =
-          'Email exists in both collections. Logged into user account.';
+        warning = 'Email exists in both collections. Logged into user account.';
       } else if (enhancedIdentity.identityDetails.existsInUsers) {
         targetCollection = 'users';
       } else if (enhancedIdentity.identityDetails.existsInAdmins) {

@@ -62,8 +62,10 @@ export default async function RootLayout({
   // Check if this is an admin route by examining the pathname
   // Payload admin routes are in the (payload) group and start with /admin
   const headersList = await headers();
-  const pathname = headersList.get('x-pathname') || headersList.get('referer') || '';
-  const isAdminRoute = pathname.includes('/admin') || pathname.startsWith('/(payload)');
+  const pathname =
+    headersList.get('x-pathname') || headersList.get('referer') || '';
+  const isAdminRoute =
+    pathname.includes('/admin') || pathname.startsWith('/(payload)');
 
   // For PayloadCMS admin routes, let Payload's RootLayout handle ALL HTML structure
   // Do NOT render any HTML elements here - Payload will handle <html>, <head>, <body>
@@ -80,7 +82,9 @@ export default async function RootLayout({
   try {
     // Check if we're in a build context or if database is available
     if (process.env.NODE_ENV === 'production' && !process.env.DATABASE_URI) {
-      console.log('Skipping theme loading during build - no database connection');
+      console.log(
+        'Skipping theme loading during build - no database connection'
+      );
     } else {
       const payload = await getPayload({ config: configPromise });
       const { docs: themesData } = await payload.find({
@@ -144,7 +148,10 @@ export default async function RootLayout({
                 enableSystem
                 disableTransitionOnChange
               >
-                <ActiveThemeProvider initialTheme={initialTheme} themes={themes}>
+                <ActiveThemeProvider
+                  initialTheme={initialTheme}
+                  themes={themes}
+                >
                   <AuthProvider>
                     {children}
                     <Toaster />

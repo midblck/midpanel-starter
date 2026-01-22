@@ -40,12 +40,16 @@ export function BoardColumn({
   onDeleteTask,
   onDeleteColumn,
 }: BoardColumnProps) {
-  const statuses = useTaskStore((state) => state.statuses);
-  const updateStatusOrders = useTaskStore((state) => state.updateStatusOrders);
-  const currentStatus = statuses.find((s: { id: string }) => s.id === column.id);
+  const statuses = useTaskStore(state => state.statuses);
+  const updateStatusOrders = useTaskStore(state => state.updateStatusOrders);
+  const currentStatus = statuses.find(
+    (s: { id: string }) => s.id === column.id
+  );
 
   // Determine if this is first or last column
-  const currentIndex = statuses.findIndex((s: { id: string }) => s.id === column.id);
+  const currentIndex = statuses.findIndex(
+    (s: { id: string }) => s.id === column.id
+  );
   const isFirstColumn = currentIndex === 0;
   const isLastColumn = currentIndex === statuses.length - 1;
 
@@ -55,7 +59,9 @@ export function BoardColumn({
       if (isFirstColumn) return;
 
       const newStatuses = [...statuses];
-      const currentIndex = newStatuses.findIndex((s: { id: string }) => s.id === columnId);
+      const currentIndex = newStatuses.findIndex(
+        (s: { id: string }) => s.id === columnId
+      );
       const newIndex = currentIndex - 1;
 
       // Swap positions
@@ -78,7 +84,9 @@ export function BoardColumn({
       if (isLastColumn) return;
 
       const newStatuses = [...statuses];
-      const currentIndex = newStatuses.findIndex((s: { id: string }) => s.id === columnId);
+      const currentIndex = newStatuses.findIndex(
+        (s: { id: string }) => s.id === columnId
+      );
       const newIndex = currentIndex + 1;
 
       // Swap positions

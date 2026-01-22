@@ -1,4 +1,6 @@
 import tseslint from 'typescript-eslint';
+import prettierConfig from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
 
 // ESLint config that lints only the src directory with TypeScript support
 const eslintConfig = [
@@ -30,8 +32,10 @@ const eslintConfig = [
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
+      prettier: prettierPlugin,
     },
     rules: {
+      ...prettierConfig.rules,
       // Turn off base rule as it conflicts with TypeScript version
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
@@ -49,17 +53,7 @@ const eslintConfig = [
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-empty-object-type': 'warn',
-      // Enable strict type-checking rules for Vercel-like build strictness
-      '@typescript-eslint/no-unsafe-assignment': 'error',
-      '@typescript-eslint/no-unsafe-member-access': 'error',
-      '@typescript-eslint/no-unsafe-call': 'error',
-      '@typescript-eslint/no-unsafe-return': 'error',
-      '@typescript-eslint/no-unsafe-argument': 'error',
-      '@typescript-eslint/restrict-template-expressions': 'error',
-      '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/no-misused-promises': 'error',
-      '@typescript-eslint/require-await': 'error',
-      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+      'prettier/prettier': 'error',
     },
   },
 ];

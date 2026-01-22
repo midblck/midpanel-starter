@@ -107,28 +107,30 @@ export async function fetchTaskTableData(
     const result: TaskTableResponse = await response.json();
 
     // Transform the data to match our table structure
-    const transformedData: TaskTableData[] = result.docs.map((task: TaskTableData) => ({
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      status: {
-        id: task.status?.id || '',
-        name: task.status?.name || 'Unknown',
-        color: task.status?.color || '#6B7280',
-      },
-      priority: task.priority,
-      assignee: task.assignee,
-      dueDate: task.dueDate,
-      taskTypes:
-        task.taskTypes?.map((type) => ({
-          id: type.id,
-          name: type.name,
-          color: type.color,
-        })) || [],
-      order: task.order,
-      createdAt: task.createdAt,
-      updatedAt: task.updatedAt,
-    }));
+    const transformedData: TaskTableData[] = result.docs.map(
+      (task: TaskTableData) => ({
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        status: {
+          id: task.status?.id || '',
+          name: task.status?.name || 'Unknown',
+          color: task.status?.color || '#6B7280',
+        },
+        priority: task.priority,
+        assignee: task.assignee,
+        dueDate: task.dueDate,
+        taskTypes:
+          task.taskTypes?.map(type => ({
+            id: type.id,
+            name: type.name,
+            color: type.color,
+          })) || [],
+        order: task.order,
+        createdAt: task.createdAt,
+        updatedAt: task.updatedAt,
+      })
+    );
 
     const pagination: TaskTablePagination = {
       page: result.page,
@@ -218,7 +220,9 @@ export async function fetchTaskAssignees() {
     const assignees = result.data
       .map((task: Pick<Task, 'assignee'>) => task.assignee)
       .filter((assignee: string | null | undefined): assignee is string => {
-        return assignee !== null && assignee !== undefined && assignee.trim() !== '';
+        return (
+          assignee !== null && assignee !== undefined && assignee.trim() !== ''
+        );
       })
       .filter(
         (assignee: string, index: number, array: string[]) =>

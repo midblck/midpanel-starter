@@ -1,7 +1,12 @@
 'use client';
 
 import type { Admin } from '@/payload-types';
-import type { AccountIdentity, IdentityDetails, MeResponse, AuthResponse } from '@/types/auth';
+import type {
+  AccountIdentity,
+  IdentityDetails,
+  MeResponse,
+  AuthResponse,
+} from '@/types/auth';
 import React, {
   createContext,
   useContext,

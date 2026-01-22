@@ -1,10 +1,16 @@
 import type { CollectionConfig } from 'payload';
+import { groups } from '@/lib/groups';
 
 export const OAuth: CollectionConfig = {
   slug: 'oauth',
+  labels: {
+    plural: { en: 'OAuth', id: 'OAuth' },
+    singular: { en: 'OAuth', id: 'OAuth' },
+  },
   admin: {
     useAsTitle: 'providerEmail',
     defaultColumns: ['provider', 'providerEmail', 'collection', 'lastLoginAt'],
+    group: groups.user,
   },
   fields: [
     {

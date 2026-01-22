@@ -68,7 +68,6 @@ export async function GET(request: NextRequest) {
 
     const { callbackUrl } = stateData;
 
-
     // Verify Google OAuth token and get user info
     const googleService = new GoogleOAuthService();
 
@@ -79,7 +78,10 @@ export async function GET(request: NextRequest) {
     } catch (verifyError) {
       console.error('❌ Google OAuth verification failed:', verifyError);
       return NextResponse.json(
-        { error: 'OAuth Verification Failed', message: 'Failed to verify Google OAuth token' },
+        {
+          error: 'OAuth Verification Failed',
+          message: 'Failed to verify Google OAuth token',
+        },
         { status: 400 }
       );
     }

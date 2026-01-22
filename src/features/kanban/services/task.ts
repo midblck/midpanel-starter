@@ -39,15 +39,24 @@ export async function fetchKanbanTasks(): Promise<Task[]> {
     }
 
     const data: PayloadResponse = await response.json();
-    console.log('Kanban: Raw API data received:', data.docs?.length || 0, 'tasks');
+    console.log(
+      'Kanban: Raw API data received:',
+      data.docs?.length || 0,
+      'tasks'
+    );
 
-    const tasks = Array.isArray(data.docs) ? data.docs.map(convertToStoreTask) : [];
+    const tasks = Array.isArray(data.docs)
+      ? data.docs.map(convertToStoreTask)
+      : [];
     console.log('Kanban: Converted tasks:', tasks.length, 'tasks');
-    console.log('Kanban: Task creators:', tasks.map(t => ({
-      id: t.id,
-      creator: 'creator' in t ? (t as any).creator : 'unknown',
-      title: t.title
-    })));
+    console.log(
+      'Kanban: Task creators:',
+      tasks.map(t => ({
+        id: t.id,
+        creator: 'creator' in t ? (t as any).creator : 'unknown',
+        title: t.title,
+      }))
+    );
 
     return tasks;
   } catch (error) {
@@ -105,7 +114,9 @@ export async function createKanbanTask(
     console.log('Kanban: Create response data:', responseData);
     // PayloadCMS returns data in a 'doc' property for single item updates
     const data = responseData.doc || responseData;
-    const convertedTask = convertToStoreTask(data as import('@/payload-types').Task);
+    const convertedTask = convertToStoreTask(
+      data as import('@/payload-types').Task
+    );
     console.log('Kanban: Converted created task:', convertedTask);
     return convertedTask;
   } catch (error) {

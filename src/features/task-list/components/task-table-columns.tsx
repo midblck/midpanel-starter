@@ -101,8 +101,8 @@ export const createTaskTableColumns = ({
 
       return (
         <Badge
-          variant="outline"
-          className="font-medium"
+          variant='outline'
+          className='font-medium'
           style={{ borderColor: status.color + '40', color: status.color }}
         >
           {statusConfig.label}
@@ -135,7 +135,12 @@ export const createTaskTableColumns = ({
       };
 
       return (
-        <Badge variant={priorityVariants[priority as keyof typeof priorityVariants] || 'warning'}>
+        <Badge
+          variant={
+            priorityVariants[priority as keyof typeof priorityVariants] ||
+            'warning'
+          }
+        >
           {priorityConfig.label}
         </Badge>
       );
@@ -225,7 +230,7 @@ export const createTaskTableColumns = ({
 
       return (
         <div className='flex flex-wrap gap-1 max-w-[200px]'>
-          {taskTypes.map((type) => (
+          {taskTypes.map(type => (
             <Badge
               key={type.id}
               variant='outline'

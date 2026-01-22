@@ -173,7 +173,33 @@ pnpm typecheck        # TypeScript type checking
 pnpm turbo:dev        # Start dev server with Turborepo
 pnpm turbo:build      # Build with Turborepo caching
 pnpm turbo:lint       # Run linting with Turborepo
+
+# Code Quality & Formatting
+pnpm format           # Format code with Prettier
+pnpm format:check     # Check code formatting
+pnpm format:fix       # Format and fix linting issues
+pnpm lint:fix         # Auto-fix linting issues
+pnpm ci:check         # Run full CI checks (typecheck, lint, format)
 ```
+
+### Code Quality Tools
+
+This project uses automated code quality tools that run across all environments:
+
+- **Prettier** - Code formatting (runs on save, pre-commit, and CI)
+- **ESLint** - Code linting with TypeScript support
+- **lint-staged** - Run tools only on staged files (pre-commit hook)
+- **Husky** - Git hooks for automated quality checks
+- **EditorConfig** - Consistent editor settings across environments
+
+### Automatic Formatting
+
+Code formatting happens automatically in multiple places:
+
+- **On Save**: Prettier formats files when you save in your editor
+- **Pre-commit**: lint-staged runs formatting on staged files before commits
+- **CI/CD**: GitHub Actions checks formatting on every pull request
+- **Manual**: Run `pnpm format` or `pnpm format:fix` anytime
 
 ### Build Performance
 

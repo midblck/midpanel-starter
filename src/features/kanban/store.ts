@@ -575,7 +575,8 @@ export const useTaskStore = create<State & Actions>()(
             },
             {
               name: 'Maintenance',
-              description: 'System upkeep, refactoring, and routine maintenance',
+              description:
+                'System upkeep, refactoring, and routine maintenance',
               color: '#64748B',
               order: 6,
             },

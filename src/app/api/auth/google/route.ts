@@ -33,7 +33,10 @@ export function GET(request: NextRequest) {
     } catch (urlError) {
       console.error('Failed to generate OAuth URL:', urlError);
       return NextResponse.json(
-        { error: 'OAuth URL Generation Failed', message: 'Failed to create Google OAuth URL' },
+        {
+          error: 'OAuth URL Generation Failed',
+          message: 'Failed to create Google OAuth URL',
+        },
         { status: 500 }
       );
     }

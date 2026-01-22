@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const requestBody = await request.json() as {
+    const requestBody = (await request.json()) as {
       currentPassword?: string;
       newPassword?: string;
       confirmPassword?: string;

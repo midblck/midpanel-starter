@@ -2,17 +2,9 @@ import {
   DashboardErrorFallback,
   ErrorBoundary,
 } from '@/components/error-boundary';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DashboardGreeting } from '@/components/dashboard-greeting';
-import type {
-  DashboardData,
-  DashboardStat,
-} from '@/types/dashboard';
+import type { DashboardData, DashboardStat } from '@/types/dashboard';
 import configPromise from '@payload-config';
 import {
   Activity,
@@ -44,8 +36,12 @@ async function getDashboardData(userId: string): Promise<DashboardData> {
 
     // Get today's date range (start of day to end of day) in UTC
     const now = new Date();
-    const startOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    const endOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+    const startOfToday = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+    );
+    const endOfToday = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)
+    );
 
     // Fetch tasks created today by the current user
     const [todayTasksResult, totalTasksResult] = await Promise.all([
@@ -170,7 +166,7 @@ async function DashboardData() {
     const payload = await getPayload({ config: configPromise });
     const headersList = await headers();
     const authResult = await payload.auth({
-      headers: headersList
+      headers: headersList,
     });
     user = authResult.user;
   } catch (error) {
@@ -188,7 +184,6 @@ async function DashboardData() {
           <StatsCard key={stat.title} stat={stat} />
         ))}
       </div>
-
     </div>
   );
 }
@@ -197,9 +192,7 @@ function DashboardSkeleton() {
   return (
     <div className='flex flex-1 flex-col space-y-4'>
       <div className='flex items-center justify-between space-y-2'>
-        <h2 className='text-2xl font-bold tracking-tight'>
-          Hi, There 👋
-        </h2>
+        <h2 className='text-2xl font-bold tracking-tight'>Hi, There 👋</h2>
       </div>
 
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1 max-w-md'>
@@ -216,7 +209,6 @@ function DashboardSkeleton() {
           </Card>
         ))}
       </div>
-
     </div>
   );
 }

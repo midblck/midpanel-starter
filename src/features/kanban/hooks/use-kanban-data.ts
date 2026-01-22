@@ -1,48 +1,62 @@
 'use client';
 
-import { fetchKanbanTasks, fetchTaskStatuses, fetchTaskTypes } from '../services';
+import {
+  fetchKanbanTasks,
+  fetchTaskStatuses,
+  fetchTaskTypes,
+} from '../services';
 import type { Task, Status, TaskType } from '../store';
 import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export function useKanbanTasks() {
-  const { data: tasks, error, isLoading, mutate } = useSWR<Task[]>(
-    'kanban-tasks',
-    fetchKanbanTasks,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 2000,
-      errorRetryCount: 3,
-    }
-  );
+  const {
+    data: tasks,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<Task[]>('kanban-tasks', fetchKanbanTasks, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+    dedupingInterval: 2000,
+    errorRetryCount: 3,
+  });
 
   const refreshTasks = useCallback(() => {
     mutate();
   }, [mutate]);
 
-  const updateTaskOptimistically = useCallback((updatedTask: Task) => {
-    mutate((currentTasks) => {
-      if (!currentTasks) return currentTasks;
-      return currentTasks.map(task =>
-        task.id === updatedTask.id ? updatedTask : task
-      );
-    }, false);
-  }, [mutate]);
+  const updateTaskOptimistically = useCallback(
+    (updatedTask: Task) => {
+      mutate(currentTasks => {
+        if (!currentTasks) return currentTasks;
+        return currentTasks.map(task =>
+          task.id === updatedTask.id ? updatedTask : task
+        );
+      }, false);
+    },
+    [mutate]
+  );
 
-  const addTaskOptimistically = useCallback((newTask: Task) => {
-    mutate((currentTasks) => {
-      if (!currentTasks) return [newTask];
-      return [...currentTasks, newTask];
-    }, false);
-  }, [mutate]);
+  const addTaskOptimistically = useCallback(
+    (newTask: Task) => {
+      mutate(currentTasks => {
+        if (!currentTasks) return [newTask];
+        return [...currentTasks, newTask];
+      }, false);
+    },
+    [mutate]
+  );
 
-  const removeTaskOptimistically = useCallback((taskId: string) => {
-    mutate((currentTasks) => {
-      if (!currentTasks) return currentTasks;
-      return currentTasks.filter(task => task.id !== taskId);
-    }, false);
-  }, [mutate]);
+  const removeTaskOptimistically = useCallback(
+    (taskId: string) => {
+      mutate(currentTasks => {
+        if (!currentTasks) return currentTasks;
+        return currentTasks.filter(task => task.id !== taskId);
+      }, false);
+    },
+    [mutate]
+  );
 
   return {
     tasks: tasks || [],
@@ -56,16 +70,17 @@ export function useKanbanTasks() {
 }
 
 export function useKanbanStatuses() {
-  const { data: statuses, error, isLoading, mutate } = useSWR<Status[]>(
-    'kanban-statuses',
-    fetchTaskStatuses,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 5000, // Statuses change less frequently
-      errorRetryCount: 3,
-    }
-  );
+  const {
+    data: statuses,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<Status[]>('kanban-statuses', fetchTaskStatuses, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+    dedupingInterval: 5000, // Statuses change less frequently
+    errorRetryCount: 3,
+  });
 
   const refreshStatuses = useCallback(() => {
     mutate();
@@ -80,16 +95,17 @@ export function useKanbanStatuses() {
 }
 
 export function useKanbanTypes() {
-  const { data: types, error, isLoading, mutate } = useSWR<TaskType[]>(
-    'kanban-types',
-    fetchTaskTypes,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      dedupingInterval: 5000, // Types change less frequently
-      errorRetryCount: 3,
-    }
-  );
+  const {
+    data: types,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<TaskType[]>('kanban-types', fetchTaskTypes, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+    dedupingInterval: 5000, // Types change less frequently
+    errorRetryCount: 3,
+  });
 
   const refreshTypes = useCallback(() => {
     mutate();

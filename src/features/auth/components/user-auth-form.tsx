@@ -69,7 +69,8 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
   const [loading, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [emailIdentity, setEmailIdentity] = useState<IdentityCheckResponse | null>(null);
+  const [emailIdentity, setEmailIdentity] =
+    useState<IdentityCheckResponse | null>(null);
   const [checkingIdentity, setCheckingIdentity] = useState(false);
   useAuth();
 
@@ -220,7 +221,7 @@ export default function UserAuthForm({ mode }: UserAuthFormProps) {
               {emailIdentity.message}
               {emailIdentity.collections.length > 0 && (
                 <div className='mt-1 flex gap-1'>
-                  {emailIdentity.collections.map((collection) => (
+                  {emailIdentity.collections.map(collection => (
                     <Badge
                       key={collection}
                       variant='outline'

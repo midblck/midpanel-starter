@@ -45,7 +45,13 @@ export function useTaskSearch({
           filterObj.search = searchTerm;
         }
 
-        void fetchTasks(currentPage, currentPageSize, sortString, filterObj, false);
+        void fetchTasks(
+          currentPage,
+          currentPageSize,
+          sortString,
+          filterObj,
+          false
+        );
       });
     },
     [table, fetchTasks, extractFilters, startTransition]

@@ -1,10 +1,16 @@
 import type { CollectionConfig } from 'payload';
+import { groups } from '@/lib/groups';
 
 export const TaskType: CollectionConfig = {
   slug: 'task-types',
+  labels: {
+    plural: { en: 'Task Types', id: 'Task Type' },
+    singular: { en: 'Task Type', id: 'Task Type' },
+  },
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'description', 'color', 'order'],
+    group: groups.misc,
   },
   fields: [
     {
