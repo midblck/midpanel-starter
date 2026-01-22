@@ -16,6 +16,9 @@ import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 import { Suspense } from 'react'
 
+// Force dynamic rendering due to authentication requirements
+export const dynamic = 'force-dynamic'
+
 // Icon mapping for dynamic icon rendering
 const iconMap = {
   TrendingUp,

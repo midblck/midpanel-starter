@@ -1,3 +1,5 @@
+'use client'
+
 import { LogOut, User, LayoutDashboard } from 'lucide-react'
 
 import { Branding } from '@/components/branding'

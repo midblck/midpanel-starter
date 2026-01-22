@@ -1,8 +1,9 @@
 import { ErrorProvider } from '@/components/error-boundary'
 import { ActiveThemeProvider } from '@/components/layout/active-theme-provider'
-import { logError, logInfo } from '@/utilities/logger'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider } from '@/features/auth'
+import type { Theme } from '@/payload-types'
+import { logError, logInfo } from '@/utilities/logger'
 import configPromise from '@payload-config'
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
@@ -11,7 +12,6 @@ import { cookies, headers } from 'next/headers'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { getPayload } from 'payload'
 import { SWRConfig } from 'swr'
-import type { Theme } from '@/payload-types'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   icons: {
     icon: '/branding/favicon.ico',
     shortcut: '/branding/favicon.ico',
-    apple: '/branding/icon.svg',
+    apple: '/branding/favicon.ico',
   },
   openGraph: {
     title: 'Midblck Admin Starter - Production-Ready Admin Panel',
@@ -122,8 +122,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang='en' className={`${inter.variable} ${inter.className}`} suppressHydrationWarning>
       <head>
         <link rel='icon' href='/branding/favicon.ico' sizes='any' />
-        <link rel='icon' href='/branding/icon.svg' type='image/svg+xml' />
-        <link rel='apple-touch-icon' href='/branding/icon.svg' />
+        <link rel='icon' href='/branding/icon-light.svg' type='image/svg+xml' />
+        <link rel='apple-touch-icon' href='/branding/icon-light.svg' />
       </head>
       <body className='antialiased'>
         <ErrorProvider>

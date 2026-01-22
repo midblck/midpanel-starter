@@ -8,6 +8,9 @@ import { isAdmin } from '@/lib/access'
 import type { Task, TaskStatus, TaskType, User, Admin } from '@/payload-types'
 import type { TaskTableData } from '@/types/data-table'
 
+// Force dynamic rendering due to authentication requirements
+export const dynamic = 'force-dynamic'
+
 // Union type to handle different user types from PayloadCMS
 type UserWithRole = (Admin & { collection: 'admins' }) | (User & { collection: 'users' }) | null
 
