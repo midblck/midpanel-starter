@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import { type IconName } from './svg'
 import { IconFallback, SvgIcon } from './svg-icon'
 

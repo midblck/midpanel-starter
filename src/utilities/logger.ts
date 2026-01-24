@@ -155,7 +155,7 @@ class Logger {
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       },
-      message
+      message,
     )
 
     return errorContext
@@ -181,7 +181,7 @@ class Logger {
     endpoint: string,
     method: string,
     error: Error | unknown,
-    metadata?: LogMetadata
+    metadata?: LogMetadata,
   ): ErrorContext {
     const correlationId = metadata?.correlationId || this.generateCorrelationId()
 
@@ -221,7 +221,7 @@ class Logger {
   componentError(
     componentName: string,
     error: Error | unknown,
-    metadata?: LogMetadata
+    metadata?: LogMetadata,
   ): ErrorContext {
     return this.error(`Component Error: ${componentName}`, error, {
       ...metadata,
@@ -279,7 +279,7 @@ export const logApiError = (
   endpoint: string,
   method: string,
   error: Error | unknown,
-  metadata?: LogMetadata
+  metadata?: LogMetadata,
 ) => logger.apiError(endpoint, method, error, metadata)
 
 export const logAuthError = (action: string, error: Error | unknown, userId?: string) =>
@@ -291,7 +291,7 @@ export const logDbError = (operation: string, error: Error | unknown, metadata?:
 export const logComponentError = (
   componentName: string,
   error: Error | unknown,
-  metadata?: LogMetadata
+  metadata?: LogMetadata,
 ) => logger.componentError(componentName, error, metadata)
 
 export const logBlockError = (blockType: string, error: Error | unknown, metadata?: LogMetadata) =>

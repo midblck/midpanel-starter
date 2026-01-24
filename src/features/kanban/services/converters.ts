@@ -39,7 +39,7 @@ export const convertToStoreTask = (payloadTask: PayloadTask): Task => ({
     payloadTask.taskTypes?.map((taskType: string | PayloadTaskType) =>
       typeof taskType === 'string'
         ? { id: taskType, name: 'Unknown', color: '#6B7280', order: 0 }
-        : convertToStoreTaskType(taskType)
+        : convertToStoreTaskType(taskType),
     ) || [],
   order: payloadTask.order || 0,
   createdAt: payloadTask.createdAt,

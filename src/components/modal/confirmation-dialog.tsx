@@ -119,7 +119,7 @@ export function ConfirmationDialog({
 
 // Convenience components for common use cases
 export function DeleteConfirmationDialog(
-  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>
+  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>,
 ) {
   return (
     <ConfirmationDialog
@@ -133,7 +133,7 @@ export function DeleteConfirmationDialog(
 }
 
 export function ApproveConfirmationDialog(
-  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>
+  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>,
 ) {
   return (
     <ConfirmationDialog
@@ -147,7 +147,7 @@ export function ApproveConfirmationDialog(
 }
 
 export function RejectConfirmationDialog(
-  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>
+  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>,
 ) {
   return (
     <ConfirmationDialog
@@ -161,7 +161,7 @@ export function RejectConfirmationDialog(
 }
 
 export function SaveConfirmationDialog(
-  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>
+  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>,
 ) {
   return (
     <ConfirmationDialog
@@ -175,7 +175,7 @@ export function SaveConfirmationDialog(
 }
 
 export function UpdateConfirmationDialog(
-  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>
+  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>,
 ) {
   return (
     <ConfirmationDialog
@@ -189,7 +189,7 @@ export function UpdateConfirmationDialog(
 }
 
 export function CreateConfirmationDialog(
-  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>
+  props: Omit<ConfirmationDialogProps, 'confirmText' | 'icon'>,
 ) {
   return (
     <ConfirmationDialog

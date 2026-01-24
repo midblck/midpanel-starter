@@ -49,7 +49,7 @@ export function DragHandlers({ children, columns, tasks }: DragHandlersProps) {
         delay: 100,
         tolerance: 5,
       },
-    })
+    }),
   )
 
   const columnsId = columns.map(col => col.id)
@@ -184,7 +184,7 @@ export function DragHandlers({ children, columns, tasks }: DragHandlersProps) {
 
             // Shift tasks at and after the insertion point down
             const targetColumnTasks = tasks.filter(
-              t => t.status && t.status.id === columnId && t.id !== taskId
+              t => t.status && t.status.id === columnId && t.id !== taskId,
             )
 
             for (const task of targetColumnTasks) {
@@ -225,7 +225,7 @@ export function DragHandlers({ children, columns, tasks }: DragHandlersProps) {
           try {
             // First, shift all tasks in target column down
             const targetColumnTasks = tasks.filter(
-              t => t.status && t.status.id === targetColumnId && t.id !== taskId
+              t => t.status && t.status.id === targetColumnId && t.id !== taskId,
             )
 
             // Update the moved task to order 0
@@ -267,7 +267,7 @@ export function DragHandlers({ children, columns, tasks }: DragHandlersProps) {
           try {
             // First, shift all tasks in target column down
             const targetColumnTasks = tasks.filter(
-              t => t.status && t.status.id === targetColumnId && t.id !== taskId
+              t => t.status && t.status.id === targetColumnId && t.id !== taskId,
             )
 
             // Update the moved task to order 0

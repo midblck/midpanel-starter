@@ -12,7 +12,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import { useAuth } from '@/features/auth'
 import { generateAvatarUrl } from '@/lib/avatar'
 import { Bell, CreditCard, LogOut, User } from 'lucide-react'
@@ -28,7 +28,7 @@ export default function MobileBottomNav() {
   // Filter to show only Dashboard and Tasks (exclude Payload Admin)
   const mobileNavItems = React.useMemo(
     () => navItems.filter(item => item.title !== 'Payload Admin'),
-    []
+    [],
   )
 
   // Check if a nav item is active
@@ -43,7 +43,7 @@ export default function MobileBottomNav() {
       }
       return false
     },
-    [pathname]
+    [pathname],
   )
 
   // Handle Tasks item click - open sheet
@@ -97,7 +97,7 @@ export default function MobileBottomNav() {
                 className={cn(
                   'relative flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 transition-colors touch-manipulation',
                   'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-                  isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                  isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
                 )}
                 aria-label={`${item.title} menu`}
                 aria-expanded={tasksSheetOpen}
@@ -120,7 +120,7 @@ export default function MobileBottomNav() {
               className={cn(
                 'flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1 rounded-lg px-3 py-2 transition-colors touch-manipulation relative',
                 'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-                isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
               )}
               aria-label={`Navigate to ${item.title}`}
               aria-current={isActive ? 'page' : undefined}
@@ -142,7 +142,7 @@ export default function MobileBottomNav() {
             'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
             pathname === '/app/profile'
               ? 'text-primary'
-              : 'text-muted-foreground hover:text-foreground'
+              : 'text-muted-foreground hover:text-foreground',
           )}
           aria-label='Profile menu'
           aria-expanded={profileSheetOpen}
@@ -178,7 +178,7 @@ export default function MobileBottomNav() {
                       'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
                       isSubActive
                         ? 'bg-primary text-primary-foreground'
-                        : 'bg-accent text-accent-foreground hover:bg-accent/80'
+                        : 'bg-accent text-accent-foreground hover:bg-accent/80',
                     )}
                     aria-label={`Navigate to ${subItem.title}`}
                     aria-current={isSubActive ? 'page' : undefined}
@@ -231,7 +231,7 @@ export default function MobileBottomNav() {
                 'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
                 pathname === '/app/profile'
                   ? 'bg-primary text-primary-foreground'
-                  : 'bg-accent text-accent-foreground hover:bg-accent/80'
+                  : 'bg-accent text-accent-foreground hover:bg-accent/80',
               )}
               aria-label='Go to Profile'
             >
@@ -242,7 +242,7 @@ export default function MobileBottomNav() {
               className={cn(
                 'flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-colors touch-manipulation',
                 'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-                'bg-accent text-accent-foreground hover:bg-accent/80'
+                'bg-accent text-accent-foreground hover:bg-accent/80',
               )}
               aria-label='Go to Billing'
             >
@@ -253,7 +253,7 @@ export default function MobileBottomNav() {
               className={cn(
                 'flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-colors touch-manipulation',
                 'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-                'bg-accent text-accent-foreground hover:bg-accent/80'
+                'bg-accent text-accent-foreground hover:bg-accent/80',
               )}
               aria-label='Go to Notifications'
             >
@@ -266,7 +266,7 @@ export default function MobileBottomNav() {
               className={cn(
                 'flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-colors touch-manipulation',
                 'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-                'bg-accent hover:bg-accent/80 text-destructive hover:text-destructive'
+                'bg-accent hover:bg-accent/80 text-destructive hover:text-destructive',
               )}
               aria-label='Sign out'
             >

@@ -165,7 +165,7 @@ function convertToCSV(data: any[]): string {
         if (typeof value === 'object') return JSON.stringify(value)
         return String(value).replace(/"/g, '""')
       })
-      .join(',')
+      .join(','),
   )
 
   return [csvHeaders, ...csvRows].join('\n')

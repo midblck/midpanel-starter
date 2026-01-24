@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
         oauthProviders: oauthRecords.docs.map(o => o.provider),
         oauthAvatar,
       },
-      { status: 200 }
+      { status: 200 },
     )
   } catch (error) {
     requestLogger.error('Profile fetch error', error, {
@@ -86,7 +86,7 @@ export async function PATCH(request: NextRequest) {
         message: 'Profile updated successfully',
         user: updatedUser,
       },
-      { status: 200 }
+      { status: 200 },
     )
   } catch (error) {
     requestLogger.error('Profile update error', error, {

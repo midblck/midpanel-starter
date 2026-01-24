@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import { logError } from '@/utilities/logger'
 import { useDroppable } from '@dnd-kit/core'
 
@@ -16,7 +16,7 @@ export function InsertionIndicator({ isVisible, className }: InsertionIndicatorP
         'h-0.5 bg-primary rounded-full transition-all duration-200 ease-in-out',
         'mx-2 my-1 shadow-sm',
         isVisible ? 'opacity-100 scale-x-100 shadow-primary/30' : 'opacity-0 scale-x-0',
-        className
+        className,
       )}
       role='presentation'
       aria-hidden='true'
@@ -56,7 +56,7 @@ export function DropZoneAfterTask({
         'min-h-2 transition-all duration-200',
         isOver || isHovered
           ? 'bg-primary/10 border-2 border-dashed border-primary/30 rounded-md'
-          : 'bg-transparent'
+          : 'bg-transparent',
       )}
     >
       <InsertionIndicator isVisible={isOver || isHovered} />
@@ -80,7 +80,7 @@ export function DropZone({ id, isActive, children, className }: DropZoneProps) {
         isActive
           ? 'bg-primary/10 border-2 border-dashed border-primary/30 rounded-md'
           : 'bg-transparent',
-        className
+        className,
       )}
     >
       {children}
@@ -114,7 +114,7 @@ export function DropZoneAfterColumn({ columnId, position, isHovered }: DropZoneA
           'min-h-12 w-8 transition-all duration-200 flex items-center justify-center mx-2',
           isOver || isHovered
             ? 'bg-primary/20 border-2 border-dashed border-primary/50 rounded-lg shadow-lg'
-            : 'bg-gray-100/70 border-2 border-dashed border-gray-400 rounded-lg hover:bg-gray-200/70'
+            : 'bg-gray-100/70 border-2 border-dashed border-gray-400 rounded-lg hover:bg-gray-200/70',
         )}
       >
         <div className='flex flex-col items-center gap-1'>
@@ -122,7 +122,7 @@ export function DropZoneAfterColumn({ columnId, position, isHovered }: DropZoneA
           <div
             className={cn(
               'text-xs font-medium transition-all duration-200',
-              isOver || isHovered ? 'text-primary' : 'text-gray-500'
+              isOver || isHovered ? 'text-primary' : 'text-gray-500',
             )}
           >
             Drop Column

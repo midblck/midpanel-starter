@@ -1,7 +1,7 @@
 import { Active, DataRef } from '@dnd-kit/core'
 
 export const hasDraggableData = (
-  active: Active | undefined | null
+  active: Active | undefined | null,
 ): active is Active & {
   data: DataRef<{
     type: string
@@ -11,7 +11,7 @@ export const hasDraggableData = (
 }
 
 export const isTask = (
-  active: Active | undefined | null
+  active: Active | undefined | null,
 ): active is Active & {
   data: DataRef<{
     type: 'task'
@@ -23,7 +23,7 @@ export const isTask = (
 }
 
 export const isColumn = (
-  active: Active | undefined | null
+  active: Active | undefined | null,
 ): active is Active & {
   data: DataRef<{
     type: 'column'

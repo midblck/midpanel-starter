@@ -66,7 +66,7 @@ export function useBulkActions() {
         })
       }
     },
-    []
+    [],
   )
 
   const handleBulkAssign = useCallback((selectedRows: TaskTableData[], assignee: string) => {

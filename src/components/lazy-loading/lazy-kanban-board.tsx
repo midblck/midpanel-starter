@@ -7,7 +7,7 @@ import { lazy, Suspense } from 'react'
 const KanbanBoard = lazy(() =>
   import('@/features/kanban/components/kanban-board').then(module => ({
     default: module.KanbanBoard,
-  }))
+  })),
 )
 
 export function LazyKanbanBoard() {

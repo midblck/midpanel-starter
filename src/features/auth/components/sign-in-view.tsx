@@ -1,5 +1,5 @@
 import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import Link from 'next/link'
 import UserAuthForm from './user-auth-form'
 
@@ -10,7 +10,7 @@ export default function SignInViewPage() {
         href='/auth/sign-up'
         className={cn(
           buttonVariants({ variant: 'ghost' }),
-          'absolute top-4 right-4 hidden md:top-8 md:right-8'
+          'absolute top-4 right-4 hidden md:top-8 md:right-8',
         )}
       >
         Sign Up

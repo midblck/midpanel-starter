@@ -76,7 +76,7 @@ export function ErrorBoundary({
         description: 'An unexpected error occurred. Our team has been notified.',
       })
     },
-    [onError]
+    [onError],
   )
 
   // Reset on props change
@@ -192,7 +192,7 @@ ${errorDetails.stack || 'No stack trace available'}`
         </div>
       )
     },
-    [fallback, handleGoHome, handleCopyError, errorState.errorId]
+    [fallback, handleGoHome, handleCopyError, errorState.errorId],
   )
 
   // Use a wrapper component that can catch errors
@@ -206,7 +206,7 @@ ${errorDetails.stack || 'No stack trace available'}`
       // Otherwise, render children normally
       return <>{child}</>
     },
-    [errorState.hasError, errorState.error, ErrorFallback, resetErrorBoundary]
+    [errorState.hasError, errorState.error, ErrorFallback, resetErrorBoundary],
   )
 
   // Use useEffect to catch errors (this is a simplified approach)
@@ -248,7 +248,7 @@ export const useErrorHandler = () => {
 // Higher-order component for easier error boundary wrapping
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
-  errorBoundaryProps?: Omit<ErrorBoundaryProps, 'children'>
+  errorBoundaryProps?: Omit<ErrorBoundaryProps, 'children'>,
 ) {
   const WrappedComponent = (props: P) => (
     <ErrorBoundary {...errorBoundaryProps}>

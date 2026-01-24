@@ -207,7 +207,7 @@ export async function fetchTaskAssignees() {
         return assignee !== null && assignee !== undefined && assignee.trim() !== ''
       })
       .filter(
-        (assignee: string, index: number, array: string[]) => array.indexOf(assignee) === index
+        (assignee: string, index: number, array: string[]) => array.indexOf(assignee) === index,
       )
       .sort()
 
@@ -250,7 +250,7 @@ export async function updateTask(
     assignee?: string
     dueDate?: string
     taskTypes?: string[]
-  }
+  },
 ) {
   try {
     const result = await updateKanbanTask(id, taskData)

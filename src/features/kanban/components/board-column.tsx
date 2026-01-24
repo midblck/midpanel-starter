@@ -66,7 +66,7 @@ export function BoardColumn({
       // Update database
       await updateStatusOrders()
     },
-    [isFirstColumn, statuses, updateStatusOrders]
+    [isFirstColumn, statuses, updateStatusOrders],
   )
 
   const moveColumnRight = useCallback(
@@ -89,7 +89,7 @@ export function BoardColumn({
       // Update database
       await updateStatusOrders()
     },
-    [isLastColumn, statuses, updateStatusOrders]
+    [isLastColumn, statuses, updateStatusOrders],
   )
 
   // Column is no longer draggable - only uses arrow buttons for reordering

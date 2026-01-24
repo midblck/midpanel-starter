@@ -199,4 +199,110 @@
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     background-color: hsl(var(--muted-foreground));
   }
+
+  /* Prose styles for richtext - ensure readable text with subtle heading/content difference */
+  .prose {
+    color: hsl(var(--foreground));
+  }
+
+  .prose p {
+    color: hsl(var(--foreground));
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    color: hsl(222.2 84% 8%);
+  }
+
+  .prose strong {
+    color: hsl(var(--foreground));
+  }
+
+  .prose a {
+    color: hsl(var(--primary));
+  }
+
+  .prose a:hover {
+    color: hsl(var(--primary));
+    opacity: 0.8;
+  }
+
+  .prose code {
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--muted));
+  }
+
+  .prose pre {
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--muted));
+  }
+
+  .prose blockquote {
+    color: hsl(var(--muted-foreground));
+    border-left-color: hsl(var(--border));
+  }
+
+  .prose hr {
+    border-color: hsl(var(--border));
+  }
+
+  .prose th {
+    color: hsl(var(--foreground));
+  }
+
+  .prose td {
+    color: hsl(var(--foreground));
+  }
+
+  /* Dark mode prose overrides - headings slightly brighter than content */
+  .dark .prose {
+    color: hsl(210 40% 95%);
+  }
+
+  .dark .prose p {
+    color: hsl(210 40% 95%);
+  }
+
+  .dark .prose h1,
+  .dark .prose h2,
+  .dark .prose h3,
+  .dark .prose h4,
+  .dark .prose h5,
+  .dark .prose h6 {
+    color: hsl(210 40% 98%);
+  }
+
+  .dark .prose strong {
+    color: hsl(210 40% 95%);
+  }
+
+  .dark .prose a {
+    color: hsl(var(--primary));
+  }
+
+  .dark .prose code {
+    color: hsl(210 40% 95%);
+    background-color: hsl(var(--muted));
+  }
+
+  .dark .prose pre {
+    color: hsl(210 40% 95%);
+    background-color: hsl(var(--muted));
+  }
+
+  .dark .prose blockquote {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .dark .prose th {
+    color: hsl(210 40% 95%);
+  }
+
+  .dark .prose td {
+    color: hsl(210 40% 95%);
+  }
 }

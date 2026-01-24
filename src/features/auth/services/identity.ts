@@ -102,7 +102,7 @@ export async function getIdentityDetails(email: string, payload: Payload): Promi
 export async function getIdentityDetailsForUser(
   userId: string,
   collection: 'admins' | 'users',
-  payload: Payload
+  payload: Payload,
 ): Promise<GetIdentity> {
   // Get the user first
   const user = await payload.findByID({

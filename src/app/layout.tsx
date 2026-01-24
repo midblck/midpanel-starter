@@ -1,5 +1,6 @@
 import { ErrorProvider } from '@/components/error-boundary'
 import { ActiveThemeProvider } from '@/components/layout/active-theme-provider'
+import { NextIntlProvider } from '@/components/next-intl-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider } from '@/features/auth'
 import type { Theme } from '@/payload-types'
@@ -101,7 +102,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       if (
         savedTheme &&
         themesData.find(
-          (theme: Theme) => theme.name.toLowerCase().replace(/\s+/g, '-') === savedTheme
+          (theme: Theme) => theme.name.toLowerCase().replace(/\s+/g, '-') === savedTheme,
         )
       ) {
         initialTheme = savedTheme
@@ -136,19 +137,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }}
           >
             <NuqsAdapter>
-              <ThemeProvider
-                attribute='class'
-                defaultTheme='system'
-                enableSystem
-                disableTransitionOnChange
-              >
-                <ActiveThemeProvider initialTheme={initialTheme} themes={themes}>
-                  <AuthProvider>
-                    {children}
-                    <Toaster />
-                  </AuthProvider>
-                </ActiveThemeProvider>
-              </ThemeProvider>
+              <NextIntlProvider>
+                <ThemeProvider
+                  attribute='class'
+                  defaultTheme='system'
+                  enableSystem
+                  disableTransitionOnChange
+                >
+                  <ActiveThemeProvider initialTheme={initialTheme} themes={themes}>
+                    <AuthProvider>
+                      {children}
+                      <Toaster />
+                    </AuthProvider>
+                  </ActiveThemeProvider>
+                </ThemeProvider>
+              </NextIntlProvider>
             </NuqsAdapter>
           </SWRConfig>
         </ErrorProvider>

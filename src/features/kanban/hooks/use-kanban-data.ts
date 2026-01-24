@@ -29,7 +29,7 @@ export function useKanbanTasks() {
         return currentTasks.map(task => (task.id === updatedTask.id ? updatedTask : task))
       }, false)
     },
-    [mutate]
+    [mutate],
   )
 
   const addTaskOptimistically = useCallback(
@@ -39,7 +39,7 @@ export function useKanbanTasks() {
         return [...currentTasks, newTask]
       }, false)
     },
-    [mutate]
+    [mutate],
   )
 
   const removeTaskOptimistically = useCallback(
@@ -49,7 +49,7 @@ export function useKanbanTasks() {
         return currentTasks.filter(task => task.id !== taskId)
       }, false)
     },
-    [mutate]
+    [mutate],
   )
 
   return {

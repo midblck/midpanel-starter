@@ -9,11 +9,12 @@ These rules are enriched from the project's .cursorrules file and comprehensive 
 1. [PayloadCMS Built-ins (CRITICAL)](#payloadcms-built-ins-critical)
 2. [TypeScript & Type Safety (HIGH)](#typescript--type-safety-high)
 3. [Code Quality (HIGH)](#code-quality-high)
-4. [Performance (MEDIUM-HIGH)](#performance-medium-high)
-5. [Component Architecture (MEDIUM)](#component-architecture-medium)
-6. [Error Handling (MEDIUM)](#error-handling-medium)
-7. [Accessibility & UX (LOW-MEDIUM)](#accessibility--ux-low-medium)
-8. [Development Workflow (LOW)](#development-workflow-low)
+4. [File Naming Conventions (HIGH)](#file-naming-conventions-high)
+5. [Performance (MEDIUM-HIGH)](#performance-medium-high)
+6. [Component Architecture (MEDIUM)](#component-architecture-medium)
+7. [Error Handling (MEDIUM)](#error-handling-medium)
+8. [Accessibility & UX (LOW-MEDIUM)](#accessibility--ux-low-medium)
+9. [Development Workflow (LOW)](#development-workflow-low)
 
 ---
 
@@ -368,7 +369,7 @@ import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 
 // 3. Internal utilities and types
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import type { User } from '@/payload-types'
 
 // 4. Components
@@ -434,6 +435,168 @@ export async function GET(request: NextRequest) {
 // ❌ Bad: Console logging
 console.log('User created:', user.id)
 console.error('Failed to create user:', error)
+```
+
+---
+
+## File Naming Conventions (HIGH)
+
+### file-naming-conventions
+
+Use consistent file and folder naming conventions throughout the codebase to maintain readability and predictability.
+
+#### File Naming Rules
+
+**TSX Files (React Components): Always use kebab-case for TSX filenames:**
+
+```typescript
+// ✅ CORRECT
+src/components/
+├── rich-text-renderer.tsx
+├── payload-redirects.tsx
+├── user-profile-card.tsx
+└── slug-component.tsx
+
+// ❌ INCORRECT - PascalCase
+src/components/
+├── RichTextRenderer.tsx
+├── PayloadRedirects.tsx
+└── UserProfileCard.tsx
+```
+
+**TypeScript/JavaScript Files: Use kebab-case for multi-word filenames:**
+
+```typescript
+// ✅ CORRECT
+src/lib/
+├── generate-preview-path.ts
+├── format-date-time.ts
+├── validate-user-input.ts
+└── handle-api-errors.ts
+
+// ❌ INCORRECT - camelCase for files
+src/lib/
+├── generatePreviewPath.ts
+├── formatDateTime.ts
+└── validateUserInput.ts
+```
+
+**Directory Names: Use kebab-case for directory names:**
+
+```typescript
+// ✅ CORRECT
+src/
+├── collections/
+│   ├── content/
+│   │   ├── posts/
+│   │   └── categories/
+│   └── user/
+│       ├── admins/
+│       └── users/
+├── components/
+│   ├── ui/
+│   ├── layout/
+│   └── forms/
+└── features/
+    ├── user-auth/
+    └── task-management/
+```
+
+#### Export Naming Rules
+
+**Component Exports: Use PascalCase for React component exports (regardless of filename):**
+
+```typescript
+// ✅ CORRECT - kebab-case filename, PascalCase export
+// slug-component.tsx
+export const SlugComponent: React.FC<Props> = ({ ... }) => { ... }
+
+// ✅ CORRECT - kebab-case filename, PascalCase export
+// rich-text-renderer.tsx
+export const RichTextRenderer: React.FC<Props> = ({ ... }) => { ... }
+```
+
+**Utility Function Exports: Use camelCase for utility function exports:**
+
+```typescript
+// ✅ CORRECT
+// generate-preview-path.ts
+export const generatePreviewPath = (params: Params) => { ... }
+
+// ✅ CORRECT
+// format-date-time.ts
+export const formatDateTime = (date: Date) => { ... }
+```
+
+**Type/Interface Exports: Use PascalCase for TypeScript types and interfaces:**
+
+```typescript
+// ✅ CORRECT
+export interface UserProfile { ... }
+export type ApiResponse<T> = { ... }
+export const USER_ROLES = { ... } as const
+```
+
+#### Import Path Consistency
+
+**Relative Imports: Use relative imports with correct case sensitivity:**
+
+```typescript
+// ✅ CORRECT
+import { RichTextRenderer } from '../components/rich-text-renderer'
+import { generatePreviewPath } from '../../lib/generate-preview-path'
+
+// ❌ INCORRECT - wrong case
+import { RichTextRenderer } from '../components/RichTextRenderer'
+```
+
+**Absolute Imports: Use absolute imports with @/ alias and correct case:**
+
+```typescript
+// ✅ CORRECT
+import { RichTextRenderer } from '@/components/rich-text-renderer'
+import { generatePreviewPath } from '@/lib/generate-preview-path'
+
+// ❌ INCORRECT - wrong case
+import { RichTextRenderer } from '@/components/RichTextRenderer'
+```
+
+#### Special Cases
+
+**Index Files: Use index.ts or index.tsx for barrel exports:**
+
+```typescript
+// ✅ CORRECT
+src / components / ui / index.ts
+src / lib / hooks / index.ts
+```
+
+**Test Files: Use .test.ts or .spec.ts suffix with same naming as source:**
+
+```typescript
+// ✅ CORRECT
+src/
+├── components/
+│   ├── user-profile-card.tsx
+│   └── user-profile-card.test.tsx
+└── lib/
+    ├── format-date-time.ts
+    └── format-date-time.test.ts
+```
+
+#### Migration Guide
+
+When renaming files to follow these conventions:
+
+1. **Rename the file** using `git mv` to preserve history
+2. **Update all imports** that reference the old filename
+3. **Update any dynamic imports** or path references
+4. **Test the changes** to ensure no broken imports
+
+```bash
+# Example migration
+git mv RichTextRenderer.tsx rich-text-renderer.tsx
+# Then update imports in all files that reference it
 ```
 
 ---
@@ -1129,17 +1292,18 @@ Follow naming conventions for files and components.
 ```typescript
 // ✅ CORRECT: Naming conventions
 
-// Components: PascalCase
+// Component Exports: PascalCase (regardless of filename)
 export function UserCard() {}
 export function UserManagement() {}
 
-// Files: lowercase with hyphens
+// TSX Files: kebab-case
 // components/user-card.tsx
 // components/user-management.tsx
+// components/rich-text-renderer.tsx
 
 // Utilities: camelCase
-// lib/format-date.ts
-// lib/generate-avatar.ts
+// lib/format-date-time.ts
+// lib/generate-preview-path.ts
 
 // Types: PascalCase with suffixes
 interface UserCardProps {}
@@ -1149,6 +1313,11 @@ type UserRole = 'admin' | 'editor' | 'viewer'
 // Collections: PascalCase
 export const Users: CollectionConfig = {}
 export const Posts: CollectionConfig = {}
+
+// Directory Names: kebab-case
+// features/user-auth/
+// components/ui/
+// lib/url-conversion/
 ```
 
 ## Quick Reference

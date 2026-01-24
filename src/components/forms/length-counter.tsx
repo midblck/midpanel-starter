@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 
 /**
  * LengthCounter - A reusable component for displaying character count with visual warnings

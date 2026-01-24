@@ -41,7 +41,7 @@ export function sanitizeString(input: string): string {
  */
 export function validateRequired<T extends Record<string, unknown>>(
   data: T,
-  requiredFields: (keyof T)[]
+  requiredFields: (keyof T)[],
 ): { isValid: boolean; missingFields: (keyof T)[] } {
   const missingFields = requiredFields.filter(field => {
     const value = data[field]

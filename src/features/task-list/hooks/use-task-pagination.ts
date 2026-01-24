@@ -16,7 +16,7 @@ interface UseTaskPaginationProps {
     sort: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filters: any,
-    includeFilterOptions?: boolean
+    includeFilterOptions?: boolean,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

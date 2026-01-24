@@ -368,7 +368,7 @@ import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 
 // 3. Internal utilities and types
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import type { User } from '@/payload-types'
 
 // 4. Components
@@ -395,7 +395,8 @@ export async function getUsersPage(page = 1) {
     collection: 'users',
     limit: 10,
     page,
-    select: { // Only needed fields
+    select: {
+      // Only needed fields
       name: true,
       email: true,
       id: true,
@@ -708,29 +709,20 @@ export async function POST(request: Request) {
 
     // Validate input
     if (!body.email || !body.password) {
-      return Response.json(
-        { error: 'Email and password are required' },
-        { status: 400 }
-      )
+      return Response.json({ error: 'Email and password are required' }, { status: 400 })
     }
 
     const payload = await getPayload({ config: configPromise })
     const result = await createUser(body)
 
     if (!result.success) {
-      return Response.json(
-        { error: result.error, details: result.errors },
-        { status: 400 }
-      )
+      return Response.json({ error: result.error, details: result.errors }, { status: 400 })
     }
 
     return Response.json({ user: result.user }, { status: 201 })
   } catch (error) {
     console.error('API Error:', error)
-    return Response.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 ```
@@ -1274,9 +1266,7 @@ export const Posts: CollectionConfig = {
       async ({ data }) => {
         // Generate slug from title
         if (data.title && !data.slug) {
-          data.slug = data.title
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
+          data.slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
         }
         return data
       },

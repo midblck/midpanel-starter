@@ -12,7 +12,7 @@ interface UseTaskSearchProps {
     sort: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filters: any,
-    includeFilterOptions?: boolean
+    includeFilterOptions?: boolean,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => Promise<any>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,7 +44,7 @@ export function useTaskSearch({ table, fetchTasks, extractFilters }: UseTaskSear
         void fetchTasks(currentPage, currentPageSize, sortString, filterObj, false)
       })
     },
-    [table, fetchTasks, extractFilters, startTransition]
+    [table, fetchTasks, extractFilters, startTransition],
   )
 
   return { handleSearch, isPending }

@@ -4,7 +4,7 @@ import { createProfileActions } from './profile-actions'
 
 export const createAllKBarActions = (
   navigateTo: (url: string) => void,
-  openInNewTab: (url: string) => void
+  openInNewTab: (url: string) => void,
 ): KBarAction[] => {
   const navigationActions = createNavigationActions(navigateTo, openInNewTab)
   const profileActions = createProfileActions(navigateTo)

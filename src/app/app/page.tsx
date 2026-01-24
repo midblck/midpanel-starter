@@ -38,10 +38,10 @@ async function getDashboardData(userId: string): Promise<DashboardData> {
     // Get today's date range (start of day to end of day) in UTC
     const now = new Date()
     const startOfToday = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
     )
     const endOfToday = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
     )
 
     // Fetch tasks created today by the current user
@@ -217,7 +217,7 @@ function DashboardSkeleton() {
 export default async function DashboardPage(
   {
     // searchParams,
-  }: DashboardPageProps
+  }: DashboardPageProps,
 ) {
   // This would be where you'd add authentication checks
   // For now, we'll assume the user is authenticated via middleware

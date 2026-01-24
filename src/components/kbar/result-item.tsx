@@ -12,7 +12,7 @@ const ResultItem = React.forwardRef(
       active: boolean
       currentRootActionId: ActionId
     },
-    ref: React.Ref<HTMLDivElement>
+    ref: React.Ref<HTMLDivElement>,
   ) => {
     const ancestors = React.useMemo(() => {
       if (!currentRootActionId) return action.ancestors
@@ -63,7 +63,7 @@ const ResultItem = React.forwardRef(
         )}
       </div>
     )
-  }
+  },
 )
 
 ResultItem.displayName = 'KBarResultItem'

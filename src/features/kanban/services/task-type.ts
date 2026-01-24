@@ -50,7 +50,7 @@ export async function createTaskType(taskTypeData: CreateTaskTypeData): Promise<
 // Update task type using PayloadCMS built-in REST API
 export async function updateTaskType(
   id: string,
-  taskTypeData: UpdateTaskTypeData
+  taskTypeData: UpdateTaskTypeData,
 ): Promise<TaskType | null> {
   try {
     const response = await fetch(`/api/task-types/${id}`, {

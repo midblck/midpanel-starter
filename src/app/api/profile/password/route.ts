@@ -30,14 +30,14 @@ export async function POST(request: NextRequest) {
     if (!newPassword || newPassword.length < 8) {
       return NextResponse.json(
         { message: 'New password must be at least 8 characters long' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
     if (newPassword !== confirmPassword) {
       return NextResponse.json(
         { message: 'New password and confirmation do not match' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
           message:
             'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number',
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       {
         message: 'Password updated successfully',
       },
-      { status: 200 }
+      { status: 200 },
     )
   } catch (error) {
     requestLogger.error('Password update error', error, {

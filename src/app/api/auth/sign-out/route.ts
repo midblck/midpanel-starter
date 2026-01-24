@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     // Create response and clear cookies directly
     const logoutResponse = NextResponse.json(
       { message: 'Signed out successfully', collection },
-      { status: 200 }
+      { status: 200 },
     )
 
     // Clear the JWT token cookie

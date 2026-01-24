@@ -160,7 +160,7 @@ export async function createKanbanTask(taskData: CreateTaskData): Promise<Task |
 // Update task using PayloadCMS built-in REST API
 export async function updateKanbanTask(
   id: string,
-  taskData: Partial<CreateTaskData>
+  taskData: Partial<CreateTaskData>,
 ): Promise<Task | null> {
   try {
     // Get JWT token from cookies for authentication
@@ -268,7 +268,7 @@ export async function bulkUpdateKanbanTasks(tasks: Task[]): Promise<boolean> {
           ...convertToPayloadTask(task),
           order: index,
         }),
-      })
+      }),
     )
 
     const responses = await Promise.all(updatePromises)

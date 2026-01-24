@@ -64,7 +64,7 @@ export function useAsyncErrorHandler() {
         return null
       }
     },
-    [handleError]
+    [handleError],
   )
 
   return { executeWithErrorHandling }

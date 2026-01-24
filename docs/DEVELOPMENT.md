@@ -181,21 +181,21 @@ export function UserDialog({ user }: { user: User }) {
 
 ```typescript
 // ✅ Use PayloadCMS generated types
-import type { User, Media, Post } from '@/payload-types';
+import type { User, Media, Post } from '@/payload-types'
 
 // ✅ Create specific interfaces
 interface UserCardProps {
-  user: User;
-  onEdit: (userId: string) => void;
-  variant?: 'default' | 'compact';
+  user: User
+  onEdit: (userId: string) => void
+  variant?: 'default' | 'compact'
 }
 
 // ✅ Use utility types
-type UserUpdateData = Partial<Pick<User, 'name' | 'email'>>;
+type UserUpdateData = Partial<Pick<User, 'name' | 'email'>>
 type ApiResponse<T> = {
-  data: T;
-  error?: string;
-};
+  data: T
+  error?: string
+}
 ```
 
 ### Generic Components
@@ -294,29 +294,25 @@ Before submitting code:
 
 ```typescript
 const generateAvatarUrl = (name: string, size = 40) =>
-  `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=${size}&background=random&color=fff&bold=true&format=png`;
+  `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=${size}&background=random&color=fff&bold=true&format=png`
 ```
 
 ### Class Name Utility
 
 ```typescript
-import { cn } from '@/lib/utils';
+import { cn } from '@/utilities/cn'
 
-const className = cn(
-  'base-class',
-  condition && 'conditional-class',
-  props.className
-);
+const className = cn('base-class', condition && 'conditional-class', props.className)
 ```
 
 ### PayloadCMS Data Fetching
 
 ```typescript
-const payload = await getPayload({ config: payloadConfig });
+const payload = await getPayload({ config: payloadConfig })
 const { docs } = await payload.find({
   collection: 'collection-name',
   where: { field: { equals: 'value' } },
-});
+})
 ```
 
 ## 📚 Resources

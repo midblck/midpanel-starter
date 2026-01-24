@@ -40,7 +40,7 @@ export function GET(request: NextRequest) {
           error: 'OAuth URL Generation Failed',
           message: 'Failed to create Google OAuth URL',
         },
-        { status: 500 }
+        { status: 500 },
       )
     }
 

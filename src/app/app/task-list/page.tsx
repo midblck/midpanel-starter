@@ -158,12 +158,12 @@ export default async function TasksListPage() {
           task.taskTypes?.map((type: string | TaskType) =>
             typeof type === 'string'
               ? { id: type, name: 'Unknown', color: '#6B7280' }
-              : { id: type.id, name: type.name, color: type.color }
+              : { id: type.id, name: type.name, color: type.color },
           ) || [],
         order: task.order || 0,
         createdAt: task.createdAt,
         updatedAt: task.updatedAt,
-      })
+      }),
     )
 
     initialPagination = {
@@ -179,8 +179,8 @@ export default async function TasksListPage() {
           .map((task: Pick<Task, 'assignee'>) => task.assignee)
           .filter(
             (assignee): assignee is string =>
-              assignee !== null && assignee !== undefined && assignee.trim() !== ''
-          )
+              assignee !== null && assignee !== undefined && assignee.trim() !== '',
+          ),
       ),
     ].sort()
 

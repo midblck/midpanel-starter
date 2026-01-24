@@ -9,18 +9,22 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
-import { getServerSideURL } from '@/utilities/getURL'
+import { getServerSideURL } from '@/utilities/get-url'
 import { SupportedLanguages } from '@payloadcms/translations'
 import { en } from '@payloadcms/translations/languages/en'
-import { Theme } from './collections/configuration/Theme'
-import { Media } from './collections/content/Media'
-import { Tasks } from './collections/misc/Task'
-import { TaskStatuses } from './collections/misc/TaskStatus'
-import { TaskType } from './collections/misc/TaskType'
-import { Admins } from './collections/user/Admins'
-import { OAuth } from './collections/user/OAuth'
-import { Users } from './collections/user/Users'
+import { Theme } from './collections/configuration/theme'
+import { Categories } from './collections/content/categories'
+import { Media } from './collections/content/media'
+import { Posts } from './collections/content/posts'
+import Comments from './collections/content/comments'
+import { Tasks } from './collections/misc/task'
+import { TaskStatuses } from './collections/misc/taskStatus'
+import { TaskType } from './collections/misc/taskType'
+import { Admins } from './collections/user/admins'
+import { OAuth } from './collections/user/oauth'
+import { Users } from './collections/user/users'
 import { id } from './lib/translations/id'
+import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -55,7 +59,19 @@ export default buildConfig({
     ], // required
     defaultLocale: 'id', // required
   },
-  collections: [Admins, Users, OAuth, Media, Tasks, TaskStatuses, TaskType, Theme],
+  collections: [
+    Admins,
+    Users,
+    OAuth,
+    Media,
+    Tasks,
+    TaskStatuses,
+    TaskType,
+    Theme,
+    Posts,
+    Categories,
+    Comments,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -79,6 +95,7 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
+    ...plugins,
     // payloadCloudPlugin(),
     // storage-adapter-placeholder
     uploadthingStorage({

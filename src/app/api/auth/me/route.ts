@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
         hasOAuth: oauthRecords.docs.length > 0,
         oauthProviders: oauthRecords.docs.map(o => o.provider),
       },
-      { status: 200 }
+      { status: 200 },
     )
   } catch (error) {
     requestLogger.error('Auth verification error', error, {
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
         collections,
         message,
       },
-      { status: 200 }
+      { status: 200 },
     )
   } catch (error) {
     requestLogger.error('Identity check error', error, {
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
     })
     return NextResponse.json(
       { message: 'An error occurred during identity check' },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import { type IconName } from './svg'
 
 interface SvgIconProps {
@@ -303,7 +303,7 @@ export function SvgIcon({
         className={cn(
           sizeClasses[size],
           'bg-destructive/10 text-destructive rounded flex items-center justify-center text-xs',
-          className
+          className,
         )}
         title={`Icon "${name}" not found`}
         aria-label='Icon error'
@@ -342,7 +342,7 @@ export function IconFallback({
       className={cn(
         sizeClass,
         'bg-muted text-muted-foreground rounded flex items-center justify-center text-xs font-mono',
-        className
+        className,
       )}
       title={`Icon "${name}" not found`}
       aria-label={`Missing icon: ${name}`}

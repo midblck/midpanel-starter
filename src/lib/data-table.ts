@@ -126,7 +126,7 @@ export function getDefaultFilterOperator(filterVariant: FilterVariant) {
 
 export function getValidFilters(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filters: Array<{ id: string; operator: FilterOperator; value: any }>
+  filters: Array<{ id: string; operator: FilterOperator; value: any }>,
 ) {
   return filters.filter(
     filter =>
@@ -134,7 +134,7 @@ export function getValidFilters(
       filter.operator === 'isNotEmpty' ||
       (Array.isArray(filter.value)
         ? filter.value.length > 0
-        : filter.value !== '' && filter.value !== null && filter.value !== undefined)
+        : filter.value !== '' && filter.value !== null && filter.value !== undefined),
   )
 }
 

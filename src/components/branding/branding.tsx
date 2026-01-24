@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import Image from 'next/image'
 
 interface BrandingProps {
@@ -88,7 +88,7 @@ export function BrandingLogo({
       className={cn(
         'relative rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center',
         sizeClasses[size],
-        className
+        className,
       )}
     >
       <Image

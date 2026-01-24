@@ -15,7 +15,7 @@ const isAdmin = (user: UserWithRole): boolean =>
     user &&
       user.collection === 'admins' &&
       'role' in user &&
-      (user.role === 'master' || user.role === 'staff')
+      (user.role === 'master' || user.role === 'staff'),
   )
 
 const isMaster = (user: UserWithRole): boolean =>

@@ -91,7 +91,7 @@ export function useTaskData({
         dueDateFrom?: string
         dueDateTo?: string
       } = {},
-      includeFilterOptions: boolean = false
+      includeFilterOptions: boolean = false,
     ) => {
       try {
         const searchParams = new URLSearchParams({
@@ -136,7 +136,7 @@ export function useTaskData({
         throw err
       }
     },
-    [swrMutate]
+    [swrMutate],
   )
 
   // Fetch filter options on initial load
@@ -165,7 +165,7 @@ export function useTaskData({
         }
       }, false) // false = don't revalidate after optimistic update
     },
-    [swrMutate]
+    [swrMutate],
   )
 
   return {

@@ -12,7 +12,7 @@ export interface KBarAction {
 
 export const createNavigationActions = (
   navigateTo: (url: string) => void,
-  openInNewTab: (url: string) => void
+  openInNewTab: (url: string) => void,
 ): KBarAction[] => {
   {
     /* Hide Payload Admin from sidebar navigation */

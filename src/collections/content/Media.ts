@@ -1,11 +1,11 @@
-import type { CollectionConfig } from 'payload'
+import { groups } from '@/lib/groups'
 import {
   FixedToolbarFeature,
   HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import { groups } from '@/lib/groups'
+import type { CollectionConfig } from 'payload'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -50,5 +50,6 @@ export const Media: CollectionConfig = {
         effort: 6, // Compression effort (1-6, higher = better compression)
       },
     },
+    focalPoint: true,
   },
 }

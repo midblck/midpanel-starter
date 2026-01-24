@@ -81,18 +81,18 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
       shallow: true,
       throttleMs: 500,
     }),
-    []
+    [],
   )
 
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>(
-    initialState?.rowSelection ?? {}
+    initialState?.rowSelection ?? {},
   )
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(
-    initialState?.columnVisibility ?? {}
+    initialState?.columnVisibility ?? {},
   )
   // Load column sizing from localStorage (client-side only)
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>(
-    initialState?.columnSizing ?? {}
+    initialState?.columnSizing ?? {},
   )
   const [isHydrated, setIsHydrated] = React.useState(false)
 
@@ -138,7 +138,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
         }
       }
     },
-    [columnSizing]
+    [columnSizing],
   )
 
   // Simple ref to prevent initial load loops
@@ -151,13 +151,13 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   // URL state management with simple configuration
   const [page, setPage] = useQueryState(
     PAGE_KEY,
-    parseAsInteger.withOptions(queryStateOptions).withDefault(1)
+    parseAsInteger.withOptions(queryStateOptions).withDefault(1),
   )
   const [perPage, setPerPage] = useQueryState(
     PER_PAGE_KEY,
     parseAsInteger
       .withOptions(queryStateOptions)
-      .withDefault(initialState?.pagination?.pageSize ?? 10)
+      .withDefault(initialState?.pagination?.pageSize ?? 10),
   )
 
   const pagination: PaginationState = React.useMemo(() => {
@@ -178,7 +178,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
         void setPerPage(updaterOrValue.pageSize)
       }
     },
-    [pagination]
+    [pagination],
   )
 
   // const columnIds = React.useMemo(() => {
@@ -190,7 +190,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
   // URL state management for sorting
   const [sorting, setSorting] = useQueryState(
     SORT_KEY,
-    parseAsString.withOptions(queryStateOptions).withDefault('')
+    parseAsString.withOptions(queryStateOptions).withDefault(''),
   )
 
   const parsedSorting: SortingState = React.useMemo(() => {
@@ -211,7 +211,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
       void setSorting(JSON.stringify(newSorting))
     },
-    [parsedSorting]
+    [parsedSorting],
   )
 
   const filterableColumns = React.useMemo(() => {
@@ -227,14 +227,14 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
       (acc, column) => {
         if (column.meta?.options) {
           acc[column.id ?? ''] = parseAsArrayOf(parseAsString, ARRAY_SEPARATOR).withOptions(
-            queryStateOptions
+            queryStateOptions,
           )
         } else {
           acc[column.id ?? ''] = parseAsString.withOptions(queryStateOptions)
         }
         return acc
       },
-      {}
+      {},
     )
   }, [filterableColumns, queryStateOptions, enableAdvancedFilter])
 
@@ -284,7 +284,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
             }
             return acc
           },
-          {}
+          {},
         )
 
         for (const prevFilter of prev) {
@@ -297,7 +297,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
         return next
       })
     },
-    [debouncedSetFilterValues, filterableColumns, enableAdvancedFilter]
+    [debouncedSetFilterValues, filterableColumns, enableAdvancedFilter],
   )
 
   const table = useReactTable({

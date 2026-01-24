@@ -88,7 +88,7 @@ export type Actions = {
     taskTypes?: string[],
     priority?: 'low' | 'medium' | 'high' | 'critical',
     assignee?: string,
-    dueDate?: string
+    dueDate?: string,
   ) => Promise<void>
   addCol: (title: string) => void
   dragTask: (id: string | null) => void
@@ -98,7 +98,7 @@ export type Actions = {
   setCols: (updatedCols: Column[]) => void
   updateTask: (
     id: string,
-    updates: Partial<Omit<Task, 'status'>> & { status?: Status | string }
+    updates: Partial<Omit<Task, 'status'>> & { status?: Status | string },
   ) => Promise<void>
   deleteTask: (id: string) => Promise<boolean>
   moveTask: (taskId: string, newStatusId: string, newOrder?: number) => Promise<void>
@@ -158,7 +158,7 @@ export const useTaskStore = create<State & Actions>()(
         taskTypes = [],
         priority = 'medium',
         assignee,
-        dueDate
+        dueDate,
       ) => {
         try {
           // Get the highest order in the target status to place new task at top
@@ -357,7 +357,7 @@ export const useTaskStore = create<State & Actions>()(
           } else {
             // Ensure unique statuses and columns
             const uniqueStatuses = statuses.filter(
-              (status, index, self) => index === self.findIndex(s => s.id === status.id)
+              (status, index, self) => index === self.findIndex(s => s.id === status.id),
             )
 
             set(() => ({
@@ -414,7 +414,7 @@ export const useTaskStore = create<State & Actions>()(
             set(state => ({
               statuses: state.statuses.map(status => (status.id === id ? updatedStatus : status)),
               columns: state.columns.map(col =>
-                col.id === id ? { id: updatedStatus.id, title: updatedStatus.name } : col
+                col.id === id ? { id: updatedStatus.id, title: updatedStatus.name } : col,
               ),
             }))
             toast.success('Status updated successfully')
@@ -454,7 +454,7 @@ export const useTaskStore = create<State & Actions>()(
                         ...task,
                         status: fallbackStatus,
                       }
-                    : task
+                    : task,
                 ),
               }
             })
@@ -616,7 +616,7 @@ export const useTaskStore = create<State & Actions>()(
           if (updatedTaskType) {
             set(state => ({
               taskTypes: state.taskTypes.map(taskType =>
-                taskType.id === id ? updatedTaskType : taskType
+                taskType.id === id ? updatedTaskType : taskType,
               ),
             }))
             toast.success('Task type updated successfully')
@@ -738,6 +738,6 @@ export const useTaskStore = create<State & Actions>()(
         taskTypes: state.taskTypes,
         dateFilter: state.dateFilter,
       }),
-    }
-  )
+    },
+  ),
 )

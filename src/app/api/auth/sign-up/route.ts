@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     if (!name || !email || !password) {
       return NextResponse.json(
         { message: 'Name, email and password are required' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
         {
           message: `${collection === 'admins' ? 'Admin' : 'User'} with this email already exists`,
         },
-        { status: 409 }
+        { status: 409 },
       )
     }
 
@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
         oauthProviders: existingOAuth.docs.map(o => o.provider),
         ...(warning && { warning }),
       },
-      { status: 201 }
+      { status: 201 },
     )
   } catch (error) {
     requestLogger.error('Sign up error', error, {

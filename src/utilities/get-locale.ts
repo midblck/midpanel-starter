@@ -1,6 +1,8 @@
-import { locales, defaultLocale, type Locale } from '@/i18n/config'
-import { cookies, headers } from 'next/headers'
+'use server'
+
+import { defaultLocale, locales, type Locale } from '@/i18n/config'
 import { logWarn } from '@/utilities/logger'
+import { cookies, headers } from 'next/headers'
 
 export async function getUserLocale(): Promise<string> {
   try {
@@ -40,4 +42,11 @@ export async function getUserLocale(): Promise<string> {
     })
     return defaultLocale
   }
+}
+
+export async function setUserLocale(locale: Locale) {
+  ;(await cookies()).set('locale', locale, {
+    path: '/',
+    maxAge: 60 * 60 * 24 * 365, // 1 year
+  })
 }

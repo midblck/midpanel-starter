@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/utilities/cn'
 import { SwipeableButton } from 'react-swipeable-button'
 
 interface SwipeButtonProps {

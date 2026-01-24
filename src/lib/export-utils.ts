@@ -46,7 +46,7 @@ export function exportToCSV(data: TaskTableData[], options: ExportOptions = {}):
         row.order,
         `"${formatDate(row.createdAt)}"`,
         `"${formatDate(row.updatedAt)}"`,
-      ].join(',')
+      ].join(','),
     ),
   ].join('\n')
 

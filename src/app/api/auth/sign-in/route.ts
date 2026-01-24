@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
           token: result.token,
           exp: result.exp,
         },
-        { status: 200 }
+        { status: 200 },
       )
 
       response.cookies.set('payload-token', result.token, {

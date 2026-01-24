@@ -8,7 +8,7 @@ import { lazy, Suspense } from 'react'
 const TaskTable = lazy(() =>
   import('@/features/task-list/components/table').then(module => ({
     default: module.TaskTable,
-  }))
+  })),
 )
 
 interface LazyTaskTableProps {

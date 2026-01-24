@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json(
         { error: 'OAuth Error', message: errorMessage, googleError: error },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
           error: 'OAuth Verification Failed',
           message: 'Failed to verify Google OAuth token',
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
       })
       return NextResponse.json(
         { message: 'Invalid OAuth data received from Google' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -319,7 +319,7 @@ export async function GET(request: NextRequest) {
           sid: sid,
         },
         hashedSecret,
-        { expiresIn: '7d' }
+        { expiresIn: '7d' },
       )
     } catch (jwtError) {
       requestLogger.error('Failed to generate JWT token', jwtError, {
@@ -334,7 +334,7 @@ export async function GET(request: NextRequest) {
     if (!token) {
       return NextResponse.json(
         { message: 'Failed to generate authentication token' },
-        { status: 500 }
+        { status: 500 },
       )
     }
 

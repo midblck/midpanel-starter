@@ -76,7 +76,7 @@ export async function createTaskStatus(statusData: CreateStatusData): Promise<St
 // Update task status using PayloadCMS built-in REST API
 export async function updateTaskStatus(
   id: string,
-  statusData: UpdateStatusData
+  statusData: UpdateStatusData,
 ): Promise<Status | null> {
   try {
     const response = await fetch(`/api/task-statuses/${id}`, {

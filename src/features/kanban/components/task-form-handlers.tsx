@@ -84,7 +84,7 @@ export function useTaskFormHandlers({ columnId, editingTask }: TaskFormHandlersP
     if (editingTask) {
       // Find the status object from the selected status ID
       const selectedStatus = statuses.find(
-        (status: { id: string }) => status.id === formData.status
+        (status: { id: string }) => status.id === formData.status,
       )
 
       // Update existing task
@@ -108,7 +108,7 @@ export function useTaskFormHandlers({ columnId, editingTask }: TaskFormHandlersP
         formData.taskTypes,
         formData.priority,
         formData.assignee || undefined,
-        formData.dueDate ? new Date(formData.dueDate).toISOString() : undefined
+        formData.dueDate ? new Date(formData.dueDate).toISOString() : undefined,
       )
     }
 

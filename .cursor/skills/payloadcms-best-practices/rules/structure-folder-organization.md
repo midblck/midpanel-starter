@@ -5,6 +5,7 @@ Maintain consistent folder structure following the established project conventio
 ## Why It Matters
 
 Consistent folder structure provides:
+
 - Predictable file locations for all team members
 - Clear separation of concerns between different parts of the application
 - Easy navigation and maintenance
@@ -94,7 +95,7 @@ src/
 - Organize PayloadCMS collections in `collections/` directory with PascalCase naming
 - Place utilities in `lib/` with descriptive filenames and subdirectories for organization
 - Keep generated types in root-level files and organize custom types in `types/` directory
-- Use consistent naming conventions: PascalCase for components/classes, camelCase for utilities, kebab-case for multi-word files
+- Use consistent naming conventions: kebab-case for TSX files, PascalCase for component names/exports, camelCase for utilities, kebab-case for multi-word files
 - Consider feature-based architecture (`features/`) for larger applications to improve scalability
 - Separate custom API routes from PayloadCMS API routes for better organization
 - Use `lib/hooks/` for shared custom hooks and feature-specific hooks within feature directories

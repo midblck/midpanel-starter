@@ -274,21 +274,21 @@ touch src/types/[type-name].ts
 
 ```typescript
 // 1. React and Next.js
-import React from 'react';
-import Image from 'next/image';
+import React from 'react'
+import Image from 'next/image'
 
 // 2. Third-party libraries
-import { getPayload } from 'payload';
+import { getPayload } from 'payload'
 
 // 3. Internal utilities
-import { cn } from '@/lib/utils';
-import type { User } from '@/types';
+import { cn } from '@/utilities/cn'
+import type { User } from '@/types'
 
 // 4. Components
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button'
 
 // 5. Local imports
-import { UserCardProps } from './types';
+import { UserCardProps } from './types'
 ```
 
 ### 3. **Type Safety**
