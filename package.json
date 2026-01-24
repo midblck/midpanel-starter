@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "cross-env NODE_OPTIONS='--no-deprecation --max-old-space-size=8000 -r tsconfig-paths/register' pnpm generate:importmap && pnpm generate:types && next build",
+    "build": "cross-env NODE_OPTIONS='--no-deprecation --max-old-space-size=8000' pnpm generate:importmap && pnpm generate:types && next build",
     "dev": "set NODE_OPTIONS=--no-deprecation && next dev",
     "dev:clean": "rm -rf .next-dev && set NODE_OPTIONS=--no-deprecation && next dev",
     "generate:importmap": "set NODE_OPTIONS=--no-deprecation && pnpm exec payload generate:importmap --debug",
