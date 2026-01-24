@@ -5,10 +5,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "set NODE_OPTIONS=--no-deprecation && set NODE_OPTIONS=%NODE_OPTIONS% --max-old-space-size=8000 && pnpm generate:importmap && pnpm generate:types && next build --webpack",
+    "build": "cross-env NODE_OPTIONS='--no-deprecation --max-old-space-size=8000' pnpm generate:importmap && pnpm generate:types && next build",
     "dev": "set NODE_OPTIONS=--no-deprecation && next dev",
     "dev:clean": "rm -rf .next-dev && set NODE_OPTIONS=--no-deprecation && next dev",
-    "generate:importmap": "set NODE_OPTIONS=--no-deprecation && payload generate:importmap",
+    "generate:importmap": "set NODE_OPTIONS=--no-deprecation && payload generate:importmap --debug",
     "generate:types": "set NODE_OPTIONS=--no-deprecation && payload generate:types",
     "lint": "set NODE_OPTIONS=--no-deprecation && eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "set NODE_OPTIONS=--no-deprecation && node scripts/lint-fix.js",
@@ -26,7 +26,7 @@
     "turbo:build": "turbo run build",
     "turbo:dev": "turbo run dev",
     "turbo:lint": "turbo run lint",
-    "prepare": "husky install",
+    "prepare": "husky",
     "setup:dev": "node scripts/setup-dev.js"
   },
   "dependencies": {
@@ -103,6 +103,7 @@
     "@typescript-eslint/parser": "^8.50.0",
     "autoprefixer": "^10.4.21",
     "baseline-browser-mapping": "^2.9.11",
+    "cross-env": "^10.1.0",
     "eslint": "^9.16.0",
     "eslint-config-next": "^16.0.10",
     "eslint-config-prettier": "^10.1.8",
